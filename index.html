@@ -21,7 +21,7 @@
 
   <!-- Header / Navbar -->
   <header class="bg-indigo-700 text-white shadow-md no-print">
-    <div class="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
       <div>
         <h1 class="text-2xl font-bold tracking-tight">Sistem Kuota & Laporan PKL</h1>
         <p class="text-indigo-200 text-sm">Monitoring Ketersediaan & Over-Kuota Tempat PKL</p>
@@ -54,6 +54,53 @@
           <p id="alert-text" class="text-red-700 text-sm mt-1"></p>
         </div>
       </div>
+    </div>
+
+    <!-- AREA INPUT DATA (FORM) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 no-print">
+      
+      <!-- Form 1: Tambah Tempat DUDI Baru -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+          <span>🏢</span> Tambah Tempat DUDI Baru
+        </h2>
+        <form id="form-dudi" onsubmit="tambahDudi(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Perusahaan / DUDI</label>
+            <input type="text" id="input-nama-dudi" placeholder="Contoh: PT. Maju Bersama" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Kuota Maksimal Siswa</label>
+            <input type="number" id="input-kuota-dudi" min="1" placeholder="Contoh: 4" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition shadow-sm">
+            + Simpan DUDI Baru
+          </button>
+        </form>
+      </div>
+
+      <!-- Form 2: Plotting / Input Siswa ke DUDI -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+          <span>👨‍🎓</span> Plotting Siswa ke DUDI
+        </h2>
+        <form id="form-siswa" onsubmit="tambahSiswa(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih DUDI Tujuan</label>
+            <select id="select-dudi" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">-- Pilih DUDI --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Siswa</label>
+            <input type="text" id="input-nama-siswa" placeholder="Contoh: Ahmad Rizky" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition shadow-sm">
+            + Plotting Siswa
+          </button>
+        </form>
+      </div>
+
     </div>
 
     <!-- Ringkasan Statistik -->
@@ -99,6 +146,7 @@
               <th class="py-3 px-4 text-center">Sisa Kuota</th>
               <th class="py-3 px-4 text-center">Status</th>
               <th class="py-3 px-4">Daftar Siswa</th>
+              <th class="py-3 px-4 text-center no-print">Aksi</th>
             </tr>
           </thead>
           <tbody id="data-dudi-body" class="divide-y divide-slate-200 text-sm">
@@ -111,16 +159,67 @@
   </main>
 
   <script>
-    // 1. Data Dummy (Simulasi dari Database)
-    const dudiData = [
+    // 1. Data Utama (Sistem Penyimpanan Sementara)
+    let dudiData = [
       { id: 1, nama: "PT. Tech Nusantara", kuota: 5, siswa: ["Ahmad R", "Budi S", "Citra D"] },
       { id: 2, nama: "CV. Digital Creative", kuota: 4, siswa: ["Dina M", "Eko P", "Fani A", "Gita R"] },
-      { id: 3, nama: "Bengkel Auto Jaya", kuota: 2, siswa: ["Hadi T", "Irfan K", "Joko W", "Kiki L"] }, // OVER KUOTA
-      { id: 4, nama: "Studio Grafis Merdeka", kuota: 3, siswa: ["Lani N"] },
-      { id: 5, nama: "PT. Rekayasa Solusi", kuota: 4, siswa: ["Mina O", "Nanda P", "Oky R", "Putri S", "Qori T"] } // OVER KUOTA
+      { id: 3, nama: "Bengkel Auto Jaya", kuota: 2, siswa: ["Hadi T", "Irfan K", "Joko W", "Kiki L"] } // OVER KUOTA (4/2)
     ];
 
-    // 2. Fungsi Render Data ke Tabel & Menghitung Logika Kuota
+    // 2. Fungsi Tambah DUDI Baru
+    function tambahDudi(event) {
+      event.preventDefault();
+      const nama = document.getElementById('input-nama-dudi').value;
+      const kuota = parseInt(document.getElementById('input-kuota-dudi').value);
+
+      const dudiBaru = {
+        id: Date.now(),
+        nama: nama,
+        kuota: kuota,
+        siswa: []
+      };
+
+      dudiData.push(dudiBaru);
+      document.getElementById('form-dudi').reset();
+      renderAll();
+    }
+
+    // 3. Fungsi Tambah Siswa ke DUDI
+    function tambahSiswa(event) {
+      event.preventDefault();
+      const dudiId = parseInt(document.getElementById('select-dudi').value);
+      const namaSiswa = document.getElementById('input-nama-siswa').value;
+
+      const targetDudi = dudiData.find(item => item.id === dudiId);
+      if (targetDudi) {
+        targetDudi.siswa.push(namaSiswa);
+        document.getElementById('form-siswa').reset();
+        renderAll();
+      }
+    }
+
+    // 4. Fungsi Hapus DUDI
+    function hapusDudi(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus data DUDI ini?")) {
+        dudiData = dudiData.filter(item => item.id !== id);
+        renderAll();
+      }
+    }
+
+    // 5. Fungsi Update Dropdown DUDI pada Form Plotting Siswa
+    function updateDropdownDudi() {
+      const select = document.getElementById('select-dudi');
+      select.innerHTML = '<option value="">-- Pilih DUDI --</option>';
+
+      dudiData.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.id;
+        option.textContent = `${item.nama} (Sisa: ${item.kuota - item.siswa.length})`;
+        select.appendChild(option);
+      });
+    }
+
+    // 6. Fungsi Render Data ke Tabel & Menghitung Logika Kuota
     function renderTable() {
       const tbody = document.getElementById('data-dudi-body');
       tbody.innerHTML = '';
@@ -137,19 +236,16 @@
         let statusBadge = '';
         let rowClass = '';
 
-        // Logika Pengecekan Ketersediaan & Kelebihan Kuota
+        // Logika Cek Ketersediaan & Kelebihan Kuota
         if (sisa < 0) {
-          // OVER KUOTA (Merah)
           const selisih = Math.abs(sisa);
           statusBadge = `<span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-1 rounded-full border border-red-200">🔴 Over (+${selisih})</span>`;
           rowClass = 'bg-red-50/50';
           overKuotaCount++;
           overKuotaNames.push(`<b>${item.nama}</b> (Kelebihan ${selisih} siswa)`);
         } else if (sisa === 0) {
-          // PENUH (Kuning)
           statusBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">🟡 Penuh</span>`;
         } else {
-          // TERSEDIA (Hijau)
           statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200">🟢 Tersedia (${sisa})</span>`;
         }
 
@@ -162,7 +258,12 @@
           <td class="py-3 px-4 text-center font-semibold text-indigo-600">${terdaftar}</td>
           <td class="py-3 px-4 text-center font-bold ${sisa < 0 ? 'text-red-600' : 'text-emerald-600'}">${sisa}</td>
           <td class="py-3 px-4 text-center">${statusBadge}</td>
-          <td class="py-3 px-4 text-xs text-slate-600">${item.siswa.join(', ')}</td>
+          <td class="py-3 px-4 text-xs text-slate-600">${item.siswa.length > 0 ? item.siswa.join(', ') : '<i>Belum ada siswa</i>'}</td>
+          <td class="py-3 px-4 text-center no-print">
+            <button onclick="hapusDudi(${item.id})" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded border border-red-200 transition">
+              🗑️ Hapus
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -183,9 +284,14 @@
       }
     }
 
-    // 3. Fungsi Export ke File Excel (.xlsx)
+    // 7. Render Seluruh Tampilan
+    function renderAll() {
+      renderTable();
+      updateDropdownDudi();
+    }
+
+    // 8. Fungsi Export ke File Excel (.xlsx)
     function exportToExcel() {
-      // Menyiapkan data khusus untuk sheet excel
       const excelData = dudiData.map((item, index) => {
         const terdaftar = item.siswa.length;
         const sisa = item.kuota - terdaftar;
@@ -207,13 +313,11 @@
       const worksheet = XLSX.utils.json_to_sheet(excelData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan PKL");
-      
-      // Save file
       XLSX.writeFile(workbook, `Laporan_Rencana_PKL_${new Date().toISOString().slice(0,10)}.xlsx`);
     }
 
-    // Jalankan fungsi saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', renderTable);
+    // Jalankan pertama kali saat halaman dibuka
+    document.addEventListener('DOMContentLoaded', renderAll);
   </script>
 </body>
 </html>
