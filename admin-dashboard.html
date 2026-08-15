@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Admin BK | Dashboard Pelayanan & Data</title>
+  <title>Portal Admin BK | Dashboard Pelayanan & Upload Berkas</title>
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,7 +27,7 @@
       </div>
       <div>
         <h1 class="font-bold text-lg text-slate-900 leading-tight">Ruang Admin Bimbingan Konseling</h1>
-        <p class="text-xs text-slate-500">Sistem Pengelolaan Layanan, Data Siswa & Rekapitulasi Evaluasi BK</p>
+        <p class="text-xs text-slate-500">Sistem Pengelolaan Layanan, Data Siswa & Arsip Berkas BK</p>
       </div>
     </div>
     <div class="flex items-center gap-3 text-xs font-bold">
@@ -74,9 +74,10 @@
 
   <!-- MAIN NAVIGATION TABS -->
   <div class="max-w-7xl mx-auto mb-6 no-print">
-    <div class="flex bg-slate-200/70 p-1.5 rounded-2xl max-w-md">
+    <div class="flex bg-slate-200/70 p-1.5 rounded-2xl max-w-xl">
       <button id="tabBtnKonseling" onclick="switchMainTab('konseling')" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition">Konseling & Aduan</button>
       <button id="tabBtnSiswa" onclick="switchMainTab('siswa')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Master Data Siswa</button>
+      <button id="tabBtnDokumen" onclick="switchMainTab('dokumen')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Arsip Berkas PDF</button>
       <button id="tabBtnLaporan" onclick="switchMainTab('laporan')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Rekap Laporan</button>
     </div>
   </div>
@@ -86,11 +87,9 @@
 
     <!-- VIEW 1: MANAJEMEN TIKET KONSELING -->
     <div id="viewKonseling" class="bg-white rounded-3xl border border-rose-100 p-6 shadow-sm">
-      <!-- FILTER & ACTIONS -->
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 no-print">
         <div class="flex items-center gap-3 w-full md:w-auto">
           <h3 class="font-bold text-slate-800 text-base">Daftar Pengaduan Siswa</h3>
-          <!-- Tombol Hapus Massal Konseling -->
           <button id="btnHapusMassalKonseling" onclick="hapusKonselingTerpilih()" class="hidden px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Terpilih (<span id="countSelectedKonseling">0</span>)
           </button>
@@ -162,12 +161,10 @@
         </div>
       </div>
 
-      <!-- TABEL MASTER SISWA -->
       <div class="bg-white rounded-3xl border border-rose-100 p-6 shadow-sm">
         <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 no-print">
           <div class="flex items-center gap-3 w-full md:w-auto">
             <h3 class="font-bold text-slate-800 text-base">Database Master Siswa</h3>
-            <!-- Tombol Hapus Massal Siswa -->
             <button id="btnHapusMassalSiswa" onclick="hapusSiswaTerpilih()" class="hidden px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Terpilih (<span id="countSelectedSiswa">0</span>)
             </button>
@@ -197,7 +194,56 @@
       </div>
     </div>
 
-    <!-- VIEW 3: REKAP LAPORAN BK SIAP CETAK -->
+    <!-- VIEW 3: ARSIP DOKUMEN / PDF LAMPIRAN GOOGLE DRIVE -->
+    <div id="viewDokumen" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-3xl border border-rose-100 shadow-sm no-print">
+        <h4 class="font-bold text-slate-800 text-sm mb-1 flex items-center gap-2">
+          <i data-lucide="file-up" class="text-rose-600 w-4 h-4"></i> Upload Berkas / Lampiran PDF Siswa
+        </h4>
+        <p class="text-xs text-slate-500 mb-4">Upload hasil tes psikologi, surat pernyataan, atau laporan konseling (PDF/Gambar disimpan langsung ke Google Drive).</p>
+        
+        <div class="grid md:grid-cols-4 gap-3">
+          <input type="text" id="pdfNisn" placeholder="NISN Siswa (Opsional)" class="px-3.5 py-2 border rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-rose-500">
+          <input type="file" id="pdfFileInput" accept=".pdf,image/*" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700">
+          <button onclick="prosesUploadPdf()" id="btnUploadPdf" class="px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-xs rounded-xl shadow-md transition md:col-span-2 flex items-center justify-center gap-2">
+            <i data-lucide="upload-cloud" class="w-4 h-4"></i> Simpan ke Google Drive
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-rose-100 p-6 shadow-sm">
+        <div class="flex justify-between items-center mb-4 no-print">
+          <div class="flex items-center gap-3">
+            <h3 class="font-bold text-slate-800 text-base">Arsip Dokumen Ter-upload</h3>
+            <button id="btnHapusMassalDokumen" onclick="hapusDokumenTerpilih()" class="hidden px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Terpilih (<span id="countSelectedDokumen">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b bg-rose-50/50 text-slate-600 uppercase font-bold">
+                <th class="p-3 w-8 text-center no-print">
+                  <input type="checkbox" id="selectAllDokumen" onchange="toggleSelectAllDokumen(this)" class="rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+                </th>
+                <th class="p-3">ID Dokumen</th>
+                <th class="p-3">Nama File</th>
+                <th class="p-3">NISN Siswa</th>
+                <th class="p-3">Tanggal Upload</th>
+                <th class="p-3 no-print">Aksi Akses</th>
+              </tr>
+            </thead>
+            <tbody id="tabelDokumen" class="divide-y">
+              <tr><td colspan="6" class="p-4 text-center text-slate-400">Memuat daftar dokumen...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: REKAP LAPORAN BK SIAP CETAK -->
     <div id="viewLaporan" class="hidden bg-white rounded-3xl border border-rose-100 p-6 md:p-8 shadow-sm">
       <div class="border-b pb-4 mb-6 text-center">
         <h2 class="text-xl font-bold text-slate-900 uppercase tracking-wide">Laporan Evaluasi Pelayanan Bimbingan Konseling</h2>
@@ -294,17 +340,21 @@
 
     let rawKonselingData = [];
     let rawSiswaData = [];
+    let rawDokumenData = [];
     let selectedKonselingIds = [];
     let selectedSiswaNisns = [];
+    let selectedDokumenIds = [];
 
     // SWITCH TABS
     function switchMainTab(tab) {
       document.getElementById('viewKonseling').classList.add('hidden');
       document.getElementById('viewSiswa').classList.add('hidden');
+      document.getElementById('viewDokumen').classList.add('hidden');
       document.getElementById('viewLaporan').classList.add('hidden');
 
       document.getElementById('tabBtnKonseling').className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
       document.getElementById('tabBtnSiswa').className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
+      document.getElementById('tabBtnDokumen').className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
       document.getElementById('tabBtnLaporan').className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
 
       if(tab === 'konseling') {
@@ -314,6 +364,10 @@
         document.getElementById('viewSiswa').classList.remove('hidden');
         document.getElementById('tabBtnSiswa').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
         loadMasterSiswa();
+      } else if(tab === 'dokumen') {
+        document.getElementById('viewDokumen').classList.remove('hidden');
+        document.getElementById('tabBtnDokumen').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
+        loadDokumen();
       } else if(tab === 'laporan') {
         document.getElementById('viewLaporan').classList.remove('hidden');
         document.getElementById('tabBtnLaporan').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
@@ -364,6 +418,12 @@
       lucide.createIcons();
     }
 
+    function updateStatistik() {
+      document.getElementById('statTotal').innerText = rawKonselingData.length;
+      document.getElementById('statPending').innerText = rawKonselingData.filter(d => d.Status === 'Pending').length;
+      document.getElementById('statSelesai').innerText = rawKonselingData.filter(d => d.Status === 'Selesai').length;
+    }
+
     // CHECKBOX HANDLERS KONSELING
     function toggleSelectAllKonseling(master) {
       const chks = document.querySelectorAll('.chkKonseling');
@@ -376,32 +436,24 @@
     }
 
     function toggleSelectKonseling(chk) {
-      if(chk.checked) {
-        selectedKonselingIds.push(chk.value);
-      } else {
-        selectedKonselingIds = selectedKonselingIds.filter(id => id !== chk.value);
-      }
+      if(chk.checked) selectedKonselingIds.push(chk.value);
+      else selectedKonselingIds = selectedKonselingIds.filter(id => id !== chk.value);
       updateBtnHapusKonseling();
     }
 
     function updateBtnHapusKonseling() {
       const btn = document.getElementById('btnHapusMassalKonseling');
-      const count = document.getElementById('countSelectedKonseling');
-      count.innerText = selectedKonselingIds.length;
+      document.getElementById('countSelectedKonseling').innerText = selectedKonselingIds.length;
       if(selectedKonselingIds.length > 0) btn.classList.remove('hidden');
       else btn.classList.add('hidden');
     }
 
     function hapusSingleKonseling(id) {
-      if(confirm(`Yakin ingin menghapus tiket ${id}?`)) {
-        eksekusiHapusKonseling([id]);
-      }
+      if(confirm(`Yakin ingin menghapus tiket ${id}?`)) eksekusiHapusKonseling([id]);
     }
 
     function hapusKonselingTerpilih() {
-      if(confirm(`Yakin menghapus ${selectedKonselingIds.length} tiket terpilih?`)) {
-        eksekusiHapusKonseling(selectedKonselingIds);
-      }
+      if(confirm(`Yakin menghapus ${selectedKonselingIds.length} tiket terpilih?`)) eksekusiHapusKonseling(selectedKonselingIds);
     }
 
     function eksekusiHapusKonseling(ids) {
@@ -457,7 +509,6 @@
       lucide.createIcons();
     }
 
-    // CHECKBOX HANDLERS SISWA
     function toggleSelectAllSiswa(master) {
       const chks = document.querySelectorAll('.chkSiswa');
       selectedSiswaNisns = [];
@@ -469,32 +520,24 @@
     }
 
     function toggleSelectSiswa(chk) {
-      if(chk.checked) {
-        selectedSiswaNisns.push(chk.value);
-      } else {
-        selectedSiswaNisns = selectedSiswaNisns.filter(nisn => nisn !== chk.value);
-      }
+      if(chk.checked) selectedSiswaNisns.push(chk.value);
+      else selectedSiswaNisns = selectedSiswaNisns.filter(nisn => nisn !== chk.value);
       updateBtnHapusSiswa();
     }
 
     function updateBtnHapusSiswa() {
       const btn = document.getElementById('btnHapusMassalSiswa');
-      const count = document.getElementById('countSelectedSiswa');
-      count.innerText = selectedSiswaNisns.length;
+      document.getElementById('countSelectedSiswa').innerText = selectedSiswaNisns.length;
       if(selectedSiswaNisns.length > 0) btn.classList.remove('hidden');
       else btn.classList.add('hidden');
     }
 
     function hapusSingleSiswa(nisn) {
-      if(confirm(`Yakin ingin menghapus siswa NISN ${nisn}?`)) {
-        eksekusiHapusSiswa([nisn]);
-      }
+      if(confirm(`Yakin menghapus siswa NISN ${nisn}?`)) eksekusiHapusSiswa([nisn]);
     }
 
     function hapusSiswaTerpilih() {
-      if(confirm(`Yakin menghapus ${selectedSiswaNisns.length} siswa terpilih?`)) {
-        eksekusiHapusSiswa(selectedSiswaNisns);
-      }
+      if(confirm(`Yakin menghapus ${selectedSiswaNisns.length} siswa terpilih?`)) eksekusiHapusSiswa(selectedSiswaNisns);
     }
 
     function eksekusiHapusSiswa(nisns) {
@@ -506,6 +549,142 @@
       .then(res => {
         alert("Data siswa berhasil dihapus!");
         loadMasterSiswa();
+      });
+    }
+
+    // UPLOAD PDF & DOKUMEN HANDLERS
+    function prosesUploadPdf() {
+      const fileInput = document.getElementById('pdfFileInput');
+      const nisn = document.getElementById('pdfNisn').value.trim();
+      
+      if (!fileInput.files.length) return alert("Pilih file PDF/Gambar terlebih dahulu!");
+      
+      const file = fileInput.files[0];
+      const btn = document.getElementById('btnUploadPdf');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Mengunggah...`;
+      lucide.createIcons();
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const payload = {
+          action: 'uploadPdf',
+          fileName: file.name,
+          fileData: e.target.result,
+          nisn: nisn
+        };
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="upload-cloud" class="w-4 h-4"></i> Simpan ke Google Drive`;
+          lucide.createIcons();
+
+          if(res.result === "success") {
+            alert("File Berhasil Disimpan ke Google Drive!");
+            fileInput.value = "";
+            document.getElementById('pdfNisn').value = "";
+            loadDokumen();
+          } else {
+            alert("Gagal upload: " + res.message);
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="upload-cloud" class="w-4 h-4"></i> Simpan ke Google Drive`;
+          lucide.createIcons();
+          alert("Terjadi kesalahan koneksi.");
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadDokumen() {
+      fetch(`${SCRIPT_URL}?action=getDokumen`)
+      .then(res => res.json())
+      .then(res => {
+        rawDokumenData = res.data || [];
+        renderTabelDokumen(rawDokumenData);
+      });
+    }
+
+    function renderTabelDokumen(data) {
+      const tbody = document.getElementById('tabelDokumen');
+      tbody.innerHTML = '';
+      selectedDokumenIds = [];
+      updateBtnHapusDokumen();
+
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada berkas PDF yang di-upload.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-rose-50/30">
+            <td class="p-3 text-center no-print">
+              <input type="checkbox" value="${item.ID_Dokumen}" onchange="toggleSelectDokumen(this)" class="chkDokumen rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+            </td>
+            <td class="p-3 font-bold font-mono text-slate-800">${item.ID_Dokumen}</td>
+            <td class="p-3 font-semibold text-rose-600 flex items-center gap-1.5"><i data-lucide="file-text" class="w-4 h-4"></i> ${item.Nama_File}</td>
+            <td class="p-3 font-mono">${item.NISN_Siswa || 'Umum'}</td>
+            <td class="p-3 text-slate-500">${new Date(item.Timestamp).toLocaleString('id-ID')}</td>
+            <td class="p-3 no-print flex gap-2">
+              <a href="${item.URL_File}" target="_blank" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 rounded-lg font-bold flex items-center gap-1">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Drive
+              </a>
+              <button onclick="hapusSingleDokumen('${item.ID_Dokumen}')" class="p-1 text-slate-400 hover:text-rose-600 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    function toggleSelectAllDokumen(master) {
+      const chks = document.querySelectorAll('.chkDokumen');
+      selectedDokumenIds = [];
+      chks.forEach(c => {
+        c.checked = master.checked;
+        if(master.checked) selectedDokumenIds.push(c.value);
+      });
+      updateBtnHapusDokumen();
+    }
+
+    function toggleSelectDokumen(chk) {
+      if(chk.checked) selectedDokumenIds.push(chk.value);
+      else selectedDokumenIds = selectedDokumenIds.filter(id => id !== chk.value);
+      updateBtnHapusDokumen();
+    }
+
+    function updateBtnHapusDokumen() {
+      const btn = document.getElementById('btnHapusMassalDokumen');
+      document.getElementById('countSelectedDokumen').innerText = selectedDokumenIds.length;
+      if(selectedDokumenIds.length > 0) btn.classList.remove('hidden');
+      else btn.classList.add('hidden');
+    }
+
+    function hapusSingleDokumen(id) {
+      if(confirm(`Yakin menghapus catatan berkas ${id}?`)) eksekusiHapusDokumen([id]);
+    }
+
+    function hapusDokumenTerpilih() {
+      if(confirm(`Yakin menghapus ${selectedDokumenIds.length} berkas terpilih?`)) eksekusiHapusDokumen(selectedDokumenIds);
+    }
+
+    function eksekusiHapusDokumen(ids) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'deleteDokumen', ids: ids })
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert("Berkas berhasil dihapus!");
+        loadDokumen();
       });
     }
 
