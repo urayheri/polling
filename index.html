@@ -1,323 +1,374 @@
 <!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-BK | Layanan Bimbingan & Konseling Online</title>
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 w-full z-50 glass border-b border-slate-200/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-200">
+            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+          </div>
+          <span class="font-bold text-xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">E-BK Support</span>
+        </div>
+        <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
+          <a href="#hero" class="hover:text-indigo-600 transition">Beranda</a>
+          <a href="#layanan" class="hover:text-indigo-600 transition">Fitur</a>
+          <a href="#form-section" class="hover:text-indigo-600 transition">Buat Janji / Konseling</a>
+          <a href="#cek-tiket" class="hover:text-indigo-600 transition">Cek Status Tiket</a>
+        </div>
+        <div>
+          <a href="#form-section" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-indigo-200 transition duration-200">
+            Mulai Cerita
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section id="hero" class="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-indigo-50/50 to-slate-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 mb-6">
+        <i data-lucide="shield-check" class="w-4 h-4"></i> Safe Space & 100% Rahasia
+      </span>
+      <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Tempat Aman Untuk <br class="hidden sm:inline"/><span class="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Bercerita & Tumbuh Bersama</span>
+      </h1>
+      <p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto">
+        Layanan Bimbingan Konseling Digital. Dapatkan pendampingan masalah akademik, pribadi, karir, hingga perundungan dengan privasi terjaga.
+      </p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a href="#form-section" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-indigo-200 transition">
+          Kirim Aduan / Konseling
+        </a>
+        <a href="#cek-tiket" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold px-6 py-3.5 rounded-xl transition">
+          Lacak Tiket Saya
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FITUR UTAMA -->
+  <section id="layanan" class="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="lock" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Privasi Dijamin</h3>
+        <p class="text-slate-600 text-sm">Opsi kirim aduan secara anonim tanpa perlu khawatir identitas ketahuan jika belum siap bercerita.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="clock" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Respon Cepat Guru BK</h3>
+        <p class="text-slate-600 text-sm">Pesan terhubung langsung dengan notifikasi otomatis ke Guru BK untuk penanganan segera.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 bg-violet-50 text-violet-600 rounded-xl flex items-center justify-center mb-6">
+          <i data-lucide="compass" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Konsultasi Karir & Belajar</h3>
+        <p class="text-slate-600 text-sm">Layanan pemetaan minat bakat, konsultasi studi lanjut, hingga motivasi belajar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM KONSELING & CEK TIKET -->
+  <section id="form-section" class="py-16 bg-slate-100/70">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- TAB NAVIGATION -->
+      <div class="flex bg-slate-200/80 p-1.5 rounded-2xl mb-8 max-w-md mx-auto">
+        <button id="btnTabForm" onclick="switchTab('form')" class="flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-indigo-600 transition">Form Konseling</button>
+        <button id="btnTabTiket" onclick="switchTab('tiket')" class="flex-1 py-2.5 text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Cek Balasan Tiket</button>
+      </div>
+
+      <!-- FORM BK -->
+      <div id="viewForm" class="bg-white p-8 md:p-10 rounded-3xl border border-slate-200/80 shadow-xl">
+        <div class="mb-8 border-b border-slate-100 pb-4">
+          <h2 class="text-2xl font-bold text-slate-900">Form Pengaduan / Konseling</h2>
+          <p class="text-slate-500 text-sm">Isi formulir di bawah ini dengan jujur. Kami di sini untuk mendengarkan.</p>
+        </div>
+
+        <form id="bkForm" class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">NISN / Identitas Siswa</label>
+              <input type="text" id="nisn" placeholder="Masukkan NISN atau 'Anonim'" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
+              <input type="text" id="nama" placeholder="Nama Anda (Kosongkan jika anonim)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">Kelas</label>
+              <input type="text" id="kelas" placeholder="Contoh: XII RPL 1" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">Kategori Konseling</label>
+              <select id="kategori" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm bg-white">
+                <option value="Akademik / Belajar">Akademik / Problem Belajar</option>
+                <option value="Pribadi / Emosional">Masalah Pribadi / Emosional</option>
+                <option value="Social / Bullying">Sosial / Perundungan (Bullying)</option>
+                <option value="Karir / Studi Lanjut">Karir & Masa Depan</option>
+                <option value="Lainnya">Lain-lain</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Ceritakan Masalah Anda</label>
+            <textarea id="pesan" rows="5" placeholder="Tuliskan keluhan atau hal yang ingin dikonsultasikan secara jelas..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm"></textarea>
+          </div>
+
+          <button type="submit" id="btnSubmit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 transition flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling
+          </button>
+        </form>
+      </div>
+
+      <!-- CEK STATUS TIKET -->
+      <div id="viewTiket" class="hidden bg-white p-8 md:p-10 rounded-3xl border border-slate-200/80 shadow-xl">
+        <div class="mb-8 border-b border-slate-100 pb-4">
+          <h2 class="text-2xl font-bold text-slate-900">Cek Status & Balasan BK</h2>
+          <p class="text-slate-500 text-sm">Masukkan Kode Tiket yang Anda dapatkan saat mengirim form konseling.</p>
+        </div>
+
+        <div class="flex gap-3 mb-6">
+          <input type="text" id="inputTiket" placeholder="Contoh: BK-171800000" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm">
+          <button onclick="cariTiket()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl transition flex items-center gap-2">
+            <i data-lucide="search" class="w-4 h-4"></i> Cari
+          </button>
+        </div>
+
+        <!-- RESULT BOX -->
+        <div id="hasilTiket" class="hidden p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">ID Tiket: <span id="resId" class="text-slate-800"></span></span>
+            <span id="resStatus" class="px-3 py-1 rounded-full text-xs font-bold"></span>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-400 mb-1">PESAN ANDA:</p>
+            <p id="resPesan" class="text-sm text-slate-700 italic"></p>
+          </div>
+          <div class="pt-2 border-t">
+            <p class="text-xs font-bold text-indigo-600 mb-1">TANGGAPAN GURU BK:</p>
+            <p id="resBalasan" class="text-sm font-semibold text-slate-900"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
+    <p>© 2026 E-BK Online Support - Tim Bimbingan & Konseling Sekolah.</p>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    lucide.createIcons();
+
+    // GANTI SCRIPT URL INI DENGAN DEPLOYMENT URL GOOGLE APPS SCRIPT ANDA
+    const SCRIPT_URL = "PASANG_WEB_APP_URL_GOOGLE_APPS_SCRIPT_DISINI";
+
+    function switchTab(tab) {
+      const form = document.getElementById('viewForm');
+      const tiket = document.getElementById('viewTiket');
+      const btnForm = document.getElementById('btnTabForm');
+      const btnTiket = document.getElementById('btnTabTiket');
+
+      if(tab === 'form') {
+        form.classList.remove('hidden');
+        tiket.classList.add('hidden');
+        btnForm.className = "flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-indigo-600 transition";
+        btnTiket.className = "flex-1 py-2.5 text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
+      } else {
+        form.classList.add('hidden');
+        tiket.classList.remove('hidden');
+        btnTiket.className = "flex-1 py-2.5 text-sm font-bold rounded-xl bg-white shadow-sm text-indigo-600 transition";
+        btnForm.className = "flex-1 py-2.5 text-sm font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
+      }
+    }
+
+    // Submit Form Konseling
+    document.getElementById('bkForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.innerHTML = `Memproses...`;
+
+      const payload = {
+        action: 'submit',
+        nisn: document.getElementById('nisn').value,
+        nama: document.getElementById('nama').value || 'Anonim',
+        kelas: document.getElementById('kelas').value,
+        kategori: document.getElementById('kategori').value,
+        pesan: document.getElementById('pesan').value
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling`;
+        lucide.createIcons();
+
+        if(data.result === 'success') {
+          alert(`Berhasil Terkirim!\n\nSIMPAN KODE TIKET ANDA: ${data.id_tiket}\nGunakan kode ini untuk mengecek balasan Guru BK di tab 'Cek Balasan Tiket'.`);
+          document.getElementById('bkForm').reset();
+        } else {
+          alert('Gagal mengirim: ' + data.message);
+        }
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling`;
+        alert('Terjadi kesalahan koneksi.');
+      });
+    });
+
+    // Cari Tiket
+    function cariTiket() {
+      const idTiket = document.getElementById('inputTiket').value.trim();
+      if(!idTiket) return alert('Masukkan ID Tiket!');
+
+      fetch(`${SCRIPT_URL}?action=check&id=${encodeURIComponent(idTiket)}`)
+      .then(res => res.json())
+      .then(data => {
+        const box = document.getElementById('hasilTiket');
+        if(data.found) {
+          box.classList.remove('hidden');
+          document.getElementById('resId').innerText = data.data.ID_Tiket;
+          document.getElementById('resPesan').innerText = data.data.Pesan;
+          
+          const statusElem = document.getElementById('resStatus');
+          statusElem.innerText = data.data.Status;
+          
+          if(data.data.Status === 'Selesai') {
+            statusElem.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700";
+          } else {
+            statusElem.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700";
+          }
+
+          document.getElementById('resBalasan').innerText = data.data.Tanggapan_Guru || 'Belum ada balasan dari Guru BK. Harap cek berkala.';
+        } else {
+          alert('Kode Tiket tidak ditemukan!');
+          box.classList.add('hidden');
+        }
+      });
+    }
+  </script><!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Monitoring & Laporan Rencana PKL</title>
-  <!-- Tailwind CSS CDN -->
+  <title>E-BK Support | Layanan Bimbingan Konseling Digital</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- SheetJS CDN (Untuk Export Excel) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    @media print {
-      body { background: white; color: black; }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-      .card-shadow { box-shadow: none !important; border: 1px solid #ccc; }
-    }
-  </style>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
 </head>
-<body class="bg-slate-50 font-sans min-h-screen text-slate-800 pb-12">
+<body class="bg-slate-50 text-slate-800">
 
-  <!-- Header / Navbar -->
-  <header class="bg-indigo-700 text-white shadow-md no-print">
-    <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div>
-        <h1 class="text-2xl font-bold tracking-tight">Sistem Kuota & Laporan PKL</h1>
-        <p class="text-indigo-200 text-sm">Monitoring Ketersediaan & Over-Kuota Tempat PKL</p>
+  <!-- NAVBAR -->
+  <nav class="bg-white/90 backdrop-blur-md border-b border-slate-200 fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-indigo-600 text-white rounded-xl"><i data-lucide="heart-handshake"></i></div>
+        <span class="font-bold text-xl text-indigo-950">E-BK Support</span>
       </div>
-      <div class="flex gap-2">
-        <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
-          <span>📊 Export Excel</span>
-        </button>
-        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
-          <span>🖨️ Cetak PDF / Print</span>
-        </button>
+      <div class="hidden md:flex gap-8 font-semibold text-sm text-slate-600">
+        <a href="index.html" class="text-indigo-600">Beranda</a>
+        <a href="siswa-form.html" class="hover:text-indigo-600">Konseling Online</a>
+        <a href="siswa-status.html" class="hover:text-indigo-600">Cek Status Tiket</a>
+        <a href="karir.html" class="hover:text-indigo-600">Info Karir & Studi</a>
       </div>
+      <a href="admin-login.html" class="text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1.5">
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i> Portal Guru BK
+      </a>
     </div>
-  </header>
+  </nav>
 
-  <!-- Kop Surat Khusus Mode Print/PDF -->
-  <div class="hidden print-only p-8 border-b-2 border-black mb-6 text-center">
-    <h2 class="text-2xl font-bold uppercase tracking-wide">Laporan Rencana Plotting PKL Siswa</h2>
-    <p class="text-sm text-gray-600">Dicetak Otomatis dari Sistem Monitoring Kuota PKL</p>
-  </div>
+  <!-- HERO SECTION -->
+  <section class="pt-32 pb-20 px-6 max-w-7xl mx-auto text-center">
+    <span class="px-3.5 py-1.5 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full inline-block mb-4">
+      Riset Berbasis Standar PBIS & Counseling 4.0
+    </span>
+    <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight">
+      Ruang Aman Konseling & <br><span class="text-indigo-600">Pengembangan Potensi Siswa</span>
+    </h1>
+    <p class="mt-4 text-slate-600 max-w-2xl mx-auto text-base md:text-lg">
+      Layanan BK Digital Terpadu. Menangani konsultasi akademik, pribadi, sosial, serta perencanaan karir masa depan secara rapi dan akuntabel.
+    </p>
 
-  <main class="max-w-7xl mx-auto px-4 mt-8">
-    
-    <!-- Banner Warning Over Capacity -->
-    <div id="alert-over-kuota" class="hidden mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-sm no-print">
-      <div class="flex items-start">
-        <span class="text-2xl mr-3">⚠️</span>
-        <div>
-          <h3 class="text-red-800 font-bold">Peringatan Over-Kuota Terdeteksi!</h3>
-          <p id="alert-text" class="text-red-700 text-sm mt-1"></p>
+    <div class="mt-8 flex justify-center gap-4 flex-wrap">
+      <a href="siswa-form.html" class="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 flex items-center gap-2">
+        <i data-lucide="message-square"></i> Buat Janji / Konseling
+      </a>
+      <a href="siswa-status.html" class="px-6 py-3.5 bg-white border border-slate-200 hover:bg-slate-100 font-bold rounded-xl flex items-center gap-2">
+        <i data-lucide="search"></i> Lacak Status Tiket
+      </a>
+    </div>
+  </section>
+
+  <!-- 4 PILAR LAYANAN BK -->
+  <section class="py-16 bg-white border-y border-slate-200 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-center font-bold text-2xl text-slate-900 mb-12">4 Layanan Utama BK Sekolah</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="p-6 rounded-2xl border border-slate-100 bg-slate-50">
+          <i data-lucide="shield-alert" class="w-8 h-8 text-indigo-600 mb-4"></i>
+          <h3 class="font-bold text-slate-900 mb-2">Pencegahan Bullying</h3>
+          <p class="text-xs text-slate-600">Fasilitas pelaporan cepat dan anonim untuk menangani kasus perundungan secara rahasia.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-slate-100 bg-slate-50">
+          <i data-lucide="brain-circuit" class="w-8 h-8 text-emerald-600 mb-4"></i>
+          <h3 class="font-bold text-slate-900 mb-2">Konseling Pribadi</h3>
+          <p class="text-xs text-slate-600">Pendampingan kesehatan mental, motivasi belajar, dan pemecahan masalah emosional.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-slate-100 bg-slate-50">
+          <i data-lucide="compass" class="w-8 h-8 text-amber-600 mb-4"></i>
+          <h3 class="font-bold text-slate-900 mb-2">Bimbingan Karir</h3>
+          <p class="text-xs text-slate-600">Eksplorasi minat bakat, persiapan perguruan tinggi, serta kesiapan dunia kerja (DUDI).</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-slate-100 bg-slate-50">
+          <i data-lucide="file-bar-chart" class="w-8 h-8 text-purple-600 mb-4"></i>
+          <h3 class="font-bold text-slate-900 mb-2">Rekam Pendampingan</h3>
+          <p class="text-xs text-slate-600">Pencatatan perkembangan dan pemetaan asesmen kebutuhan siswa secara terstruktur.</p>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- AREA INPUT DATA (FORM) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 no-print">
-      
-      <!-- Form 1: Tambah Tempat DUDI Baru -->
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-        <h2 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-          <span>🏢</span> Tambah Tempat DUDI Baru
-        </h2>
-        <form id="form-dudi" onsubmit="tambahDudi(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Perusahaan / DUDI</label>
-            <input type="text" id="input-nama-dudi" placeholder="Contoh: PT. Maju Bersama" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Kuota Maksimal Siswa</label>
-            <input type="number" id="input-kuota-dudi" min="1" placeholder="Contoh: 4" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg text-sm transition shadow-sm">
-            + Simpan DUDI Baru
-          </button>
-        </form>
-      </div>
-
-      <!-- Form 2: Plotting / Input Siswa ke DUDI -->
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-        <h2 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
-          <span>👨‍🎓</span> Plotting Siswa ke DUDI
-        </h2>
-        <form id="form-siswa" onsubmit="tambahSiswa(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih DUDI Tujuan</label>
-            <select id="select-dudi" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="">-- Pilih DUDI --</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Siswa</label>
-            <input type="text" id="input-nama-siswa" placeholder="Contoh: Ahmad Rizky" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg text-sm transition shadow-sm">
-            + Plotting Siswa
-          </button>
-        </form>
-      </div>
-
-    </div>
-
-    <!-- Ringkasan Statistik -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 no-print">
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-        <div>
-          <p class="text-sm font-medium text-slate-500">Total DUDI</p>
-          <p id="stat-total-dudi" class="text-3xl font-extrabold text-slate-800 mt-1">0</p>
-        </div>
-        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center text-xl font-bold">🏢</div>
-      </div>
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-        <div>
-          <p class="text-sm font-medium text-slate-500">Total Siswa Terdaftar</p>
-          <p id="stat-total-siswa" class="text-3xl font-extrabold text-indigo-600 mt-1">0</p>
-        </div>
-        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xl font-bold">👨‍🎓</div>
-      </div>
-      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-        <div>
-          <p class="text-sm font-medium text-slate-500">DUDI Over-Kuota</p>
-          <p id="stat-over-kuota" class="text-3xl font-extrabold text-red-600 mt-1">0</p>
-        </div>
-        <div class="w-12 h-12 bg-red-50 text-red-600 rounded-lg flex items-center justify-center text-xl font-bold">🚨</div>
-      </div>
-    </div>
-
-    <!-- Tabel Monitoring DUDI -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-12">
-      <div class="p-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
-        <h2 class="font-bold text-slate-800 text-lg">Daftar Tempat PKL & Status Kuota</h2>
-        <span class="text-xs font-semibold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full no-print">Realtime Update</span>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse" id="table-laporan">
-          <thead>
-            <tr class="bg-slate-100 text-slate-600 uppercase text-xs font-bold border-b border-slate-200">
-              <th class="py-3 px-4">No</th>
-              <th class="py-3 px-4">Nama DUDI / Perusahaan</th>
-              <th class="py-3 px-4 text-center">Kuota Maks.</th>
-              <th class="py-3 px-4 text-center">Siswa Terdaftar</th>
-              <th class="py-3 px-4 text-center">Sisa Kuota</th>
-              <th class="py-3 px-4 text-center">Status</th>
-              <th class="py-3 px-4">Daftar Siswa</th>
-              <th class="py-3 px-4 text-center no-print">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="data-dudi-body" class="divide-y divide-slate-200 text-sm">
-            <!-- Data dimasukkan secara dinamis melalui JavaScript -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </main>
-
-  <script>
-    // 1. Data Utama (Sistem Penyimpanan Sementara)
-    let dudiData = [
-      { id: 1, nama: "PT. Tech Nusantara", kuota: 5, siswa: ["Ahmad R", "Budi S", "Citra D"] },
-      { id: 2, nama: "CV. Digital Creative", kuota: 4, siswa: ["Dina M", "Eko P", "Fani A", "Gita R"] },
-      { id: 3, nama: "Bengkel Auto Jaya", kuota: 2, siswa: ["Hadi T", "Irfan K", "Joko W", "Kiki L"] } // OVER KUOTA (4/2)
-    ];
-
-    // 2. Fungsi Tambah DUDI Baru
-    function tambahDudi(event) {
-      event.preventDefault();
-      const nama = document.getElementById('input-nama-dudi').value;
-      const kuota = parseInt(document.getElementById('input-kuota-dudi').value);
-
-      const dudiBaru = {
-        id: Date.now(),
-        nama: nama,
-        kuota: kuota,
-        siswa: []
-      };
-
-      dudiData.push(dudiBaru);
-      document.getElementById('form-dudi').reset();
-      renderAll();
-    }
-
-    // 3. Fungsi Tambah Siswa ke DUDI
-    function tambahSiswa(event) {
-      event.preventDefault();
-      const dudiId = parseInt(document.getElementById('select-dudi').value);
-      const namaSiswa = document.getElementById('input-nama-siswa').value;
-
-      const targetDudi = dudiData.find(item => item.id === dudiId);
-      if (targetDudi) {
-        targetDudi.siswa.push(namaSiswa);
-        document.getElementById('form-siswa').reset();
-        renderAll();
-      }
-    }
-
-    // 4. Fungsi Hapus DUDI
-    function hapusDudi(id) {
-      if (confirm("Apakah Anda yakin ingin menghapus data DUDI ini?")) {
-        dudiData = dudiData.filter(item => item.id !== id);
-        renderAll();
-      }
-    }
-
-    // 5. Fungsi Update Dropdown DUDI pada Form Plotting Siswa
-    function updateDropdownDudi() {
-      const select = document.getElementById('select-dudi');
-      select.innerHTML = '<option value="">-- Pilih DUDI --</option>';
-
-      dudiData.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.id;
-        option.textContent = `${item.nama} (Sisa: ${item.kuota - item.siswa.length})`;
-        select.appendChild(option);
-      });
-    }
-
-    // 6. Fungsi Render Data ke Tabel & Menghitung Logika Kuota
-    function renderTable() {
-      const tbody = document.getElementById('data-dudi-body');
-      tbody.innerHTML = '';
-
-      let totalSiswa = 0;
-      let overKuotaCount = 0;
-      let overKuotaNames = [];
-
-      dudiData.forEach((item, index) => {
-        const terdaftar = item.siswa.length;
-        const sisa = item.kuota - terdaftar;
-        totalSiswa += terdaftar;
-
-        let statusBadge = '';
-        let rowClass = '';
-
-        // Logika Cek Ketersediaan & Kelebihan Kuota
-        if (sisa < 0) {
-          const selisih = Math.abs(sisa);
-          statusBadge = `<span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-1 rounded-full border border-red-200">🔴 Over (+${selisih})</span>`;
-          rowClass = 'bg-red-50/50';
-          overKuotaCount++;
-          overKuotaNames.push(`<b>${item.nama}</b> (Kelebihan ${selisih} siswa)`);
-        } else if (sisa === 0) {
-          statusBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">🟡 Penuh</span>`;
-        } else {
-          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200">🟢 Tersedia (${sisa})</span>`;
-        }
-
-        const tr = document.createElement('tr');
-        tr.className = `hover:bg-slate-50 transition ${rowClass}`;
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-medium text-slate-500">${index + 1}</td>
-          <td class="py-3 px-4 font-bold text-slate-800">${item.nama}</td>
-          <td class="py-3 px-4 text-center font-semibold">${item.kuota}</td>
-          <td class="py-3 px-4 text-center font-semibold text-indigo-600">${terdaftar}</td>
-          <td class="py-3 px-4 text-center font-bold ${sisa < 0 ? 'text-red-600' : 'text-emerald-600'}">${sisa}</td>
-          <td class="py-3 px-4 text-center">${statusBadge}</td>
-          <td class="py-3 px-4 text-xs text-slate-600">${item.siswa.length > 0 ? item.siswa.join(', ') : '<i>Belum ada siswa</i>'}</td>
-          <td class="py-3 px-4 text-center no-print">
-            <button onclick="hapusDudi(${item.id})" class="text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded border border-red-200 transition">
-              🗑️ Hapus
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // Update Ringkasan Stat
-      document.getElementById('stat-total-dudi').innerText = dudiData.length;
-      document.getElementById('stat-total-siswa').innerText = totalSiswa;
-      document.getElementById('stat-over-kuota').innerText = overKuotaCount;
-
-      // Update Alert Box Over-Kuota
-      const alertBox = document.getElementById('alert-over-kuota');
-      const alertText = document.getElementById('alert-text');
-      if (overKuotaCount > 0) {
-        alertBox.classList.remove('hidden');
-        alertText.innerHTML = `Terdapat ${overKuotaCount} DUDI yang melebihi kapasitas kuota: <br>` + overKuotaNames.join(', ');
-      } else {
-        alertBox.classList.add('hidden');
-      }
-    }
-
-    // 7. Render Seluruh Tampilan
-    function renderAll() {
-      renderTable();
-      updateDropdownDudi();
-    }
-
-    // 8. Fungsi Export ke File Excel (.xlsx)
-    function exportToExcel() {
-      const excelData = dudiData.map((item, index) => {
-        const terdaftar = item.siswa.length;
-        const sisa = item.kuota - terdaftar;
-        let status = "Tersedia";
-        if (sisa === 0) status = "Penuh";
-        if (sisa < 0) status = `Over Kuota (+${Math.abs(sisa)})`;
-
-        return {
-          "No": index + 1,
-          "Nama DUDI": item.nama,
-          "Kuota Maksimal": item.kuota,
-          "Siswa Terdaftar": terdaftar,
-          "Sisa Kuota": sisa,
-          "Status Kuota": status,
-          "Daftar Siswa": item.siswa.join(', ')
-        };
-      });
-
-      const worksheet = XLSX.utils.json_to_sheet(excelData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Laporan PKL");
-      XLSX.writeFile(workbook, `Laporan_Rencana_PKL_${new Date().toISOString().slice(0,10)}.xlsx`);
-    }
-
-    // Jalankan pertama kali saat halaman dibuka
-    document.addEventListener('DOMContentLoaded', renderAll);
-  </script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
 </body>
 </html>
