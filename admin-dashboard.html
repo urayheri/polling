@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Admin BK | Dashboard Lengkap</title>
+  <title>Portal Admin BK | Dashboard Pelayanan & Data</title>
+  <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     @media print {
@@ -16,24 +17,24 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 p-4 md:p-6">
+<body class="bg-slate-50 text-slate-800 p-4 md:p-6 antialiased selection:bg-rose-500 selection:text-white">
 
   <!-- TOP NAVBAR -->
-  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 gap-4 no-print">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-3xl border border-rose-100 shadow-sm mb-6 gap-4 no-print">
     <div class="flex items-center gap-3">
-      <div class="p-2.5 bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-100">
-        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+      <div class="p-3 bg-gradient-to-tr from-rose-500 to-pink-600 text-white rounded-2xl shadow-md shadow-rose-200">
+        <i data-lucide="heart-handshake" class="w-6 h-6"></i>
       </div>
       <div>
-        <h1 class="font-bold text-lg text-slate-900 leading-tight">Portal Admin & Bimbingan Konseling</h1>
-        <p class="text-xs text-slate-500">Sistem Pengelolaan Laporan, Data Siswa & Rekapitulasi BK</p>
+        <h1 class="font-bold text-lg text-slate-900 leading-tight">Ruang Admin Bimbingan Konseling</h1>
+        <p class="text-xs text-slate-500">Sistem Pengelolaan Layanan, Data Siswa & Rekapitulasi Evaluasi BK</p>
       </div>
     </div>
     <div class="flex items-center gap-3 text-xs font-bold">
-      <button onclick="window.print()" class="px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl border border-indigo-200 transition flex items-center gap-2">
+      <button onclick="window.print()" class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-2xl border border-rose-200/60 transition flex items-center gap-2">
         <i data-lucide="printer" class="w-4 h-4"></i> Cetak Laporan BK
       </button>
-      <button onclick="logout()" class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl border border-rose-200 transition flex items-center gap-2">
+      <button onclick="logout()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-2xl transition flex items-center gap-2">
         <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
       </button>
     </div>
@@ -41,42 +42,42 @@
 
   <!-- STATISTIK RINGKAS (ANALYTICS) -->
   <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 no-print">
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="bg-white p-5 rounded-3xl border border-rose-100 shadow-sm">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-bold text-slate-400">TOTAL TIKET</span>
-        <i data-lucide="message-square" class="w-5 h-5 text-indigo-500"></i>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Konseling</span>
+        <div class="p-2 bg-rose-50 text-rose-500 rounded-xl"><i data-lucide="message-circle-heart" class="w-5 h-5"></i></div>
       </div>
-      <h3 id="statTotal" class="text-2xl font-extrabold text-slate-900 mt-2">0</h3>
+      <h3 id="statTotal" class="text-3xl font-extrabold text-slate-900 mt-2">0</h3>
     </div>
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="bg-white p-5 rounded-3xl border border-rose-100 shadow-sm">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-bold text-amber-500">PENDING / PERLU AKSI</span>
-        <i data-lucide="clock" class="w-5 h-5 text-amber-500"></i>
+        <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Perlu Respon</span>
+        <div class="p-2 bg-amber-50 text-amber-500 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
       </div>
-      <h3 id="statPending" class="text-2xl font-extrabold text-amber-600 mt-2">0</h3>
+      <h3 id="statPending" class="text-3xl font-extrabold text-amber-600 mt-2">0</h3>
     </div>
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="bg-white p-5 rounded-3xl border border-rose-100 shadow-sm">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-bold text-emerald-500">SELESAI DITANGANI</span>
-        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+        <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Selesai Ditangani</span>
+        <div class="p-2 bg-emerald-50 text-emerald-500 rounded-xl"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
       </div>
-      <h3 id="statSelesai" class="text-2xl font-extrabold text-emerald-600 mt-2">0</h3>
+      <h3 id="statSelesai" class="text-3xl font-extrabold text-emerald-600 mt-2">0</h3>
     </div>
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="bg-white p-5 rounded-3xl border border-rose-100 shadow-sm">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-bold text-indigo-500">TOTAL SISWA MASTER</span>
-        <i data-lucide="users" class="w-5 h-5 text-indigo-500"></i>
+        <span class="text-xs font-bold text-violet-500 uppercase tracking-wider">Siswa Terdaftar</span>
+        <div class="p-2 bg-violet-50 text-violet-500 rounded-xl"><i data-lucide="users" class="w-5 h-5"></i></div>
       </div>
-      <h3 id="statSiswa" class="text-2xl font-extrabold text-indigo-600 mt-2">0</h3>
+      <h3 id="statSiswa" class="text-3xl font-extrabold text-violet-600 mt-2">0</h3>
     </div>
   </div>
 
   <!-- MAIN NAVIGATION TABS -->
   <div class="max-w-7xl mx-auto mb-6 no-print">
-    <div class="flex bg-slate-200/80 p-1.5 rounded-2xl max-w-lg">
-      <button id="tabBtnKonseling" onclick="switchMainTab('konseling')" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition">Konseling & Aduan</button>
+    <div class="flex bg-slate-200/70 p-1.5 rounded-2xl max-w-md">
+      <button id="tabBtnKonseling" onclick="switchMainTab('konseling')" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition">Konseling & Aduan</button>
       <button id="tabBtnSiswa" onclick="switchMainTab('siswa')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Master Data Siswa</button>
-      <button id="tabBtnLaporan" onclick="switchMainTab('laporan')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Rekap Laporan BK</button>
+      <button id="tabBtnLaporan" onclick="switchMainTab('laporan')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Rekap Laporan</button>
     </div>
   </div>
 
@@ -84,12 +85,19 @@
   <div class="max-w-7xl mx-auto space-y-6">
 
     <!-- VIEW 1: MANAJEMEN TIKET KONSELING -->
-    <div id="viewKonseling" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-      <!-- FILTER & SEARCH -->
+    <div id="viewKonseling" class="bg-white rounded-3xl border border-rose-100 p-6 shadow-sm">
+      <!-- FILTER & ACTIONS -->
       <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 no-print">
-        <h3 class="font-bold text-slate-800 text-lg">Daftar Laporan Konseling Siswa</h3>
+        <div class="flex items-center gap-3 w-full md:w-auto">
+          <h3 class="font-bold text-slate-800 text-base">Daftar Pengaduan Siswa</h3>
+          <!-- Tombol Hapus Massal Konseling -->
+          <button id="btnHapusMassalKonseling" onclick="hapusKonselingTerpilih()" class="hidden px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Terpilih (<span id="countSelectedKonseling">0</span>)
+          </button>
+        </div>
+
         <div class="flex flex-wrap gap-2 w-full md:w-auto">
-          <input type="text" id="searchTiket" onkeyup="filterTiket()" placeholder="Cari NISN, Nama, atau Pesan..." class="px-3.5 py-2 border rounded-xl text-xs flex-1 md:w-64 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="searchTiket" onkeyup="filterTiket()" placeholder="Cari NISN, Nama, atau Pesan..." class="px-3.5 py-2 border rounded-xl text-xs flex-1 md:w-64 focus:ring-2 focus:ring-rose-500 focus:outline-none">
           <select id="filterStatus" onchange="filterTiket()" class="px-3 py-2 border rounded-xl text-xs bg-white">
             <option value="">Semua Status</option>
             <option value="Pending">Pending</option>
@@ -108,15 +116,17 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="border-b bg-slate-50 text-slate-500 uppercase font-bold">
+            <tr class="border-b bg-rose-50/50 text-slate-600 uppercase font-bold">
+              <th class="p-3 w-8 text-center no-print">
+                <input type="checkbox" id="selectAllKonseling" onchange="toggleSelectAllKonseling(this)" class="rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+              </th>
               <th class="p-3">ID Tiket</th>
               <th class="p-3">Siswa (NISN)</th>
               <th class="p-3">Kelas</th>
               <th class="p-3">Kategori</th>
-              <th class="p-3">Urgensi</th>
               <th class="p-3">Keluhan</th>
               <th class="p-3">Status</th>
-              <th class="p-3 no-print">Aksi Respon</th>
+              <th class="p-3 no-print">Aksi</th>
             </tr>
           </thead>
           <tbody id="tabelKonseling" class="divide-y">
@@ -126,67 +136,76 @@
       </div>
     </div>
 
-    <!-- VIEW 2: MASTER DATA SISWA (EDIT & UPLOAD) -->
+    <!-- VIEW 2: MASTER DATA SISWA -->
     <div id="viewSiswa" class="hidden space-y-6">
-      <!-- FORM UPLOAD & TAMBAH -->
       <div class="grid md:grid-cols-3 gap-6 no-print">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm md:col-span-2">
+        <div class="bg-white p-6 rounded-3xl border border-rose-100 shadow-sm md:col-span-2">
           <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-slate-800 text-sm">Upload Batch Data Siswa (CSV)</h3>
-            <a href="#" onclick="downloadTemplateCsv()" class="text-xs font-bold text-indigo-600 hover:underline">Download Template CSV</a>
+            <a href="#" onclick="downloadTemplateCsv()" class="text-xs font-bold text-rose-600 hover:underline">Download Template CSV</a>
           </div>
-          <p class="text-xs text-slate-500 mb-4">File CSV harus memiliki header: <code>NISN, Nama, Kelas, Email</code></p>
+          <p class="text-xs text-slate-500 mb-4">Header CSV: <code>NISN, Nama, Kelas, Email</code></p>
           <div class="flex gap-3">
-            <input type="file" id="csvFile" accept=".csv" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-            <button onclick="uploadCsvSiswa()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition">Upload</button>
+            <input type="file" id="csvFile" accept=".csv" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+            <button onclick="uploadCsvSiswa()" class="px-5 py-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-xs rounded-xl shadow-md transition">Upload</button>
           </div>
         </div>
 
-        <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-md flex flex-col justify-between">
+        <div class="bg-gradient-to-br from-rose-500 via-pink-500 to-violet-600 text-white p-6 rounded-3xl shadow-md flex flex-col justify-between">
           <div>
             <h4 class="font-bold mb-1">Tambah Siswa Manual</h4>
-            <p class="text-xs text-indigo-100">Tambah 1 data siswa baru secara langsung tanpa lewat file CSV.</p>
+            <p class="text-xs text-rose-100">Tambah 1 data siswa master secara langsung.</p>
           </div>
-          <button onclick="openModalSiswa('tambah')" class="mt-4 px-4 py-2.5 bg-white text-indigo-600 font-bold text-xs rounded-xl shadow hover:bg-indigo-50 transition">
+          <button onclick="openModalSiswa('tambah')" class="mt-4 px-4 py-2.5 bg-white text-rose-600 font-bold text-xs rounded-xl shadow hover:bg-rose-50 transition">
             + Tambah Siswa Baru
           </button>
         </div>
       </div>
 
       <!-- TABEL MASTER SISWA -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <div class="flex justify-between items-center mb-4 no-print">
-          <h3 class="font-bold text-slate-800 text-base">Database Master Siswa</h3>
-          <input type="text" id="searchSiswa" onkeyup="filterSiswa()" placeholder="Cari NISN / Nama Siswa..." class="px-3.5 py-2 border rounded-xl text-xs w-64 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+      <div class="bg-white rounded-3xl border border-rose-100 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 no-print">
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <h3 class="font-bold text-slate-800 text-base">Database Master Siswa</h3>
+            <!-- Tombol Hapus Massal Siswa -->
+            <button id="btnHapusMassalSiswa" onclick="hapusSiswaTerpilih()" class="hidden px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Terpilih (<span id="countSelectedSiswa">0</span>)
+            </button>
+          </div>
+          <input type="text" id="searchSiswa" onkeyup="filterSiswa()" placeholder="Cari NISN / Nama Siswa..." class="px-3.5 py-2 border rounded-xl text-xs w-full md:w-64 focus:ring-2 focus:ring-rose-500 focus:outline-none">
         </div>
+
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-xs">
             <thead>
-              <tr class="border-b bg-slate-50 text-slate-500 uppercase font-bold">
+              <tr class="border-b bg-rose-50/50 text-slate-600 uppercase font-bold">
+                <th class="p-3 w-8 text-center no-print">
+                  <input type="checkbox" id="selectAllSiswa" onchange="toggleSelectAllSiswa(this)" class="rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+                </th>
                 <th class="p-3">NISN</th>
                 <th class="p-3">Nama Lengkap</th>
                 <th class="p-3">Kelas</th>
                 <th class="p-3">Email</th>
-                <th class="p-3 no-print">Aksi Edit</th>
+                <th class="p-3 no-print">Aksi</th>
               </tr>
             </thead>
             <tbody id="tabelSiswa" class="divide-y">
-              <tr><td colspan="5" class="p-4 text-center text-slate-400">Memuat data siswa...</td></tr>
+              <tr><td colspan="6" class="p-4 text-center text-slate-400">Memuat data siswa...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 3: REKAP & LAPORAN BK SIAP CETAK -->
-    <div id="viewLaporan" class="hidden bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm">
+    <!-- VIEW 3: REKAP LAPORAN BK SIAP CETAK -->
+    <div id="viewLaporan" class="hidden bg-white rounded-3xl border border-rose-100 p-6 md:p-8 shadow-sm">
       <div class="border-b pb-4 mb-6 text-center">
         <h2 class="text-xl font-bold text-slate-900 uppercase tracking-wide">Laporan Evaluasi Pelayanan Bimbingan Konseling</h2>
-        <p class="text-xs text-slate-500 mt-1">Laporan Rekapitulasi Kasus dan Layanan BK Sekolah</p>
+        <p class="text-xs text-slate-500 mt-1">Laporan Rekapitulasi Pelayanan Kasus dan Pendampingan Siswa</p>
       </div>
 
       <div class="space-y-6">
-        <div class="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="grid grid-cols-2 gap-4 text-xs bg-rose-50/40 p-4 rounded-2xl border border-rose-100">
           <div>
             <p><span class="font-bold">Total Aduan Masuk:</span> <span id="repTotal">0</span> Kasus</p>
             <p><span class="font-bold">Kasus Selesai Ditangani:</span> <span id="repSelesai">0</span> Kasus</p>
@@ -211,9 +230,7 @@
                 <th class="p-2 border">Tanggapan / Tindakan Guru BK</th>
               </tr>
             </thead>
-            <tbody id="tabelLaporanCetak">
-              <!-- Data cetak -->
-            </tbody>
+            <tbody id="tabelLaporanCetak"></tbody>
           </table>
         </div>
 
@@ -236,7 +253,7 @@
 
   <!-- MODAL EDIT / TAMBAH SISWA -->
   <div id="modalSiswa" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white p-6 rounded-3xl max-w-md w-full shadow-2xl border border-slate-100">
+    <div class="bg-white p-6 rounded-3xl max-w-md w-full shadow-2xl border border-rose-100">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
         <h3 id="modalSiswaTitle" class="font-bold text-slate-900 text-base">Edit Data Siswa</h3>
         <button onclick="closeModalSiswa()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
@@ -245,24 +262,24 @@
       <form id="formSiswaModal" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">NISN</label>
-          <input type="text" id="mNisn" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="mNisn" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap</label>
-          <input type="text" id="mNama" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="mNama" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Kelas</label>
-          <input type="text" id="mKelas" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="mKelas" required class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Email (Opsional)</label>
-          <input type="email" id="mEmail" class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="email" id="mEmail" class="w-full px-3 py-2 border rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
         </div>
         
         <div class="flex gap-2 pt-2">
           <button type="button" onclick="closeModalSiswa()" class="flex-1 py-2.5 text-xs font-bold text-slate-600 bg-slate-100 rounded-xl">Batal</button>
-          <button type="submit" class="flex-1 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl">Simpan Data</button>
+          <button type="submit" class="flex-1 py-2.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-xl">Simpan Data</button>
         </div>
       </form>
     </div>
@@ -277,8 +294,10 @@
 
     let rawKonselingData = [];
     let rawSiswaData = [];
+    let selectedKonselingIds = [];
+    let selectedSiswaNisns = [];
 
-    // SWITCH MAIN TABS
+    // SWITCH TABS
     function switchMainTab(tab) {
       document.getElementById('viewKonseling').classList.add('hidden');
       document.getElementById('viewSiswa').classList.add('hidden');
@@ -290,19 +309,19 @@
 
       if(tab === 'konseling') {
         document.getElementById('viewKonseling').classList.remove('hidden');
-        document.getElementById('tabBtnKonseling').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition";
+        document.getElementById('tabBtnKonseling').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
       } else if(tab === 'siswa') {
         document.getElementById('viewSiswa').classList.remove('hidden');
-        document.getElementById('tabBtnSiswa').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition";
+        document.getElementById('tabBtnSiswa').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
         loadMasterSiswa();
       } else if(tab === 'laporan') {
         document.getElementById('viewLaporan').classList.remove('hidden');
-        document.getElementById('tabBtnLaporan').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition";
+        document.getElementById('tabBtnLaporan').className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white text-rose-600 shadow-sm transition";
         generateLaporanCetak();
       }
     }
 
-    // LOAD ALL DATA KONSELING
+    // LOAD DATA KONSELING
     function loadData() {
       fetch(`${SCRIPT_URL}?action=getAll`)
       .then(res => res.json())
@@ -316,35 +335,181 @@
     function renderTabelKonseling(data) {
       const tbody = document.getElementById('tabelKonseling');
       tbody.innerHTML = '';
+      selectedKonselingIds = [];
+      updateBtnHapusKonseling();
+
       if(data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">Belum ada data konseling.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">Belum ada data pengaduan.</td></tr>`;
         return;
       }
       data.forEach(item => {
         tbody.innerHTML += `
-          <tr class="hover:bg-slate-50">
+          <tr class="hover:bg-rose-50/30">
+            <td class="p-3 text-center no-print">
+              <input type="checkbox" value="${item.ID_Tiket}" onchange="toggleSelectKonseling(this)" class="chkKonseling rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+            </td>
             <td class="p-3 font-bold text-slate-800">${item.ID_Tiket}</td>
             <td class="p-3">${item.Nama} <br/><span class="text-slate-400 font-mono">${item.NISN}</span></td>
             <td class="p-3">${item.Kelas}</td>
             <td class="p-3">${item.Kategori}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${item.Urgensi === 'Sangat Mendesak' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">${item.Urgensi || 'Biasa'}</span></td>
             <td class="p-3 max-w-xs truncate" title="${item.Pesan}">${item.Pesan}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${item.Status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.Status}</span></td>
-            <td class="p-3 no-print">
-              <button onclick="responTiket('${item.ID_Tiket}')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition">Tanggapi</button>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full font-bold ${item.Status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.Status}</span></td>
+            <td class="p-3 no-print flex gap-1">
+              <button onclick="responTiket('${item.ID_Tiket}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg font-bold transition">Tanggapi</button>
+              <button onclick="hapusSingleKonseling('${item.ID_Tiket}')" class="p-1 text-slate-400 hover:text-rose-600 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
             </td>
           </tr>
         `;
       });
+      lucide.createIcons();
     }
 
-    function updateStatistik() {
-      document.getElementById('statTotal').innerText = rawKonselingData.length;
-      document.getElementById('statPending').innerText = rawKonselingData.filter(d => d.Status === 'Pending').length;
-      document.getElementById('statSelesai').innerText = rawKonselingData.filter(d => d.Status === 'Selesai').length;
+    // CHECKBOX HANDLERS KONSELING
+    function toggleSelectAllKonseling(master) {
+      const chks = document.querySelectorAll('.chkKonseling');
+      selectedKonselingIds = [];
+      chks.forEach(c => {
+        c.checked = master.checked;
+        if(master.checked) selectedKonselingIds.push(c.value);
+      });
+      updateBtnHapusKonseling();
     }
 
-    // FILTER TIKET KONSELING
+    function toggleSelectKonseling(chk) {
+      if(chk.checked) {
+        selectedKonselingIds.push(chk.value);
+      } else {
+        selectedKonselingIds = selectedKonselingIds.filter(id => id !== chk.value);
+      }
+      updateBtnHapusKonseling();
+    }
+
+    function updateBtnHapusKonseling() {
+      const btn = document.getElementById('btnHapusMassalKonseling');
+      const count = document.getElementById('countSelectedKonseling');
+      count.innerText = selectedKonselingIds.length;
+      if(selectedKonselingIds.length > 0) btn.classList.remove('hidden');
+      else btn.classList.add('hidden');
+    }
+
+    function hapusSingleKonseling(id) {
+      if(confirm(`Yakin ingin menghapus tiket ${id}?`)) {
+        eksekusiHapusKonseling([id]);
+      }
+    }
+
+    function hapusKonselingTerpilih() {
+      if(confirm(`Yakin menghapus ${selectedKonselingIds.length} tiket terpilih?`)) {
+        eksekusiHapusKonseling(selectedKonselingIds);
+      }
+    }
+
+    function eksekusiHapusKonseling(ids) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'deleteKonseling', ids: ids })
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert("Data berhasil dihapus!");
+        loadData();
+      });
+    }
+
+    // MASTER SISWA HANDLERS
+    function loadMasterSiswa() {
+      fetch(`${SCRIPT_URL}?action=getMasterSiswa`)
+      .then(res => res.json())
+      .then(res => {
+        rawSiswaData = res.data || [];
+        document.getElementById('statSiswa').innerText = rawSiswaData.length;
+        renderTabelSiswa(rawSiswaData);
+      });
+    }
+
+    function renderTabelSiswa(data) {
+      const tbody = document.getElementById('tabelSiswa');
+      tbody.innerHTML = '';
+      selectedSiswaNisns = [];
+      updateBtnHapusSiswa();
+
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada data siswa.</td></tr>`;
+        return;
+      }
+      data.forEach(item => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-rose-50/30">
+            <td class="p-3 text-center no-print">
+              <input type="checkbox" value="${item.NISN}" onchange="toggleSelectSiswa(this)" class="chkSiswa rounded text-rose-600 focus:ring-rose-500 w-4 h-4">
+            </td>
+            <td class="p-3 font-bold font-mono">${item.NISN}</td>
+            <td class="p-3 font-semibold">${item.Nama}</td>
+            <td class="p-3">${item.Kelas}</td>
+            <td class="p-3 text-slate-500">${item.Email || '-'}</td>
+            <td class="p-3 no-print flex gap-1">
+              <button onclick="editSiswa('${item.NISN}', '${item.Nama}', '${item.Kelas}', '${item.Email || ''}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-lg font-bold">Edit</button>
+              <button onclick="hapusSingleSiswa('${item.NISN}')" class="p-1 text-slate-400 hover:text-rose-600 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      lucide.createIcons();
+    }
+
+    // CHECKBOX HANDLERS SISWA
+    function toggleSelectAllSiswa(master) {
+      const chks = document.querySelectorAll('.chkSiswa');
+      selectedSiswaNisns = [];
+      chks.forEach(c => {
+        c.checked = master.checked;
+        if(master.checked) selectedSiswaNisns.push(c.value);
+      });
+      updateBtnHapusSiswa();
+    }
+
+    function toggleSelectSiswa(chk) {
+      if(chk.checked) {
+        selectedSiswaNisns.push(chk.value);
+      } else {
+        selectedSiswaNisns = selectedSiswaNisns.filter(nisn => nisn !== chk.value);
+      }
+      updateBtnHapusSiswa();
+    }
+
+    function updateBtnHapusSiswa() {
+      const btn = document.getElementById('btnHapusMassalSiswa');
+      const count = document.getElementById('countSelectedSiswa');
+      count.innerText = selectedSiswaNisns.length;
+      if(selectedSiswaNisns.length > 0) btn.classList.remove('hidden');
+      else btn.classList.add('hidden');
+    }
+
+    function hapusSingleSiswa(nisn) {
+      if(confirm(`Yakin ingin menghapus siswa NISN ${nisn}?`)) {
+        eksekusiHapusSiswa([nisn]);
+      }
+    }
+
+    function hapusSiswaTerpilih() {
+      if(confirm(`Yakin menghapus ${selectedSiswaNisns.length} siswa terpilih?`)) {
+        eksekusiHapusSiswa(selectedSiswaNisns);
+      }
+    }
+
+    function eksekusiHapusSiswa(nisns) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'deleteSiswa', nisns: nisns })
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert("Data siswa berhasil dihapus!");
+        loadMasterSiswa();
+      });
+    }
+
+    // FILTER & UTILS
     function filterTiket() {
       const q = document.getElementById('searchTiket').value.toLowerCase();
       const status = document.getElementById('filterStatus').value;
@@ -359,9 +524,14 @@
       renderTabelKonseling(filtered);
     }
 
-    // TANGGAPI TIKET
+    function filterSiswa() {
+      const q = document.getElementById('searchSiswa').value.toLowerCase();
+      const filtered = rawSiswaData.filter(s => s.Nama.toLowerCase().includes(q) || s.NISN.toString().includes(q));
+      renderTabelSiswa(filtered);
+    }
+
     function responTiket(id) {
-      const tanggapan = prompt("Masukkan Tanggapan / Solusi / Jadwal Konsultasi untuk tiket: " + id);
+      const tanggapan = prompt("Masukkan Solusi / Tanggapan Guru BK untuk tiket: " + id);
       if(tanggapan) {
         fetch(SCRIPT_URL, {
           method: 'POST',
@@ -370,45 +540,6 @@
         .then(res => res.json())
         .then(data => { alert("Tanggapan berhasil disimpan!"); loadData(); });
       }
-    }
-
-    // MASTER DATA SISWA HANDLER
-    function loadMasterSiswa() {
-      fetch(`${SCRIPT_URL}?action=getMasterSiswa`)
-      .then(res => res.json())
-      .then(res => {
-        rawSiswaData = res.data || [];
-        document.getElementById('statSiswa').innerText = rawSiswaData.length;
-        renderTabelSiswa(rawSiswaData);
-      });
-    }
-
-    function renderTabelSiswa(data) {
-      const tbody = document.getElementById('tabelSiswa');
-      tbody.innerHTML = '';
-      if(data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Belum ada data siswa master.</td></tr>`;
-        return;
-      }
-      data.forEach(item => {
-        tbody.innerHTML += `
-          <tr class="hover:bg-slate-50">
-            <td class="p-3 font-bold font-mono">${item.NISN}</td>
-            <td class="p-3">${item.Nama}</td>
-            <td class="p-3">${item.Kelas}</td>
-            <td class="p-3 text-slate-500">${item.Email || '-'}</td>
-            <td class="p-3 no-print">
-              <button onclick="editSiswa('${item.NISN}', '${item.Nama}', '${item.Kelas}', '${item.Email || ''}')" class="px-2.5 py-1 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-lg font-bold mr-1">Edit</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function filterSiswa() {
-      const q = document.getElementById('searchSiswa').value.toLowerCase();
-      const filtered = rawSiswaData.filter(s => s.Nama.toLowerCase().includes(q) || s.NISN.toString().includes(q));
-      renderTabelSiswa(filtered);
     }
 
     // MODAL SISWA
@@ -447,53 +578,26 @@
 
     // UPLOAD CSV
     function uploadCsvSiswa() {
-  const input = document.getElementById('csvFile');
-  if (!input.files.length) return alert("Pilih file CSV dulu!");
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const text = e.target.result;
-    
-    // Pisahkan berdasarkan enter/baris baru
-    const lines = text.split(/\r\n|\n/);
-    
-    // Deteksi pemisah (koma atau titik koma)
-    const rows = lines.map(r => {
-      return r.includes(';') ? r.split(';') : r.split(',');
-    });
+      const input = document.getElementById('csvFile');
+      if (!input.files.length) return alert("Pilih file CSV dulu!");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split(/\r\n|\n/);
+        const rows = lines.map(r => r.includes(';') ? r.split(';') : r.split(','));
 
-    // Tampilkan indikator memproses
-    const btnUpload = document.querySelector("button[onclick='uploadCsvSiswa()']");
-    const originalText = btnUpload.innerText;
-    btnUpload.disabled = true;
-    btnUpload.innerText = "Mengunggah...";
-
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'uploadSiswa', dataSiswa: rows })
-    })
-    .then(res => res.json())
-    .then(res => {
-      btnUpload.disabled = false;
-      btnUpload.innerText = originalText;
-      
-      if(res.result === "success") {
-        alert("Data CSV Siswa berhasil di-upload!");
-        input.value = ""; // Reset input file
-        loadMasterSiswa(); // LOADS RE-FETCH DATA OTOMATIS KE TABEL
-      } else {
-        alert("Gagal menyimpan ke database: " + (res.message || "Unknown error"));
-      }
-    })
-    .catch(err => {
-      btnUpload.disabled = false;
-      btnUpload.innerText = originalText;
-      alert("Terjadi kesalahan jaringan/CORS saat upload.");
-    });
-  };
-  
-  reader.readAsText(input.files[0]);
-}
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'uploadSiswa', dataSiswa: rows })
+        })
+        .then(res => res.json())
+        .then(res => {
+          alert("Data CSV Siswa berhasil di-upload!");
+          input.value = "";
+          loadMasterSiswa();
+        });
+      };
+      reader.readAsText(input.files[0]);
+    }
 
     function downloadTemplateCsv() {
       const csvContent = "data:text/csv;charset=utf-8,NISN,Nama,Kelas,Email\n0051234567,Ahmad Rizky,X RPL 1,ahmad@sekolah.sch.id\n0051234568,Budi Santoso,X RPL 2,budi@sekolah.sch.id";
@@ -505,7 +609,6 @@
       link.click();
     }
 
-    // GENERATE REKAP LAPORAN
     function generateLaporanCetak() {
       const total = rawKonselingData.length;
       const selesai = rawKonselingData.filter(d => d.Status === 'Selesai').length;
@@ -539,7 +642,6 @@
       window.location.href = "admin-login.html";
     }
 
-    // INITIAL LOAD
     loadData();
   </script>
 </body>
