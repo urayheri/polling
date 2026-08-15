@@ -447,24 +447,53 @@
 
     // UPLOAD CSV
     function uploadCsvSiswa() {
-      const input = document.getElementById('csvFile');
-      if(!input.files.length) return alert("Pilih file CSV dulu!");
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const text = e.target.result;
-        const rows = text.split('\n').map(r => r.split(','));
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'uploadSiswa', dataSiswa: rows })
-        })
-        .then(res => res.json())
-        .then(res => {
-          alert("Data CSV Siswa berhasil di-upload!");
-          loadMasterSiswa();
-        });
-      };
-      reader.readAsText(input.files[0]);
-    }
+  const input = document.getElementById('csvFile');
+  if (!input.files.length) return alert("Pilih file CSV dulu!");
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    
+    // Pisahkan berdasarkan enter/baris baru
+    const lines = text.split(/\r\n|\n/);
+    
+    // Deteksi pemisah (koma atau titik koma)
+    const rows = lines.map(r => {
+      return r.includes(';') ? r.split(';') : r.split(',');
+    });
+
+    // Tampilkan indikator memproses
+    const btnUpload = document.querySelector("button[onclick='uploadCsvSiswa()']");
+    const originalText = btnUpload.innerText;
+    btnUpload.disabled = true;
+    btnUpload.innerText = "Mengunggah...";
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'uploadSiswa', dataSiswa: rows })
+    })
+    .then(res => res.json())
+    .then(res => {
+      btnUpload.disabled = false;
+      btnUpload.innerText = originalText;
+      
+      if(res.result === "success") {
+        alert("Data CSV Siswa berhasil di-upload!");
+        input.value = ""; // Reset input file
+        loadMasterSiswa(); // LOADS RE-FETCH DATA OTOMATIS KE TABEL
+      } else {
+        alert("Gagal menyimpan ke database: " + (res.message || "Unknown error"));
+      }
+    })
+    .catch(err => {
+      btnUpload.disabled = false;
+      btnUpload.innerText = originalText;
+      alert("Terjadi kesalahan jaringan/CORS saat upload.");
+    });
+  };
+  
+  reader.readAsText(input.files[0]);
+}
 
     function downloadTemplateCsv() {
       const csvContent = "data:text/csv;charset=utf-8,NISN,Nama,Kelas,Email\n0051234567,Ahmad Rizky,X RPL 1,ahmad@sekolah.sch.id\n0051234568,Budi Santoso,X RPL 2,budi@sekolah.sch.id";
