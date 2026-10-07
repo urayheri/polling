@@ -1,398 +1,238 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-BK Support | Layanan Bimbingan & Konseling Online</title>
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤝</text></svg>">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); }
-    .hero-gradient { background: radial-gradient(circle at 50% 0%, rgba(253, 242, 248, 1) 0%, rgba(245, 243, 255, 0.6) 50%, rgba(248, 250, 252, 1) 100%); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CBT Matematika - Langkah Penyelesaian & Jawaban</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; margin: auto; }
+        h2, h3 { text-align: center; color: #1a73e8; margin-top: 0; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; font-size: 18px; text-align: center; font-weight: bold; }
+        .input-group input:focus { border-color: #1a73e8; outline: none; }
+        #canvas { border: 2px dashed #1a73e8; background: #fafafa; border-radius: 8px; display: block; margin: 10px auto; touch-action: none; cursor: crosshair; }
+        .btn { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .btn-clear { background: #dc3545; }
+        .badge-pelanggaran { background: #fff3cd; color: #856404; padding: 8px; border-radius: 6px; font-size: 13px; text-align: center; margin-bottom: 10px; border: 1px solid #ffeeba; }
+        .soal-box { background: #e8f0fe; padding: 15px; border-radius: 8px; text-align: center; font-size: 28px; font-weight: bold; color: #1967d2; margin-bottom: 15px; }
+        .label-section { font-weight: bold; font-size: 14px; color: #555; margin-top: 10px; display: block; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-rose-500 selection:text-white">
+<body>
 
-  <!-- NAVBAR -->
-  <nav class="fixed top-0 w-full z-40 glass border-b border-rose-100/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16 items-center">
-        <!-- Logo -->
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
-          <div class="p-2.5 bg-gradient-to-tr from-rose-500 to-violet-600 text-white rounded-2xl shadow-md shadow-rose-200">
-            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
-          </div>
-          <span class="font-bold text-xl bg-gradient-to-r from-rose-600 via-pink-600 to-violet-600 bg-clip-text text-transparent">
-            E-BK Smkn 1 Semparuk
-          </span>
-        </div>
+<div class="card" id="identitas-page">
+    <h2>CBT MATEMATIKA</h2>
+    <div class="input-group">
+        <label>Nama Siswa</label>
+        <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" style="text-align: left;" required>
+    </div>
+    <div class="input-group">
+        <label>NIS / Nomor Absen</label>
+        <input type="number" id="nis" placeholder="Masukkan NIS" style="text-align: left;" required>
+    </div>
+    <button class="btn" onclick="mulaiUjian()">Mulai Ujian</button>
+</div>
+
+<div class="card" id="ujian-page" style="display: none;">
+    <div class="badge-pelanggaran" id="warn-box">
+        ⚠️ Jangan berpindah aplikasi/tab! Soal otomatis diganti jika terdeteksi curang.
+    </div>
+
+    <div style="display: flex; justify-content: space-between; font-weight: bold; color: #555;">
+        <span id="indikator-soal">Soal 1 dari 4</span>
+        <span id="tipe-soal">Penjumlahan</span>
+    </div>
+
+    <div class="soal-box" id="display-soal">745 + 841</div>
+
+    <!-- Area Coretan Cara Penyelesaian -->
+    <span class="label-section">✍️ Tulis Cara Penyelesaian (Jalan Hitung):</span>
+    <canvas id="canvas" width="340" height="260"></canvas>
+    <button class="btn btn-clear" style="padding: 8px; font-size: 14px;" onclick="clearCanvas()">Hapus Coretan</button>
+
+    <!-- Kolom Input Jawaban Akhir -->
+    <div class="input-group" style="margin-top: 15px;">
+        <label>🔢 Hasil / Jawaban Akhir:</label>
+        <input type="number" id="jawaban-akhir" placeholder="Ketik Hasil Akhir Di Sini" autocomplete="off">
+    </div>
+
+    <button class="btn" id="btn-next" onclick="jawabSoal()">Kirim & Lanjut</button>
+</div>
+
+<div class="card" id="selesai-page" style="display: none; text-align: center;">
+    <h2>Ujian Selesai!</h2>
+    <p>Terima kasih telah menyelesaikan tes.</p>
+    <h3 id="hasil-skor"></h3>
+    <p id="pelanggaran-info" style="color: #d93025;"></p>
+</div>
+
+<script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxmxihXo0dGDdByRKTFu8l2H3eGgfG_4NzW0IP-KxdZZiGNPq8RiZigy58oroFzayZZZg/exec";
+
+    let bankSoal = [];
+    let currentIdx = 0;
+    let jawabanSiswa = [];
+    let totalPelanggaran = 0;
+    let namaSiswa = "", nisSiswa = "";
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    function setupCanvas() {
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
         
-        <!-- Navigation Links -->
-        <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
-          <a href="#hero" onclick="scrollToSection('hero')" class="hover:text-rose-600 transition">Beranda</a>
-          <a href="#layanan" onclick="scrollToSection('layanan')" class="hover:text-rose-600 transition">Layanan BK</a>
-          <a href="#form-section" onclick="switchTab('form')" class="hover:text-rose-600 transition">Konseling Online</a>
-          <a href="#form-section" onclick="switchTab('tiket')" class="hover:text-rose-600 transition">Cek Tiket Saya</a>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <!-- Tombol Portal Admin BK -->
-          <a href="admin-login.html" class="text-xs font-bold px-3.5 py-2 bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 rounded-xl transition flex items-center gap-1.5 border border-slate-200 hover:border-rose-200">
-            <i data-lucide="shield-check" class="w-4 h-4 text-rose-500"></i> Portal Guru BK
-          </a>
-          
-          <button onclick="switchTab('form')" class="hidden sm:inline-block bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-md shadow-rose-200 transition">
-            Mulai Cerita
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO SECTION -->
-  <section id="hero" class="pt-32 pb-16 md:pt-40 md:pb-24 hero-gradient relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-rose-100/80 text-rose-700 border border-rose-200/50 mb-6 backdrop-blur-sm">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-rose-500"></i> Ruang Aman, Empati & 100% Rahasia
-      </span>
-      <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-        Tempat Aman Untuk <br class="hidden sm:inline"/>
-        <span class="bg-gradient-to-r from-rose-600 via-pink-600 to-violet-600 bg-clip-text text-transparent">
-          Bercerita, Didengar & Tumbuh
-        </span>
-      </h1>
-      <p class="mt-6 text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-        Layanan Bimbingan Konseling Digital Sekolah. Kami hadir mendampingi setiap langkah perkembangan akademik, masalah pribadi, sosial, hingga perencanaan karir Anda.
-      </p>
-      <div class="mt-8 flex justify-center gap-4 flex-wrap">
-        <button onclick="switchTab('form')" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg shadow-rose-200 transition flex items-center gap-2">
-          <i data-lucide="message-circle-heart" class="w-5 h-5"></i> Kirim Permohonan Konseling
-        </button>
-        <button onclick="switchTab('tiket')" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 font-bold px-6 py-3.5 rounded-2xl shadow-sm transition flex items-center gap-2">
-          <i data-lucide="search" class="w-4 h-4 text-slate-500"></i> Lacak Balasan Tiket
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- FITUR UTAMA / 3 PILAR BK -->
-  <section id="layanan" class="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-3xl font-bold text-slate-900">Layanan Pendampingan Siswa</h2>
-      <p class="text-xs md:text-sm text-slate-500 mt-2">Menjaga kesehatan mental & mendukung potensi belajar yang optimal</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6">
-          <i data-lucide="lock" class="w-6 h-6"></i>
-        </div>
-        <h3 class="text-lg font-bold text-slate-900 mb-2">Kerahasiaan Terjamin</h3>
-        <p class="text-slate-600 text-xs leading-relaxed">Seluruh isi konsultasi terjaga dengan prinsip etik konseling. Tersedia pula opsi pengiriman laporan anonim jika belum siap membuka identitas.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-          <i data-lucide="heart-pulse" class="w-6 h-6"></i>
-        </div>
-        <h3 class="text-lg font-bold text-slate-900 mb-2">Respon Cepat & Tanggap</h3>
-        <p class="text-slate-600 text-xs leading-relaxed">Pengaduan terhubung secara otomatis ke notifikasi Guru BK sekolah untuk memberikan tindakan dan respon secepat mungkin.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition">
-        <div class="w-12 h-12 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center mb-6">
-          <i data-lucide="compass" class="w-6 h-6"></i>
-        </div>
-        <h3 class="text-lg font-bold text-slate-900 mb-2">Bimbingan Karir & Studi</h3>
-        <p class="text-slate-600 text-xs leading-relaxed">Fasilitas pendampingan penelusuran minat bakat, konsultasi kelanjutan studi PTN/PTS, serta kesiapan dunia kerja (DUDI).</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- FORM KONSELING & CEK TIKET SECTION -->
-  <section id="form-section" class="py-16 bg-slate-100/60">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- BANNER SITUASI KRISIS / PANIC BUTTON -->
-      <div class="mb-8 p-4 bg-rose-50 border border-rose-200/80 rounded-2xl flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="p-2.5 bg-rose-600 text-white rounded-xl shadow-sm">
-            <i data-lucide="phone-call" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h4 class="font-bold text-rose-950 text-xs md:text-sm">Membutuhkan Bantuan Darurat / Situasi Krisis?</h4>
-            <p class="text-[11px] text-rose-700">Jika mengalami perundungan berat atau kondisi krisis emosional, segera hubungi tim BK atau hotline sekolah.</p>
-          </div>
-        </div>
-        <a href="tel:112" class="hidden sm:inline-block px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition whitespace-nowrap">
-          Call Center 112
-        </a>
-      </div>
-
-      <!-- TAB NAVIGATION -->
-      <div class="flex bg-slate-200/80 p-1.5 rounded-2xl mb-8 max-w-md mx-auto">
-        <button id="btnTabForm" onclick="switchTab('form')" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white shadow-sm text-rose-600 transition">Form Konseling</button>
-        <button id="btnTabTiket" onclick="switchTab('tiket')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition">Cek Balasan Tiket</button>
-      </div>
-
-      <!-- VIEW 1: FORM BK -->
-      <div id="viewForm" class="bg-white p-8 md:p-10 rounded-3xl border border-slate-200/80 shadow-xl">
-        <div class="mb-8 border-b border-slate-100 pb-4">
-          <h2 class="text-2xl font-bold text-slate-900">Formulir Pengaduan & Konseling</h2>
-          <p class="text-slate-500 text-xs mt-1">Isi formulir di bawah ini. Kami siap mendengarkan tanpa menghakimi.</p>
-        </div>
-
-        <form id="bkForm" class="space-y-6">
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">
-                NISN / Identitas Siswa
-                <span id="nisnLoading" class="hidden text-xs text-rose-600 font-normal ml-2">Mencari data...</span>
-              </label>
-              <input type="text" id="nisn" placeholder="Masukkan NISN atau 'Anonim'" required oninput="cekNisnOtomatis(this.value)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Nama Lengkap</label>
-              <input type="text" id="nama" placeholder="Terisi otomatis setelah NISN diisi" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs bg-slate-50" readonly>
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Kelas</label>
-              <input type="text" id="kelas" placeholder="Terisi otomatis" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs bg-slate-50" readonly>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Kategori Konseling</label>
-              <select id="kategori" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs bg-white">
-                <option value="Akademik / Problem Belajar">Akademik / Problem Belajar</option>
-                <option value="Pribadi / Emosional">Masalah Pribadi / Emosional</option>
-                <option value="Sosial / Perundungan (Bullying)">Sosial / Perundungan (Bullying)</option>
-                <option value="Karir / Studi Lanjut">Karir & Masa Depan</option>
-                <option value="Lainnya">Lain-lain</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-2">Ceritakan Masalah Anda</label>
-            <textarea id="pesan" rows="5" placeholder="Tuliskan keluhan atau hal yang ingin dikonsultasikan secara jelas..." required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs leading-relaxed"></textarea>
-          </div>
-
-          <button type="submit" id="btnSubmit" class="w-full bg-gradient-to-r from-rose-500 via-pink-500 to-violet-600 hover:from-rose-600 hover:to-violet-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition flex items-center justify-center gap-2 text-xs">
-            <i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling
-          </button>
-        </form>
-      </div>
-
-      <!-- VIEW 2: CEK STATUS TIKET -->
-      <div id="viewTiket" class="hidden bg-white p-8 md:p-10 rounded-3xl border border-slate-200/80 shadow-xl">
-        <div class="mb-8 border-b border-slate-100 pb-4">
-          <h2 class="text-2xl font-bold text-slate-900">Cek Status & Balasan Guru BK</h2>
-          <p class="text-slate-500 text-xs mt-1">Masukkan Kode Tiket unik yang Anda dapatkan saat mengirim form konseling.</p>
-        </div>
-
-        <div class="flex gap-3 mb-6">
-          <input type="text" id="inputTiket" placeholder="Contoh: BK-171800000" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-rose-500 focus:outline-none text-xs">
-          <button onclick="cariTiket()" class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold px-6 py-3 rounded-xl transition flex items-center gap-2 text-xs">
-            <i data-lucide="search" class="w-4 h-4"></i> Cari
-          </button>
-        </div>
-
-        <!-- HASIL HASIL TIKET -->
-        <div id="hasilTiket" class="hidden p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-4">
-          <div class="flex justify-between items-center border-b pb-3">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">ID Tiket: <span id="resId" class="text-slate-800"></span></span>
-            <span id="resStatus" class="px-3 py-1 rounded-full text-xs font-bold"></span>
-          </div>
-          <div>
-            <p class="text-[11px] font-bold text-slate-400 mb-1 uppercase">PESAN ANDA:</p>
-            <p id="resPesan" class="text-xs text-slate-700 italic bg-white p-3 rounded-xl border border-slate-100 leading-relaxed"></p>
-          </div>
-          <div class="pt-2 border-t">
-            <p class="text-[11px] font-bold text-rose-600 mb-1 uppercase">TANGGAPAN GURU BK:</p>
-            <p id="resBalasan" class="text-xs font-semibold text-slate-900 bg-rose-50/50 p-4 rounded-xl border border-rose-100 leading-relaxed"></p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
-    <p>© 2026 E-BK Support - Layanan Bimbingan & Konseling Sekolah.</p>
-  </footer>
-
-  <!-- SCRIPT INTEGRASI -->
-  <script>
-    lucide.createIcons();
-
-    // SCRIPT URL GOOGLE APPS SCRIPT ANDA
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0_xU66UXpJw0n0mVjYKYcnjShzppFC1SPYtlegRTCf6A_lPL4y50FKCTZTGvX4yU7kw/exec";
-
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        canvas.addEventListener('touchstart', startDraw);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDraw);
+        
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDraw);
     }
 
-    function switchTab(tab) {
-      const form = document.getElementById('viewForm');
-      const tiket = document.getElementById('viewTiket');
-      const btnForm = document.getElementById('btnTabForm');
-      const btnTiket = document.getElementById('btnTabTiket');
-
-      document.getElementById('form-section').scrollIntoView({ behavior: 'smooth' });
-
-      if(tab === 'form') {
-        form.classList.remove('hidden');
-        tiket.classList.add('hidden');
-        btnForm.className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white shadow-sm text-rose-600 transition";
-        btnTiket.className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
-      } else {
-        form.classList.add('hidden');
-        tiket.classList.remove('hidden');
-        btnTiket.className = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white shadow-sm text-rose-600 transition";
-        btnForm.className = "flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition";
-      }
+    function startDraw(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        const pos = getPos(e);
+        ctx.moveTo(pos.x, pos.y);
     }
 
-    // Auto Check NISN
-    let nisnTimer;
-    function cekNisnOtomatis(val) {
-      clearTimeout(nisnTimer);
-      const inputNama = document.getElementById('nama');
-      const inputKelas = document.getElementById('kelas');
-      const loader = document.getElementById('nisnLoading');
-      const nisn = val.trim();
+    function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
 
-      if (nisn.toLowerCase() === 'anonim') {
-        inputNama.value = 'Anonim';
-        inputNama.readOnly = true;
-        inputKelas.readOnly = false;
-        inputKelas.classList.remove('bg-slate-50');
-        inputKelas.placeholder = "Masukkan kelas (misal: XII RPL 1)";
-        return;
-      }
+    function stopDraw() { isDrawing = false; }
+    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-      if (nisn.length >= 5) {
-        loader.classList.remove('hidden');
-        loader.innerText = "Mencari data...";
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    // Anti-Curang
+    document.addEventListener('visibilitychange', handleAntiCheat);
+    window.addEventListener('blur', handleAntiCheat);
+
+    function handleAntiCheat() {
+        if (document.hidden && document.getElementById('ujian-page').style.display !== 'none') {
+            totalPelanggaran++;
+            alert(`PERINGATAN! Anda terdeteksi keluar aplikasi (${totalPelanggaran}x).\nSoal telah diganti otomatis!`);
+            gantiSoalPelanggaran();
+        }
+    }
+
+    function gantiSoalPelanggaran() {
+        clearCanvas();
+        document.getElementById('jawaban-akhir').value = '';
+        const currentTipe = bankSoal[currentIdx].tipe;
+        bankSoal[currentIdx] = generateSingleSoal(currentTipe);
+        renderSoal();
+    }
+
+    function generateSingleSoal(tipe) {
+        let a = Math.floor(Math.random() * 800) + 100;
+        let b = Math.floor(Math.random() * 800) + 100;
+        if (tipe === "Perkalian") return { tipe: "Perkalian", soal: `${a} × ${Math.floor(Math.random()*89)+10}`, jawaban: a * (Math.floor(Math.random()*89)+10) };
+        if (tipe === "Penjumlahan") return { tipe: "Penjumlahan", soal: `${a} + ${b}`, jawaban: a + b };
+        if (tipe === "Pengurangan") return { tipe: "Pengurangan", soal: `${a + 300} - ${b}`, jawaban: (a + 300) - b };
+        return { tipe: "Pembagian", soal: `${a * 2} ÷ 2`, jawaban: a };
+    }
+
+    async function mulaiUjian() {
+        namaSiswa = document.getElementById('nama').value.trim();
+        nisSiswa = document.getElementById('nis').value.trim();
+
+        if (!namaSiswa || !nisSiswa) {
+            alert("Harap isi Nama dan NIS terlebih dahulu!");
+            return;
+        }
+
+        document.getElementById('identitas-page').style.display = 'none';
+        document.getElementById('ujian-page').style.display = 'block';
+        setupCanvas();
+
+        try {
+            const res = await fetch(GAS_URL);
+            bankSoal = await res.json();
+            renderSoal();
+        } catch (err) {
+            alert("Gagal mengambil soal. Pastikan URL Google Apps Script sudah terpasang.");
+        }
+    }
+
+    function renderSoal() {
+        if (currentIdx >= bankSoal.length) {
+            finishUjian();
+            return;
+        }
+        document.getElementById('indikator-soal').innerText = `Soal ${currentIdx + 1} dari ${bankSoal.length}`;
+        document.getElementById('tipe-soal').innerText = bankSoal[currentIdx].tipe;
+        document.getElementById('display-soal').innerText = bankSoal[currentIdx].soal;
+        document.getElementById('jawaban-akhir').value = '';
+        clearCanvas();
+    }
+
+    function jawabSoal() {
+        const inputJawaban = document.getElementById('jawaban-akhir').value.trim();
         
-        nisnTimer = setTimeout(() => {
-          fetch(`${SCRIPT_URL}?action=getSiswa&nisn=${encodeURIComponent(nisn)}`)
-            .then(res => res.json())
-            .then(data => {
-              loader.classList.add('hidden');
-              if (data.found) {
-                inputNama.value = data.nama;
-                inputKelas.value = data.kelas;
-                inputNama.readOnly = true;
-                inputKelas.readOnly = true;
-                inputNama.classList.add('bg-slate-50');
-                inputKelas.classList.add('bg-slate-50');
-              } else {
-                loader.innerText = "NISN belum terdaftar, silakan isi manual.";
-                loader.classList.remove('hidden');
-                inputNama.readOnly = false;
-                inputKelas.readOnly = false;
-                inputNama.classList.remove('bg-slate-50');
-                inputKelas.classList.remove('bg-slate-50');
-                inputNama.placeholder = "Masukkan nama Anda";
-                inputKelas.placeholder = "Masukkan kelas Anda";
-              }
-            })
-            .catch(() => {
-              loader.classList.add('hidden');
-              inputNama.readOnly = false;
-              inputKelas.readOnly = false;
+        if (inputJawaban === "") {
+            alert("Harap isi kolom jawaban akhir terlebih dahulu!");
+            return;
+        }
+
+        // Simpan coretan cara penyelesaian dan jawaban angka
+        jawabanSiswa.push({
+            soal: bankSoal[currentIdx].soal,
+            kunciJawaban: bankSoal[currentIdx].jawaban,
+            jawabanSiswa: parseInt(inputJawaban),
+            isBenar: parseInt(inputJawaban) === bankSoal[currentIdx].jawaban,
+            tipe: bankSoal[currentIdx].tipe,
+            coretanCaraKerja: canvas.toDataURL() // Format gambar PNG jalan hitung
+        });
+
+        currentIdx++;
+        renderSoal();
+    }
+
+    async function finishUjian() {
+        document.getElementById('ujian-page').style.display = 'none';
+        document.getElementById('selesai-page').style.display = 'block';
+
+        // Hitung skor otomatis berbasis jawaban akhir
+        let totalBenar = jawabanSiswa.filter(j => j.isBenar).length;
+        let skorAkhir = (totalBenar / bankSoal.length) * 100;
+
+        const payload = {
+            namaSiswa: namaSiswa,
+            nis: nisSiswa,
+            skor: skorAkhir,
+            jumlahPelanggaran: totalPelanggaran,
+            detailJawaban: jawabanSiswa
+        };
+
+        try {
+            await fetch(GAS_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
             });
-        }, 500);
-      } else {
-        loader.classList.add('hidden');
-        inputNama.value = '';
-        inputKelas.value = '';
-      }
-    }
-
-    // Submit Form Konseling Siswa
-    document.getElementById('bkForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Memproses...`;
-      lucide.createIcons();
-
-      const payload = {
-        action: 'submit',
-        nisn: document.getElementById('nisn').value,
-        nama: document.getElementById('nama').value || 'Anonim',
-        kelas: document.getElementById('kelas').value,
-        kategori: document.getElementById('kategori').value,
-        pesan: document.getElementById('pesan').value
-      };
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling`;
-        lucide.createIcons();
-
-        if(data.result === 'success') {
-          alert(`Berhasil Terkirim!\n\nSIMPAN KODE TIKET ANDA: ${data.id_tiket}\nGunakan kode ini untuk mengecek balasan Guru BK.`);
-          document.getElementById('bkForm').reset();
-          document.getElementById('inputTiket').value = data.id_tiket;
-          switchTab('tiket');
-          cariTiket();
-        } else {
-          alert('Gagal mengirim: ' + data.message);
+            document.getElementById('hasil-skor').innerText = `Nilai Anda: ${skorAkhir}`;
+            document.getElementById('pelanggaran-info').innerText = `Total Terdeteksi Pindah Aplikasi: ${totalPelanggaran} kali`;
+        } catch (err) {
+            document.getElementById('hasil-skor').innerText = "Selesai (Gagal menyimpan ke server)";
         }
-      })
-      .catch(err => {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Kirim Permohonan Konseling`;
-        lucide.createIcons();
-        alert('Terjadi kesalahan koneksi.');
-      });
-    });
-
-    // Cek Tiket oleh Siswa
-    function cariTiket() {
-      const idTiket = document.getElementById('inputTiket').value.trim();
-      if(!idTiket) return alert('Masukkan ID Tiket!');
-
-      fetch(`${SCRIPT_URL}?action=check&id=${encodeURIComponent(idTiket)}`)
-      .then(res => res.json())
-      .then(data => {
-        const box = document.getElementById('hasilTiket');
-        if(data.found) {
-          box.classList.remove('hidden');
-          document.getElementById('resId').innerText = data.data.ID_Tiket;
-          document.getElementById('resPesan').innerText = data.data.Pesan;
-          
-          const statusElem = document.getElementById('resStatus');
-          statusElem.innerText = data.data.Status;
-          
-          if(data.data.Status === 'Selesai') {
-            statusElem.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700";
-          } else {
-            statusElem.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700";
-          }
-
-          document.getElementById('resBalasan').innerText = data.data.Tanggapan_Guru || 'Belum ada balasan dari Guru BK. Harap cek berkala.';
-        } else {
-          alert('Kode Tiket tidak ditemukan!');
-          box.classList.add('hidden');
-        }
-      });
     }
-  </script>
+</script>
 </body>
 </html>
