@@ -6,18 +6,85 @@
     <title>CBT Matematika - Langkah Penyelesaian & Jawaban</title>
     <style>
         * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; margin: auto; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f0f2f5; 
+            margin: 0; 
+            padding: 10px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            max-width: 650px; 
+            width: 100%; 
+            margin: auto; 
+        }
         h2, h3 { text-align: center; color: #1a73e8; margin-top: 0; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        .input-group input { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; font-size: 18px; text-align: center; font-weight: bold; }
+        .input-group input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            text-align: center; 
+            font-weight: bold; 
+        }
         .input-group input:focus { border-color: #1a73e8; outline: none; }
-        #canvas { border: 2px dashed #1a73e8; background: #fafafa; border-radius: 8px; display: block; margin: 10px auto; touch-action: none; cursor: crosshair; }
-        .btn { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        
+        /* Canvas Lebar Maksimal & Responssif */
+        #canvas { 
+            border: 2px dashed #1a73e8; 
+            background: #fafafa; 
+            border-radius: 8px; 
+            display: block; 
+            margin: 10px 0; 
+            width: 100%; 
+            height: 320px; 
+            touch-action: none; 
+            cursor: crosshair; 
+        }
+        
+        .btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #1a73e8; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-bottom: 10px; 
+        }
         .btn-clear { background: #dc3545; }
-        .badge-pelanggaran { background: #fff3cd; color: #856404; padding: 8px; border-radius: 6px; font-size: 13px; text-align: center; margin-bottom: 10px; border: 1px solid #ffeeba; }
-        .soal-box { background: #e8f0fe; padding: 15px; border-radius: 8px; text-align: center; font-size: 28px; font-weight: bold; color: #1967d2; margin-bottom: 15px; }
+        .badge-pelanggaran { 
+            background: #fff3cd; 
+            color: #856404; 
+            padding: 8px; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            text-align: center; 
+            margin-bottom: 10px; 
+            border: 1px solid #ffeeba; 
+        }
+        .soal-box { 
+            background: #e8f0fe; 
+            padding: 15px; 
+            border-radius: 8px; 
+            text-align: center; 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: #1967d2; 
+            margin-bottom: 15px; 
+        }
         .label-section { font-weight: bold; font-size: 14px; color: #555; margin-top: 10px; display: block; }
     </style>
 </head>
@@ -46,11 +113,11 @@
         <span id="tipe-soal">Penjumlahan</span>
     </div>
 
-    <div class="soal-box" id="display-soal">745 + 841</div>
+    <div class="soal-box" id="display-soal">...</div>
 
-    <!-- Area Coretan Cara Penyelesaian -->
+    <!-- Area Canvas Coretan Cara Penyelesaian -->
     <span class="label-section">✍️ Tulis Cara Penyelesaian (Jalan Hitung):</span>
-    <canvas id="canvas" width="340" height="260"></canvas>
+    <canvas id="canvas"></canvas>
     <button class="btn btn-clear" style="padding: 8px; font-size: 14px;" onclick="clearCanvas()">Hapus Coretan</button>
 
     <!-- Kolom Input Jawaban Akhir -->
@@ -70,7 +137,8 @@
 </div>
 
 <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxmxihXo0dGDdByRKTFu8l2H3eGgfG_4NzW0IP-KxdZZiGNPq8RiZigy58oroFzayZZZg/exec";
+    // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
+    const GAS_URL = "GANTI_DENGAN_URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
 
     let bankSoal = [];
     let currentIdx = 0;
@@ -82,11 +150,20 @@
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
 
-    function setupCanvas() {
+    // Penyesuaian Resolusi Canvas Otomatis mengikuti Lebar Layar
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = 320; // Tinggi canvas 320px agar leluasa
+        
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 4;
         ctx.lineCap = "round";
-        
+    }
+
+    function setupCanvas() {
+        resizeCanvas();
+
         canvas.addEventListener('touchstart', startDraw);
         canvas.addEventListener('touchmove', draw);
         canvas.addEventListener('touchend', stopDraw);
@@ -121,14 +198,14 @@
         return { x: clientX - rect.left, y: clientY - rect.top };
     }
 
-    // Anti-Curang
+    // Fitur Anti-Curang (Auto Ganti Soal jika Pindah Tab/Layar)
     document.addEventListener('visibilitychange', handleAntiCheat);
     window.addEventListener('blur', handleAntiCheat);
 
     function handleAntiCheat() {
         if (document.hidden && document.getElementById('ujian-page').style.display !== 'none') {
             totalPelanggaran++;
-            alert(`PERINGATAN! Anda terdeteksi keluar aplikasi (${totalPelanggaran}x).\nSoal telah diganti otomatis!`);
+            alert(`PERINGATAN! Anda terdeteksi keluar dari aplikasi/tab (${totalPelanggaran}x).\nSoal Anda telah diganti secara otomatis!`);
             gantiSoalPelanggaran();
         }
     }
@@ -168,7 +245,7 @@
             bankSoal = await res.json();
             renderSoal();
         } catch (err) {
-            alert("Gagal mengambil soal. Pastikan URL Google Apps Script sudah terpasang.");
+            alert("Gagal mengambil soal dari server. Periksa URL Apps Script Anda.");
         }
     }
 
@@ -192,14 +269,13 @@
             return;
         }
 
-        // Simpan coretan cara penyelesaian dan jawaban angka
         jawabanSiswa.push({
             soal: bankSoal[currentIdx].soal,
             kunciJawaban: bankSoal[currentIdx].jawaban,
             jawabanSiswa: parseInt(inputJawaban),
             isBenar: parseInt(inputJawaban) === bankSoal[currentIdx].jawaban,
             tipe: bankSoal[currentIdx].tipe,
-            coretanCaraKerja: canvas.toDataURL() // Format gambar PNG jalan hitung
+            coretanCaraKerja: canvas.toDataURL()
         });
 
         currentIdx++;
@@ -210,7 +286,6 @@
         document.getElementById('ujian-page').style.display = 'none';
         document.getElementById('selesai-page').style.display = 'block';
 
-        // Hitung skor otomatis berbasis jawaban akhir
         let totalBenar = jawabanSiswa.filter(j => j.isBenar).length;
         let skorAkhir = (totalBenar / bankSoal.length) * 100;
 
@@ -230,7 +305,7 @@
             document.getElementById('hasil-skor').innerText = `Nilai Anda: ${skorAkhir}`;
             document.getElementById('pelanggaran-info').innerText = `Total Terdeteksi Pindah Aplikasi: ${totalPelanggaran} kali`;
         } catch (err) {
-            document.getElementById('hasil-skor').innerText = "Selesai (Gagal menyimpan ke server)";
+            document.getElementById('hasil-skor').innerText = "Gagal mengirim data ke server.";
         }
     }
 </script>
