@@ -1,313 +1,1113 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-950 select-none overflow-hidden">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CBT Matematika - Langkah Penyelesaian & Jawaban</title>
-    <style>
-        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f0f2f5; 
-            margin: 0; 
-            padding: 10px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .card { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            max-width: 650px; 
-            width: 100%; 
-            margin: auto; 
-        }
-        h2, h3 { text-align: center; color: #1a73e8; margin-top: 0; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        .input-group input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #ccc; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            text-align: center; 
-            font-weight: bold; 
-        }
-        .input-group input:focus { border-color: #1a73e8; outline: none; }
-        
-        /* Canvas Lebar Maksimal & Responssif */
-        #canvas { 
-            border: 2px dashed #1a73e8; 
-            background: #fafafa; 
-            border-radius: 8px; 
-            display: block; 
-            margin: 10px 0; 
-            width: 100%; 
-            height: 320px; 
-            touch-action: none; 
-            cursor: crosshair; 
-        }
-        
-        .btn { 
-            width: 100%; 
-            padding: 12px; 
-            background: #1a73e8; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-bottom: 10px; 
-        }
-        .btn-clear { background: #dc3545; }
-        .badge-pelanggaran { 
-            background: #fff3cd; 
-            color: #856404; 
-            padding: 8px; 
-            border-radius: 6px; 
-            font-size: 13px; 
-            text-align: center; 
-            margin-bottom: 10px; 
-            border: 1px solid #ffeeba; 
-        }
-        .soal-box { 
-            background: #e8f0fe; 
-            padding: 15px; 
-            border-radius: 8px; 
-            text-align: center; 
-            font-size: 28px; 
-            font-weight: bold; 
-            color: #1967d2; 
-            margin-bottom: 15px; 
-        }
-        .label-section { font-weight: bold; font-size: 14px; color: #555; margin-top: 10px; display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DKV 1 Photo & Video Master Dungeon - Google Sheets Edition</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@500;700;800&family=VT323&display=swap" rel="stylesheet">
+
+  <style>
+    .font-pixel { font-family: 'Press Start 2P', monospace; }
+    .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-vt { font-family: 'VT323', monospace; }
+
+    /* CRT Arcade Screen Effect */
+    .crt-overlay::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 4px;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    /* Screen Shake Animation */
+    @keyframes shake {
+      0%, 100% { transform: translate(0, 0); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 4px); }
+      20%, 40%, 60%, 80% { transform: translate(6px, -4px); }
+    }
+    .shake-screen { animation: shake 0.4s ease-in-out; }
+
+    /* Pulse Flash Modal Text */
+    @keyframes text-flash {
+      0% { opacity: 0; transform: scale(0.92); }
+      15% { opacity: 1; transform: scale(1); }
+      85% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
+    .animate-flash { animation: text-flash 1.8s ease-in-out forwards; }
+
+    /* Touch Controls Active Visual */
+    .touch-btn:active {
+      transform: scale(0.9);
+      background-color: #38bdf8 !important;
+      color: #0f172a !important;
+    }
+  </style>
 </head>
-<body>
+<body class="h-full text-slate-100 flex flex-col justify-between bg-slate-950 font-sans">
 
-<div class="card" id="identitas-page">
-    <h2>CBT MATEMATIKA</h2>
-    <div class="input-group">
-        <label>Nama Siswa</label>
-        <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" style="text-align: left;" required>
+  <!-- ==================== 1. SCREEN INITIAL LOADING (5 DETIK) ==================== -->
+  <div id="screen-loading" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-8 shadow-2xl space-y-6 text-center">
+      <div class="inline-flex p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 animate-bounce">
+        <i data-lucide="camera" class="w-12 h-12"></i>
+      </div>
+      <div>
+        <h1 class="font-pixel text-base sm:text-lg text-amber-400 mb-2">PHOTO & VIDEO DUNGEON</h1>
+        <p class="text-xs text-slate-400">MEMUAT LAB FOTOGRAFI & VIDEOGRAFI XI DKV 1...</p>
+      </div>
+
+      <!-- Retro Loading Bar -->
+      <div class="space-y-2">
+        <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800 p-0.5">
+          <div id="loading-bar" class="bg-gradient-to-r from-amber-500 to-amber-300 h-full w-0 rounded-full transition-all duration-100 ease-linear"></div>
+        </div>
+        <p id="loading-percentage" class="text-xs text-amber-400 font-pixel text-[10px]">0%</p>
+      </div>
     </div>
-    <div class="input-group">
-        <label>NIS / Nomor Absen</label>
-        <input type="number" id="nis" placeholder="Masukkan NIS" style="text-align: left;" required>
+  </div>
+
+  <!-- ==================== 2. SCREEN LOGIN SISWA ==================== -->
+  <div id="screen-auth" class="fixed inset-0 bg-slate-950 z-40 flex flex-col items-center justify-center p-4 hidden">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div class="text-center space-y-2">
+        <div class="inline-flex p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 mb-1">
+          <i data-lucide="user-check" class="w-10 h-10"></i>
+        </div>
+        <h1 class="font-pixel text-base sm:text-lg text-amber-400">LOGIN CREATOR DKV</h1>
+        <p class="text-xs text-slate-400">Evaluasi Praktikum Fotografi & Videografi XI DKV 1</p>
+      </div>
+
+      <form id="form-login" onsubmit="submitLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Lengkap Siswa</label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            <input type="text" id="input-nama" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Kelas</label>
+            <div class="relative">
+              <i data-lucide="graduation-cap" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input type="text" id="input-kelas" required value="XI DKV 1" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">NIS / Absen</label>
+            <div class="relative">
+              <i data-lucide="hash" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input type="text" id="input-nis" required placeholder="01 / 1234" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-start-game" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center space-x-2 active:scale-95">
+          <i data-lucide="play" class="w-4 h-4"></i>
+          <span>MASUK STUDIO LAB</span>
+        </button>
+      </form>
     </div>
-    <button class="btn" onclick="mulaiUjian()">Mulai Ujian</button>
-</div>
+  </div>
 
-<div class="card" id="ujian-page" style="display: none;">
-    <div class="badge-pelanggaran" id="warn-box">
-        ⚠️ Jangan berpindah aplikasi/tab! Soal otomatis diganti jika terdeteksi curang.
+  <!-- Header Bar -->
+  <header class="w-full bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between z-20 shadow-lg">
+    <div class="flex items-center space-x-3">
+      <div class="bg-indigo-600/30 border border-indigo-500/50 px-2.5 py-1 rounded-lg flex items-center space-x-2">
+        <i data-lucide="aperture" class="w-4 h-4 text-indigo-400"></i>
+        <span id="ui-user-badge" class="font-pixel text-[10px] text-indigo-300">XI DKV 1</span>
+      </div>
+      <div class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg flex items-center space-x-2">
+        <i data-lucide="door-open" class="w-4 h-4 text-emerald-400"></i>
+        <span class="text-xs font-bold text-slate-300">RUANGAN: <span id="ui-room" class="text-emerald-400 font-pixel text-xs">1 / 50</span></span>
+      </div>
+      <div id="ui-mode-badge" class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-900/60 border border-blue-500/50 text-blue-300 font-pixel text-[9px]">
+        STAGE 1: TEKNIK DASAR DKV
+      </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; font-weight: bold; color: #555;">
-        <span id="indikator-soal">Soal 1 dari 4</span>
-        <span id="tipe-soal">Penjumlahan</span>
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+        <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+        <span class="text-xs text-slate-300 font-bold">PERCOBAAN: <span id="ui-lives" class="text-rose-400 font-pixel text-xs">3</span></span>
+      </div>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+        <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+        <span class="text-xs text-slate-300 font-bold">AKURASI: <span id="ui-acc" class="text-amber-400 font-pixel text-xs">0%</span></span>
+      </div>
+      <button id="btn-audio" onclick="toggleAudio()" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sky-400 transition">
+        <i id="icon-audio" data-lucide="volume-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Game Canvas Container -->
+  <main id="main-viewport" class="relative flex-1 flex items-center justify-center p-2 sm:p-4 overflow-hidden crt-overlay">
+    <div id="game-frame" class="relative w-full max-w-4xl h-full max-h-[620px] bg-slate-900 border-4 border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
+      <canvas id="gameCanvas" class="block w-full h-full object-contain"></canvas>
+
+      <!-- Question Altar / Lock Box HUD Banner -->
+      <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[92%] max-w-2xl bg-slate-950/90 border-2 border-indigo-500/80 rounded-xl p-3 shadow-2xl backdrop-blur-md z-10 flex flex-col items-center">
+        <div class="flex items-center justify-between w-full mb-2">
+          <span class="font-pixel text-[9px] text-indigo-400 tracking-wider flex items-center gap-1">
+            <i data-lucide="box" class="w-3 h-3"></i> ALTAR SOAL FOTO & VIDEO #<span id="altar-num">1</span>
+          </span>
+          <span id="carrying-indicator" class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 hidden">
+            MEMBAWA KUNCI: <span id="carried-key-label" class="font-mono text-white font-bold"></span>
+          </span>
+        </div>
+
+        <!-- Flash Trigger Button & Cooldown Display -->
+        <div class="w-full flex flex-col items-center gap-2">
+          <button id="btn-flash-trigger" onclick="startFlashSequence()" class="w-full sm:w-auto px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg shadow-lg border border-amber-300 transition flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            <span id="flash-btn-label">LIHAT FRAGMEN SOAL (FLASH)</span>
+          </button>
+          
+          <div id="status-altar-lock" class="text-[11px] font-bold text-rose-400 flex items-center gap-1">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+            <span>ALTAR TERKUNCI (Lihat fragmen soal terlebih dahulu!)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Prompt Overlay -->
+      <div id="action-prompt" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/95 border-2 border-amber-400 px-5 py-2 rounded-full shadow-2xl flex items-center space-x-2 z-20">
+        <span id="prompt-btn-badge" class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-pixel text-[10px] font-bold animate-bounce">SPASI</span>
+        <span id="prompt-text" class="text-xs font-bold text-amber-200">Tekan SPASI untuk Mengambil Kunci</span>
+      </div>
     </div>
 
-    <div class="soal-box" id="display-soal">...</div>
+    <!-- FLASH POP-UP MODAL -->
+    <div id="modal-flash" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border-2 border-amber-500/80 w-full max-w-lg rounded-2xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <span class="font-pixel text-[10px] text-amber-400 flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i> FLASH FRAGMENT SYSTEM
+          </span>
+          <span id="flash-counter" class="text-xs font-bold text-slate-400">FRAGMEN 1 / 3</span>
+        </div>
 
-    <!-- Area Canvas Coretan Cara Penyelesaian -->
-    <span class="label-section">✍️ Tulis Cara Penyelesaian (Jalan Hitung):</span>
-    <canvas id="canvas"></canvas>
-    <button class="btn btn-clear" style="padding: 8px; font-size: 14px;" onclick="clearCanvas()">Hapus Coretan</button>
+        <div class="min-h-[120px] flex items-center justify-center px-4">
+          <p id="flash-fragment-text" class="text-lg sm:text-xl font-extrabold text-sky-300 tracking-wide leading-relaxed">
+            ...
+          </p>
+        </div>
 
-    <!-- Kolom Input Jawaban Akhir -->
-    <div class="input-group" style="margin-top: 15px;">
-        <label>🔢 Hasil / Jawaban Akhir:</label>
-        <input type="number" id="jawaban-akhir" placeholder="Ketik Hasil Akhir Di Sini" autocomplete="off">
+        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div id="flash-progress-bar" class="bg-amber-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <p class="text-[10px] text-slate-500 italic">
+          Teks akan menghilang otomatis! Pahami konsepnya dan temukan kuncinya di lab.
+        </p>
+      </div>
     </div>
 
-    <button class="btn" id="btn-next" onclick="jawabSoal()">Kirim & Lanjut</button>
-</div>
+    <!-- Game Over Modal -->
+    <div id="modal-gameover" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border-2 border-rose-500/80 w-full max-w-lg rounded-2xl p-6 text-center space-y-5 shadow-2xl">
+        <div class="inline-flex p-4 bg-rose-500/10 border border-rose-500/30 rounded-full text-rose-500">
+          <i data-lucide="skull" class="w-12 h-12"></i>
+        </div>
+        <div>
+          <h2 class="font-pixel text-lg text-rose-500 mb-2">EVALUASI GAGAL!</h2>
+          <p class="text-slate-300 text-xs sm:text-sm">
+            Kesempatan habis! Pelajari kembali parameter kamera dan teknik videografi.
+          </p>
+        </div>
 
-<div class="card" id="selesai-page" style="display: none; text-align: center;">
-    <h2>Ujian Selesai!</h2>
-    <p>Terima kasih telah menyelesaikan tes.</p>
-    <h3 id="hasil-skor"></h3>
-    <p id="pelanggaran-info" style="color: #d93025;"></p>
-</div>
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Pencapaian Ruangan:</span>
+            <span id="go-score" class="font-bold text-rose-400">0 / 50</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Batas Minimal KKM:</span>
+            <span class="font-bold text-emerald-400">75% (38/50 Ruangan)</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-800 pt-2">
+            <span class="text-slate-400">Status Sync Google Sheets:</span>
+            <span id="sync-status-fail" class="font-bold text-amber-400">Menyimpan...</span>
+          </div>
+        </div>
 
-<script>
-    // MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxmxihXo0dGDdByRKTFu8l2H3eGgfG_4NzW0IP-KxdZZiGNPq8RiZigy58oroFzayZZZg/exec";
+        <button onclick="restartGameRun()" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-xl transition flex items-center justify-center space-x-2">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span>ULANGI DARI RUANGAN 1</span>
+        </button>
+      </div>
+    </div>
 
-    let bankSoal = [];
-    let currentIdx = 0;
-    let jawabanSiswa = [];
-    let totalPelanggaran = 0;
-    let namaSiswa = "", nisSiswa = "";
+    <!-- Victory Modal -->
+    <div id="modal-victory" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border-2 border-emerald-500/80 w-full max-w-lg rounded-2xl p-6 text-center space-y-5 shadow-2xl">
+        <div class="inline-flex p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400">
+          <i data-lucide="trophy" class="w-12 h-12"></i>
+        </div>
+        <div>
+          <h2 class="font-pixel text-lg text-emerald-400 mb-2">MASTER FOTO & VIDEO!</h2>
+          <p class="text-slate-300 text-xs sm:text-sm">
+            Selamat! Kamu telah menguasai 50 parameter dan teknik fotografi & videografi XI DKV 1!
+          </p>
+        </div>
 
-    const canvas = document.getElementById('canvas');
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Skor Akhir Kelulusan:</span>
+            <span id="vic-score" class="font-bold text-emerald-400 text-sm">100%</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Status Kompetensi:</span>
+            <span class="font-bold text-sky-400">KOMPETEN (DKV 1)</span>
+          </div>
+          <div class="flex justify-between border-t border-slate-800 pt-2">
+            <span class="text-slate-400">Status Sync Google Sheets:</span>
+            <span id="sync-status-pass" class="font-bold text-amber-400">Menyimpan...</span>
+          </div>
+        </div>
+
+        <button onclick="restartGameRun()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition flex items-center justify-center space-x-2">
+          <i data-lucide="play" class="w-4 h-4"></i>
+          <span>MAIN LAGI</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Touch Screen Controls -->
+  <footer class="w-full bg-slate-900 border-t border-slate-800 p-2.5 sm:hidden flex items-center justify-between z-20">
+    <div class="grid grid-cols-3 gap-1 w-28 h-28">
+      <div></div>
+      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Up', true)" ontouchend="setKey('Up', false)">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+      </button>
+      <div></div>
+      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Left', true)" ontouchend="setKey('Left', false)">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      </button>
+      <div class="bg-slate-950 rounded-lg border border-slate-800"></div>
+      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Right', true)" ontouchend="setKey('Right', false)">
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+      </button>
+      <div></div>
+      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Down', true)" ontouchend="setKey('Down', false)">
+        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+      </button>
+      <div></div>
+    </div>
+
+    <div class="pr-2">
+      <button onclick="triggerAction()" class="touch-btn w-20 h-20 bg-indigo-600 border-2 border-indigo-400 rounded-full flex flex-col items-center justify-center text-white font-pixel text-[10px] shadow-lg active:bg-indigo-500">
+        <i data-lucide="key" class="w-5 h-5 mb-0.5"></i>
+        <span id="touch-action-label">AMBIL</span>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // -------------------------------------------------------------
+    // CONFIG GOOGLE APPS SCRIPT BACKEND WEB APP URL
+    // -------------------------------------------------------------
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzl7nC2wlyrHvPcwgFq1AnPVTaaQZHFvHHmqOCdXJuDtkUlVyr5oQhcncjTS1mfoL-m7Q/exec";
+
+    let studentData = { nama: "", kelas: "XI DKV 1", nis: "" };
+
+    function runInitialLoading() {
+      const loadingBar = document.getElementById('loading-bar');
+      const loadingText = document.getElementById('loading-percentage');
+      let progress = 0;
+      const duration = 5000;
+      const intervalTime = 50;
+      const step = 100 / (duration / intervalTime);
+
+      const timer = setInterval(() => {
+        progress += step;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(timer);
+          document.getElementById('screen-loading').classList.add('hidden');
+          document.getElementById('screen-auth').classList.remove('hidden');
+        }
+        loadingBar.style.width = `${progress}%`;
+        loadingText.innerText = `${Math.round(progress)}%`;
+      }, intervalTime);
+    }
+
+    function submitLogin(e) {
+      e.preventDefault();
+      const nama = document.getElementById('input-nama').value.trim();
+      const kelas = document.getElementById('input-kelas').value.trim();
+      const nis = document.getElementById('input-nis').value.trim();
+
+      if (!nama || !kelas || !nis) return;
+
+      studentData = { nama, kelas, nis };
+      localStorage.setItem('dkv1_game_student', JSON.stringify(studentData));
+
+      document.getElementById('screen-auth').classList.add('hidden');
+      document.getElementById('ui-user-badge').innerText = `${nis} | ${nama.split(' ')[0]}`;
+      
+      setupRoom(0);
+      requestAnimationFrame(gameLoop);
+    }
+
+    // WEB AUDIO SYNTHESIZER
+    let audioCtx = null;
+    let audioEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('icon-audio');
+      if (audioEnabled) {
+        icon.setAttribute('data-lucide', 'volume-2');
+        icon.parentElement.classList.replace('text-slate-500', 'text-sky-400');
+      } else {
+        icon.setAttribute('data-lucide', 'volume-x');
+        icon.parentElement.classList.replace('text-sky-400', 'text-slate-500');
+      }
+      lucide.createIcons();
+    }
+
+    function playSfx(type) {
+      if (!audioEnabled) return;
+      initAudio();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'step') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(100, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.05);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.05);
+        osc.start(now); osc.stop(now + 0.05);
+      } else if (type === 'pickup') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(350, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
+      } else if (type === 'flash') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.2);
+        osc.start(now); osc.stop(now + 0.2);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.35);
+        osc.start(now); osc.stop(now + 0.35);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.setValueAtTime(180, now + 0.1);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+      } else if (type === 'gameover') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.linearRampToValueAtTime(60, now + 0.6);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.6);
+        osc.start(now); osc.stop(now + 0.6);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 50 BANK SOAL KHUSUS FOTOGRAFI & VIDEOGRAFI DKV
+    // -------------------------------------------------------------
+    const dkvQuestionsPool = [
+      { fragments: ["Segitiga Eksposure terdiri dari...", "tiga elemen dasar kamera,", "yaitu Aperture, Shutter Speed, dan..."], options: ["Focal Length", "ISO", "White Balance", "Frame Rate"], a: 1 },
+      { fragments: ["Pengaturan Aperture lebar...", "ditandai dengan nilai f-number kecil...", "seperti f/1.4 yang menghasilkan efek?"], options: ["Foto sangat tajam keseluruhan", "Ruang tajam dangkal (Bokeh)", "Foto gelap sempurna", "Gerakan membeku"], a: 1 },
+      { fragments: ["Untuk MEMBEKUKAN GERAKAN...", "subjek balap motor berkecepatan tinggi,", "parameter mana yang dinaikkan?"], options: ["Shutter Speed tinggi (1/1000s)", "Aperture sempit (f/22)", "White Balance Tungsten", "ISO paling rendah"], a: 0 },
+      { fragments: ["Dampak negatif penggunaan ISO...", "yang terlalu tinggi pada kondisi malam...", "akan menimbulkan apa pada foto?"], options: ["Distorsi lensa", "Noise / Grain tajam", "Motion blur", "Banyangan putih"], a: 1 },
+      { fragments: ["Sudut pengambilan gambar...", "dari bawah objek sehingga terlihat...", "sangat megah dinamakan?"], options: ["Bird Eye View", "Low Angle / Frog Eye", "Eye Level", "High Angle"], a: 1 },
+      { fragments: ["Pergerakan kamera horizontal...", "dari kiri ke kanan tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Tilting", "Panning", "Dolly", "Pedestal"], a: 1 },
+      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu utama yang menjadi pencahayaan...", "paling dominan pada subjek adalah?"], options: ["Fill Light", "Key Light", "Back Light", "Ambient Light"], a: 1 },
+      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu yang berfungsi memisahkan...", "subjek dari latar belakang adalah?"], options: ["Key Light", "Back Light / Hair Light", "Fill Light", "Softbox"], a: 1 },
+      { fragments: ["Lensa dengan panjang fokus tetap...", "tanpa fitur mekanis zoom,", "seperti lensa 50mm dinamakan?"], options: ["Lensa Telephoto", "Lensa Prime / Fix", "Lensa Wide", "Lensa Fisheye"], a: 1 },
+      { fragments: ["Standard Frame Rate (FPS)...", "yang digunakan dalam standar pembuatan...", "film sinematik komersial adalah?"], options: ["60 FPS", "24 FPS", "120 FPS", "12 FPS"], a: 1 },
+      { fragments: ["Efek ruang tajam luas...", "dimana latar depan dan belakang...", "sama-sama fokus dinamakan?"], options: ["Shallow Depth of Field", "Deep Depth of Field", "Bokeh Effect", "Motion Blur"], a: 1 },
+      { fragments: ["Lensa ultra-wide yang memiliki...", "distorsi melengkung ekstrim hingga 180°...", "dinamakan lensa?"], options: ["Lensa Macro", "Lensa Fisheye", "Lensa Telephoto", "Lensa Tilt-shift"], a: 1 },
+      { fragments: ["Komposisi membagi layar...", "menjadi 9 kotak sejajar...", "dengan 4 titik potong utama dinamakan?"], options: ["Symmetry", "Rule of Thirds", "Golden Ratio", "Leading Lines"], a: 1 },
+      { fragments: ["Elemen warna cahaya dikonfigurasi...", "agar warna putih tampak alami...", "menggunakan pengaturan?"], options: ["ISO", "White Balance (Kelvin)", "Shutter Speed", "Picture Profile"], a: 1 },
+      { fragments: ["Filter kamera yang berfungsi...", "menghilangkan pantulan air/kaca...", "serta membirukan langit dinamakan?"], options: ["Filter ND", "Filter CPL (Polarizer)", "Filter UV", "Filter Diffusion"], a: 1 },
+      { fragments: ["Filter 'kacamata hitam' kamera...", "yang mereduksi intensitas cahaya masuk...", "tanpa mengubah warna dinamakan?"], options: ["Filter CPL", "Filter ND (Neutral Density)", "Filter Infra Merah", "Filter Soft"], a: 1 },
+      { fragments: ["Profil warna datar (flat profile)...", "yang mempertahankan dynamic range tinggi...", "untuk kebutuhan color grading dinamakan?"], options: ["Standard Profile", "LOG / S-Log Profile", "Vivid Profile", "Monochrome"], a: 1 },
+      { fragments: ["Pergerakan kamera mendekati...", "atau menjauhi subjek menggunakan...", "rel / roda dinamakan?"], options: ["Panning", "Dolly (Dolly In/Out)", "Tilting", "Crabbing"], a: 1 },
+      { fragments: ["Aturan kontinuitas arah posisi...", "interaksi antar dua karakter...", "dalam sinematografi dinamakan?"], options: ["Aturan Rule of Thirds", "Aturan Garis 180 Derajat", "Aturan Golden Ratio", "Aturan 30 Derajat"], a: 1 },
+      { fragments: ["Ukuran bidang pandang sinematik...", "yang memperlihatkan seluruh tubuh subjek...", "dari kepala hingga kaki adalah?"], options: ["Close Up (CU)", "Full Shot (FS)", "Medium Shot (MS)", "Extreme Close Up"], a: 1 },
+      { fragments: ["Ukuran bidang pandang...", "yang memotong subjek dari dada...", "hingga atas kepala dinamakan?"], options: ["Extreme Close Up", "Medium Close Up (MCU)", "Long Shot", "Full Shot"], a: 1 },
+      { fragments: ["Potongan video pendukung...", "yang disisipkan untuk melengkapi...", "narasi video utama dinamakan?"], options: ["A-Roll", "B-Roll", "Raw Footage", "Master Shot"], a: 1 },
+      { fragments: ["File presets konfigurasi warna...", "yang diimpor saat color grading...", "video dinamakan?"], options: ["RAW", "LUT (Look-Up Table)", "CODEC", "FPS"], a: 1 },
+      { fragments: ["Format file foto mentah...", "yang menyimpan seluruh informasi...", "sensor kamera tanpa kompresi adalah?"], options: ["JPEG", "RAW", "PNG", "GIF"], a: 1 },
+      { fragments: ["Sudut kamera tegak lurus...", "dari atas subjek langsung...", "seperti mata burung dinamakan?"], options: ["Eye Level", "Bird's Eye View", "Low Angle", "Dutch Angle"], a: 1 },
+      { fragments: ["Kamera sengaja dimiringkan...", "untuk menciptakan kesan ketegangan...", "atau ketidakstabilan dinamakan?"], options: ["High Angle", "Dutch Angle / Canted", "Eye Level", "Frog Eye"], a: 1 },
+      { fragments: ["Suara latar alami sekitar lokasi...", "yang direkam untuk kebutuhan...", "penyelaras audio editing dinamakan?"], options: ["Voice Over", "Ambient Sound / Room Tone", "Foley Sound", "Sound Effect"], a: 1 },
+      { fragments: ["Suara buatan fisik yang dibuat...", "di studio untuk mereplikasi bunyi...", "langkah kaki atau gesekan baju adalah?"], options: ["Foley Sound", "Ambient Sound", "Voice Over", "MOS"], a: 0 },
+      { fragments: ["Istilah rekaman video sinematik...", "yang diambil tanpa merekam...", "suara langsung di lokasi adalah?"], options: ["Sync Sound", "MOS (Mit Out Sound)", "B-Roll", "Wild Track"], a: 1 },
+      { fragments: ["Sensitivitas sensor kamera...", "terhadap cahaya dinyatakan...", "dalam satuan?"], options: ["Kelvin", "ISO", "Milimeter (mm)", "F-Number"], a: 1 },
+      { fragments: ["Panjang fokus lensa (focal length)...", "dinyatakan dalam satuan...", "ukuran fisik apa?"], options: ["Pixel (px)", "Milimeter (mm)", "Kelvin (K)", "Second (s)"], a: 1 },
+      { fragments: ["Semakin panjang fokus lensa...", "seperti lensa Telephoto 200mm,", "maka sudut pandang (FOV) menjadi?"], options: ["Semakin lebar", "Semakin sempit & menyempit", "Tetap sama", "Melengkung fisheye"], a: 1 },
+      { fragments: ["Proses merekam video slow-motion...", "membutuhkan perekaman Frame Rate (FPS)...", "yang bersifat?"], options: ["FPS Rendah (12 FPS)", "FPS Tinggi (60/120+ FPS)", "FPS Sinematik (24 FPS)", "FPS Bebas"], a: 1 },
+      { fragments: ["Istilah bayangan gelap melingkar...", "di sudut-sudut foto akibat...", "lensa atau filter dinamakan?"], options: ["Noise", "Vignette", "Flare", "Chromatic Aberration"], a: 1 },
+      { fragments: ["Pantulan cahaya terang berlebih...", "saat kamera menghadap sumber sinar...", "langsung dinamakan?"], options: ["Bokeh", "Lens Flare", "Motion Blur", "Ghosting"], a: 1 },
+      { fragments: ["Alat pembendung sinar samping...", "yang dipasang di ujung lensa...", "untuk mencegah lens flare dinamakan?"], options: ["Lens Hood", "Filter UV", "Tripod", "Softbox"], a: 0 },
+      { fragments: ["Pergerakan kamera vertikal...", "ke atas atau ke bawah tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Panning", "Tilting (Tilt Up/Down)", "Pedestal", "Dolly"], a: 1 },
+      { fragments: ["Alat penyeimbang fisik mekanis...", "atau elektronik untuk merekam...", "video pergerakan mulus dinamakan?"], options: ["Tripod", "Gimbal / Stabilizer", "Slider", "Monopod"], a: 1 },
+      { fragments: ["Teknik pencahayaan lembut...", "menggunakan aksesoris diffuser...", "seperti kain tebal dinamakan?"], options: ["Hard Light", "Soft Light (Softbox)", "Direct Sun", "Spotlight"], a: 1 },
+      { fragments: ["Garis batas tepi warna melenceng...", "seperti garis ungu pada objek kontras...", "dinamakan?"], options: ["Chromatic Aberration", "Vignette", "Distorsi Pincushion", "Noise"], a: 0 },
+      { fragments: ["Ruang kosong di depan arah pandang...", "atau arah gerak subjek dinamakan...", "ruang komposisi apa?"], options: ["Headroom", "Nose Room / Lead Room", "Top Room", "Side Blur"], a: 1 },
+      { fragments: ["Ruang kosong di atas kepala...", "subjek hingga batas atas frame...", "dinamakan?"], options: ["Lead Room", "Headroom", "Footroom", "Bokeh Space"], a: 1 },
+      { fragments: ["Pergerakan kamera menaikkan...", "atau menurunkan seluruh badan kamera...", "secara vertikal dinamakan?"], options: ["Tilting", "Pedestal (Pedestal Up/Down)", "Crabbing", "Tracking"], a: 1 },
+      { fragments: ["Teknik foto malam hari...", "menggunakan shutter speed lambat...", "sehingga mengukir jejak lampu dinamakan?"], options: ["High-speed photography", "Light Painting / Long Exposure", "Macro photography", "HDR"], a: 1 },
+      { fragments: ["Sistem mikrofon nirkabel klip...", "yang dipasang pada baju subjek...", "dinamakan mikrofon?"], options: ["Shotgun Mic", "Lavalier / Clip-on Mic", "Condenser Studio Mic", "Ribbon Mic"], a: 1 },
+      { fragments: ["Mikrofon arah terfokus...", "yang dipasang di atas kamera atau boom pole...", "dinamakan?"], options: ["Lavalier Mic", "Shotgun Mic", "Dynamic Handheld Mic", "Omni Mic"], a: 1 },
+      { fragments: ["Proses penyesuaian suhu warna...", "gambar awal sebelum pewarnaan gaya sinematik...", "dinamakan?"], options: ["Color Grading", "Color Correction", "LUT Applied", "Chroma Key"], a: 1 },
+      { fragments: ["Proses pemberian nuansa gaya...", "atau efek suasana artistik pada video...", "dinamakan?"], options: ["Color Correction", "Color Grading", "White Balancing", "Exposure Lock"], a: 1 },
+      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada kondisi sinar matahari terik...", "siang hari (daylight) standar adalah?"], options: ["3200 K", "5600 K", "10000 K", "2000 K"], a: 1 },
+      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada lampu pijar tungsten indoor...", "standar adalah?"], options: ["5600 K", "3200 K", "7000 K", "1200 K"], a: 1 }
+    ];
+
+    // STAGE MASTER SEQUENCES
+    const masterSequences = [
+      {
+        title: "Alur Kerja Pra-Produksi Video",
+        fragments: ["Susunlah urutan", "tahapan Pra-Produksi", "pembuatan karya video DKV!"],
+        seq: ["Ide Konsep", "Naskah", "Storyboard", "Location Scouting", "Shooting"],
+        options: ["Ide Konsep", "Naskah", "Storyboard", "Location Scouting", "Shooting", "Editing", "Rendering"]
+      },
+      {
+        title: "Alur Kerja Ekosistem Pascaproduksi",
+        fragments: ["Susunlah hirarki", "tahapan Pascaproduksi", "editing video sinematik!"],
+        seq: ["Import Footage", "Assembly Cut", "Color Correction", "Audio Mixing", "Export Video"],
+        options: ["Import Footage", "Assembly Cut", "Color Correction", "Audio Mixing", "Export Video", "Shooting", "Lighting"]
+      }
+    ];
+
+    // CANVAS & GAME STATE
+    const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    let isDrawing = false;
 
-    // Penyesuaian Resolusi Canvas Otomatis mengikuti Lebar Layar
-    function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = 320; // Tinggi canvas 320px agar leluasa
+    const V_WIDTH = 800;
+    const V_HEIGHT = 600;
+    canvas.width = V_WIDTH;
+    canvas.height = V_HEIGHT;
+
+    let gameMode = 'STAGE_1';
+    let roomIndex = 0;
+    let masterSeqIndex = 0;
+    let currentSeqStep = 0;
+
+    let livesRemaining = 3;
+    let correctCount = 0;
+    let currentQuestionData = null;
+    let carriedKeyIndex = null;
+    let isGameOver = false;
+
+    let isAltarUnlocked = false;
+    let isFlashActive = false;
+    let isCooldownActive = false;
+    let cooldownTimer = 0;
+    let cooldownInterval = null;
+
+    const player = {
+      x: 400, y: 460, width: 32, height: 36, speed: 4.5,
+      dir: 'down', isCarrying: false, animTimer: 0, animFrame: 0
+    };
+
+    const altarBox = { x: 350, y: 110, width: 100, height: 60 };
+    let keysInRoom = [];
+    let particleEffects = [];
+
+    const inputKeys = { Up: false, Down: false, Left: false, Right: false, Space: false };
+
+    function setKey(dir, val) { inputKeys[dir] = val; }
+
+    window.addEventListener('keydown', (e) => {
+      if (isGameOver) return;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') inputKeys.Up = true;
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') inputKeys.Down = true;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inputKeys.Left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inputKeys.Right = true;
+      if (e.key === ' ' || e.key === 'Enter') {
+        inputKeys.Space = true;
+        triggerAction();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') inputKeys.Up = false;
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') inputKeys.Down = false;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inputKeys.Left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inputKeys.Right = false;
+      if (e.key === ' ' || e.key === 'Enter') inputKeys.Space = false;
+    });
+
+    function startFlashSequence() {
+      if (isFlashActive || isCooldownActive || isGameOver) return;
+
+      isFlashActive = true;
+      const modal = document.getElementById('modal-flash');
+      const fragText = document.getElementById('flash-fragment-text');
+      const fragCounter = document.getElementById('flash-counter');
+      const progressBar = document.getElementById('flash-progress-bar');
+      
+      modal.classList.remove('hidden');
+      const fragments = currentQuestionData.fragments;
+      let currentFragIdx = 0;
+
+      function showNextFragment() {
+        if (currentFragIdx >= fragments.length) {
+          modal.classList.add('hidden');
+          isFlashActive = false;
+          isAltarUnlocked = true;
+          document.getElementById('status-altar-lock').innerHTML = `
+            <i data-lucide="unlock" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span class="text-emerald-400">ALTAR TERBUKA (Kunci dapat dimasukkan!)</span>
+          `;
+          lucide.createIcons();
+          startCooldownTimer(10);
+          return;
+        }
+
+        playSfx('flash');
+        fragCounter.innerText = `FRAGMEN ${currentFragIdx + 1} / ${fragments.length}`;
+        fragText.innerText = fragments[currentFragIdx];
         
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 4;
-        ctx.lineCap = "round";
+        fragText.classList.remove('animate-flash');
+        void fragText.offsetWidth;
+        fragText.classList.add('animate-flash');
+
+        const progressPct = ((currentFragIdx + 1) / fragments.length) * 100;
+        progressBar.style.width = `${progressPct}%`;
+
+        currentFragIdx++;
+        setTimeout(showNextFragment, 1800);
+      }
+
+      showNextFragment();
     }
 
-    function setupCanvas() {
-        resizeCanvas();
+    function startCooldownTimer(seconds) {
+      isCooldownActive = true;
+      cooldownTimer = seconds;
+      const btn = document.getElementById('btn-flash-trigger');
+      const label = document.getElementById('flash-btn-label');
+      btn.disabled = true;
 
-        canvas.addEventListener('touchstart', startDraw);
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDraw);
-        
-        canvas.addEventListener('mousedown', startDraw);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDraw);
-    }
+      if (cooldownInterval) clearInterval(cooldownInterval);
+      label.innerText = `TUNGGU ${cooldownTimer}d KEMBALI...`;
 
-    function startDraw(e) {
-        isDrawing = true;
-        ctx.beginPath();
-        const pos = getPos(e);
-        ctx.moveTo(pos.x, pos.y);
-    }
-
-    function draw(e) {
-        if (!isDrawing) return;
-        e.preventDefault();
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }
-
-    function stopDraw() { isDrawing = false; }
-    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-
-    // Fitur Anti-Curang (Auto Ganti Soal jika Pindah Tab/Layar)
-    document.addEventListener('visibilitychange', handleAntiCheat);
-    window.addEventListener('blur', handleAntiCheat);
-
-    function handleAntiCheat() {
-        if (document.hidden && document.getElementById('ujian-page').style.display !== 'none') {
-            totalPelanggaran++;
-            alert(`PERINGATAN! Anda terdeteksi keluar dari aplikasi/tab (${totalPelanggaran}x).\nSoal Anda telah diganti secara otomatis!`);
-            gantiSoalPelanggaran();
+      cooldownInterval = setInterval(() => {
+        cooldownTimer--;
+        if (cooldownTimer > 0) {
+          label.innerText = `TUNGGU ${cooldownTimer}d KEMBALI...`;
+        } else {
+          clearInterval(cooldownInterval);
+          isCooldownActive = false;
+          btn.disabled = false;
+          label.innerText = "LIHAT FRAGMEN SOAL (FLASH)";
         }
+      }, 1000);
     }
 
-    function gantiSoalPelanggaran() {
-        clearCanvas();
-        document.getElementById('jawaban-akhir').value = '';
-        const currentTipe = bankSoal[currentIdx].tipe;
-        bankSoal[currentIdx] = generateSingleSoal(currentTipe);
-        renderSoal();
-    }
+    function setupRoom(idx) {
+      player.x = 384;
+      player.y = 480;
+      player.isCarrying = false;
+      carriedKeyIndex = null;
+      isAltarUnlocked = false;
 
-    function generateSingleSoal(tipe) {
-        let a = Math.floor(Math.random() * 800) + 100;
-        let b = Math.floor(Math.random() * 800) + 100;
-        if (tipe === "Perkalian") return { tipe: "Perkalian", soal: `${a} × ${Math.floor(Math.random()*89)+10}`, jawaban: a * (Math.floor(Math.random()*89)+10) };
-        if (tipe === "Penjumlahan") return { tipe: "Penjumlahan", soal: `${a} + ${b}`, jawaban: a + b };
-        if (tipe === "Pengurangan") return { tipe: "Pengurangan", soal: `${a + 300} - ${b}`, jawaban: (a + 300) - b };
-        return { tipe: "Pembagian", soal: `${a * 2} ÷ 2`, jawaban: a };
-    }
+      const badge = document.getElementById('ui-mode-badge');
 
-    async function mulaiUjian() {
-        namaSiswa = document.getElementById('nama').value.trim();
-        nisSiswa = document.getElementById('nis').value.trim();
+      if (gameMode === 'STAGE_1') {
+        roomIndex = idx;
+        currentQuestionData = dkvQuestionsPool[roomIndex];
+        document.getElementById('altar-num').innerText = roomIndex + 1;
+        badge.innerText = "STAGE 1: TEKNIK DASAR DKV";
+        badge.className = "hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-900/60 border border-blue-500/50 text-blue-300 font-pixel text-[9px]";
+      } else {
+        masterSeqIndex = idx;
+        currentSeqStep = 0;
+        currentQuestionData = masterSequences[masterSeqIndex];
+        document.getElementById('altar-num').innerText = `M-${masterSeqIndex + 1}`;
+        badge.innerText = "STAGE 2: MASTER ALUR DKV";
+        badge.className = "hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-900/80 border border-amber-500/80 text-amber-300 font-pixel text-[9px] animate-pulse";
+      }
 
-        if (!namaSiswa || !nisSiswa) {
-            alert("Harap isi Nama dan NIS terlebih dahulu!");
-            return;
-        }
+      document.getElementById('carrying-indicator').classList.add('hidden');
+      document.getElementById('status-altar-lock').innerHTML = `
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+        <span>ALTAR TERKUNCI (Lihat fragmen soal terlebih dahulu!)</span>
+      `;
+      lucide.createIcons();
 
-        document.getElementById('identitas-page').style.display = 'none';
-        document.getElementById('ujian-page').style.display = 'block';
-        setupCanvas();
+      if (!isCooldownActive) {
+        document.getElementById('btn-flash-trigger').disabled = false;
+        document.getElementById('flash-btn-label').innerText = "LIHAT FRAGMEN SOAL (FLASH)";
+      }
 
-        try {
-            const res = await fetch(GAS_URL);
-            bankSoal = await res.json();
-            renderSoal();
-        } catch (err) {
-            alert("Gagal mengambil soal dari server. Periksa URL Apps Script Anda.");
-        }
-    }
-
-    function renderSoal() {
-        if (currentIdx >= bankSoal.length) {
-            finishUjian();
-            return;
-        }
-        document.getElementById('indikator-soal').innerText = `Soal ${currentIdx + 1} dari ${bankSoal.length}`;
-        document.getElementById('tipe-soal').innerText = bankSoal[currentIdx].tipe;
-        document.getElementById('display-soal').innerText = bankSoal[currentIdx].soal;
-        document.getElementById('jawaban-akhir').value = '';
-        clearCanvas();
-    }
-
-    function jawabSoal() {
-        const inputJawaban = document.getElementById('jawaban-akhir').value.trim();
-        
-        if (inputJawaban === "") {
-            alert("Harap isi kolom jawaban akhir terlebih dahulu!");
-            return;
-        }
-
-        jawabanSiswa.push({
-            soal: bankSoal[currentIdx].soal,
-            kunciJawaban: bankSoal[currentIdx].jawaban,
-            jawabanSiswa: parseInt(inputJawaban),
-            isBenar: parseInt(inputJawaban) === bankSoal[currentIdx].jawaban,
-            tipe: bankSoal[currentIdx].tipe,
-            coretanCaraKerja: canvas.toDataURL()
-        });
-
-        currentIdx++;
-        renderSoal();
-    }
-
-    async function finishUjian() {
-        document.getElementById('ujian-page').style.display = 'none';
-        document.getElementById('selesai-page').style.display = 'block';
-
-        let totalBenar = jawabanSiswa.filter(j => j.isBenar).length;
-        let skorAkhir = (totalBenar / bankSoal.length) * 100;
-
-        const payload = {
-            namaSiswa: namaSiswa,
-            nis: nisSiswa,
-            skor: skorAkhir,
-            jumlahPelanggaran: totalPelanggaran,
-            detailJawaban: jawabanSiswa
+      const rawOptions = [...currentQuestionData.options].sort(() => Math.random() - 0.5);
+      const cols = 4;
+      
+      keysInRoom = rawOptions.map((optText, i) => {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        return {
+          id: i,
+          label: optText,
+          x: 100 + col * 160 + (Math.random() * 20 - 10),
+          y: 220 + row * 110 + (Math.random() * 20 - 10),
+          width: 90,
+          height: 42,
+          isCarried: false,
+          isSocketed: false,
+          floatOffset: Math.random() * Math.PI * 2
         };
+      });
 
-        try {
-            await fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify(payload)
-            });
-            document.getElementById('hasil-skor').innerText = `Nilai Anda: ${skorAkhir}`;
-            document.getElementById('pelanggaran-info').innerText = `Total Terdeteksi Pindah Aplikasi: ${totalPelanggaran} kali`;
-        } catch (err) {
-            document.getElementById('hasil-skor').innerText = "Gagal mengirim data ke server.";
-        }
+      updateHUD();
     }
-</script>
+
+    function updateHUD() {
+      document.getElementById('ui-room').innerText = gameMode === 'STAGE_1' ? `${roomIndex + 1} / 50` : `M-${masterSeqIndex + 1} / ${masterSequences.length}`;
+      document.getElementById('ui-lives').innerText = livesRemaining;
+      
+      const acc = Math.round((correctCount / 50) * 100);
+      document.getElementById('ui-acc').innerText = `${acc}%`;
+    }
+
+    function triggerAction() {
+      if (isGameOver) return;
+
+      if (player.isCarrying && carriedKeyIndex !== null) {
+        const distToAltar = Math.hypot((player.x + player.width/2) - (altarBox.x + altarBox.width/2), (player.y + player.height/2) - (altarBox.y + altarBox.height/2));
+        
+        if (distToAltar < 110) {
+          if (!isAltarUnlocked) {
+            playSfx('wrong');
+            const frame = document.getElementById('game-frame');
+            frame.classList.add('shake-screen');
+            setTimeout(() => frame.classList.remove('shake-screen'), 400);
+            return;
+          }
+
+          const chosenKey = keysInRoom[carriedKeyIndex];
+          checkAnswer(chosenKey.label, chosenKey.id);
+        } else {
+          const k = keysInRoom[carriedKeyIndex];
+          k.isCarried = false;
+          k.x = player.x - 30;
+          k.y = player.y + 10;
+          player.isCarrying = false;
+          carriedKeyIndex = null;
+          document.getElementById('carrying-indicator').classList.add('hidden');
+          playSfx('step');
+        }
+        return;
+      }
+
+      for (let i = 0; i < keysInRoom.length; i++) {
+        const k = keysInRoom[i];
+        if (k.isSocketed || k.isCarried) continue;
+
+        const dist = Math.hypot((player.x + player.width/2) - (k.x + k.width/2), (player.y + player.height/2) - (k.y + k.height/2));
+        if (dist < 65) {
+          k.isCarried = true;
+          player.isCarrying = true;
+          carriedKeyIndex = i;
+          
+          document.getElementById('carried-key-label').innerText = k.label;
+          document.getElementById('carrying-indicator').classList.remove('hidden');
+          
+          playSfx('pickup');
+          createParticles(player.x, player.y, '#38bdf8', 12);
+          break;
+        }
+      }
+    }
+
+    function checkAnswer(chosenLabel, chosenIndex) {
+      if (gameMode === 'STAGE_1') {
+        const correctAnswerLabel = currentQuestionData.options[currentQuestionData.a];
+        const isCorrect = (chosenLabel.trim() === correctAnswerLabel.trim());
+
+        if (isCorrect) {
+          playSfx('correct');
+          correctCount++;
+          createParticles(altarBox.x + 50, altarBox.y + 30, '#10b981', 30);
+
+          if (roomIndex < 49) {
+            setupRoom(roomIndex + 1);
+          } else {
+            const finalPercent = Math.round((correctCount / 50) * 100);
+            if (finalPercent >= 75) {
+              gameMode = 'MASTER_STAGE';
+              setupRoom(0);
+            } else {
+              evaluateFinalResult();
+            }
+          }
+        } else {
+          playSfx('wrong');
+          livesRemaining--;
+          updateHUD();
+
+          const frame = document.getElementById('game-frame');
+          frame.classList.add('shake-screen');
+          setTimeout(() => frame.classList.remove('shake-screen'), 400);
+
+          createParticles(altarBox.x + 50, altarBox.y + 30, '#ef4444', 30);
+
+          if (livesRemaining <= 0) {
+            triggerGameOverScreen();
+          } else {
+            mutateCurrentRoom();
+          }
+        }
+      } else {
+        const expectedTag = currentQuestionData.seq[currentSeqStep];
+        if (chosenLabel.trim() === expectedTag.trim()) {
+          playSfx('correct');
+          currentSeqStep++;
+          player.isCarrying = false;
+          carriedKeyIndex = null;
+          document.getElementById('carrying-indicator').classList.add('hidden');
+
+          if (currentSeqStep >= currentQuestionData.seq.length) {
+            masterSeqIndex++;
+            if (masterSeqIndex < masterSequences.length) {
+              setupRoom(masterSeqIndex);
+            } else {
+              evaluateFinalResult();
+            }
+          }
+        } else {
+          playSfx('wrong');
+          const frame = document.getElementById('game-frame');
+          frame.classList.add('shake-screen');
+          setTimeout(() => frame.classList.remove('shake-screen'), 400);
+          setupRoom(masterSeqIndex);
+        }
+      }
+    }
+
+    function mutateCurrentRoom() {
+      let newIdx = Math.floor(Math.random() * dkvQuestionsPool.length);
+      dkvQuestionsPool[roomIndex] = dkvQuestionsPool[newIdx];
+      setupRoom(roomIndex);
+    }
+
+    function createParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        particleEffects.push({
+          x: x, y: y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          radius: Math.random() * 4 + 2,
+          color: color,
+          life: 25
+        });
+      }
+    }
+
+    function updateGame() {
+      if (isGameOver) return;
+
+      let dx = 0; let dy = 0;
+      if (inputKeys.Up) { dy -= player.speed; player.dir = 'up'; }
+      if (inputKeys.Down) { dy += player.speed; player.dir = 'down'; }
+      if (inputKeys.Left) { dx -= player.speed; player.dir = 'left'; }
+      if (inputKeys.Right) { dx += player.speed; player.dir = 'right'; }
+
+      if (dx !== 0 && dy !== 0) { dx *= 0.7071; dy *= 0.7071; }
+
+      if (dx !== 0 || dy !== 0) {
+        player.animTimer++;
+        if (player.animTimer % 7 === 0) {
+          player.animFrame = (player.animFrame + 1) % 4;
+          playSfx('step');
+        }
+      } else {
+        player.animFrame = 0;
+      }
+
+      player.x = Math.max(50, Math.min(V_WIDTH - 50 - player.width, player.x + dx));
+      player.y = Math.max(160, Math.min(V_HEIGHT - 60 - player.height, player.y + dy));
+
+      if (player.isCarrying && carriedKeyIndex !== null) {
+        const k = keysInRoom[carriedKeyIndex];
+        k.x = player.x - (k.width / 2) + (player.width / 2);
+        k.y = player.y - 35;
+      }
+
+      let nearKey = false;
+      let nearAltar = false;
+
+      if (player.isCarrying) {
+        const distToAltar = Math.hypot((player.x + player.width/2) - (altarBox.x + altarBox.width/2), (player.y + player.height/2) - (altarBox.y + altarBox.height/2));
+        if (distToAltar < 110) nearAltar = true;
+      } else {
+        for (let k of keysInRoom) {
+          const dist = Math.hypot((player.x + player.width/2) - (k.x + k.width/2), (player.y + player.height/2) - (k.y + k.height/2));
+          if (dist < 65) { nearKey = true; break; }
+        }
+      }
+
+      const promptEl = document.getElementById('action-prompt');
+      const promptText = document.getElementById('prompt-text');
+      const touchLabel = document.getElementById('touch-action-label');
+
+      if (nearAltar) {
+        promptEl.classList.remove('hidden');
+        promptText.innerText = isAltarUnlocked ? "Tekan SPASI untuk MASUKKAN KUNCI" : "ALTAR TERKUNCI! Lihat Fragmen Soal";
+        if (touchLabel) touchLabel.innerText = "MASUK";
+      } else if (nearKey) {
+        promptEl.classList.remove('hidden');
+        promptText.innerText = "Tekan SPASI untuk AMBIL KUNCI JAWABAN";
+        if (touchLabel) touchLabel.innerText = "AMBIL";
+      } else if (player.isCarrying) {
+        promptEl.classList.remove('hidden');
+        promptText.innerText = "Bawa Kunci ke Altar Soal di Atas!";
+        if (touchLabel) touchLabel.innerText = "DROP";
+      } else {
+        promptEl.classList.add('hidden');
+      }
+
+      particleEffects.forEach((p, idx) => {
+        p.x += p.vx; p.y += p.vy; p.life--;
+        if (p.life <= 0) particleEffects.splice(idx, 1);
+      });
+    }
+
+    function renderGame() {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let x = 40; x < V_WIDTH - 40; x += 40) {
+        for (let y = 40; y < V_HEIGHT - 40; y += 40) {
+          ctx.strokeRect(x, y, 40, 40);
+        }
+      }
+
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, V_WIDTH, 50);
+      ctx.fillRect(0, V_HEIGHT - 40, V_WIDTH, 40);
+      ctx.fillRect(0, 0, 40, V_HEIGHT);
+      ctx.fillRect(V_WIDTH - 40, 0, 40, V_HEIGHT);
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(40, 50, V_WIDTH - 80, V_HEIGHT - 90);
+
+      // Altar
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(altarBox.x, altarBox.y, altarBox.width, altarBox.height);
+      ctx.strokeStyle = isAltarUnlocked ? '#10b981' : '#f43f5e';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(altarBox.x, altarBox.y, altarBox.width, altarBox.height);
+
+      ctx.fillStyle = isAltarUnlocked ? '#10b981' : '#f43f5e';
+      ctx.font = '9px "Press Start 2P"';
+      ctx.textAlign = 'center';
+      ctx.fillText(isAltarUnlocked ? 'UNLOCKED' : 'LOCKED', altarBox.x + 50, altarBox.y - 10);
+
+      ctx.fillStyle = isAltarUnlocked ? '#059669' : '#e11d48';
+      ctx.fillRect(altarBox.x + 10, altarBox.y + 10, 80, 40);
+
+      if (gameMode === 'MASTER_STAGE' && isAltarUnlocked) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 12px "VT323"';
+        ctx.fillText(`SLOT ${currentSeqStep + 1}/${currentQuestionData.seq.length}`, altarBox.x + 50, altarBox.y + 34);
+      }
+
+      // Keys
+      keysInRoom.forEach((k) => {
+        if (k.isSocketed) return;
+
+        ctx.save();
+        const floatY = k.isCarried ? k.y : k.y + Math.sin(Date.now() * 0.005 + k.floatOffset) * 4;
+
+        ctx.fillStyle = k.isCarried ? '#f59e0b' : '#1e293b';
+        ctx.fillRect(k.x, floatY, k.width, k.height);
+        
+        ctx.strokeStyle = k.isCarried ? '#fbbf24' : '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(k.x, floatY, k.width, k.height);
+
+        ctx.fillStyle = k.isCarried ? '#0f172a' : '#f8fafc';
+        ctx.font = 'bold 11px "Plus Jakarta Sans"';
+        ctx.textAlign = 'center';
+        ctx.fillText(k.label, k.x + k.width / 2, floatY + 25);
+
+        ctx.restore();
+      });
+
+      // Particles
+      particleEffects.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Player Avatar
+      ctx.save();
+      ctx.translate(player.x + player.width/2, player.y + player.height/2);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath();
+      ctx.ellipse(0, player.height/2 - 2, 12, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#4f46e5';
+      ctx.fillRect(-12, -14, 24, 24);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(-9, -22, 18, 12);
+
+      ctx.fillStyle = '#818cf8';
+      if (player.dir === 'down') ctx.fillRect(-5, -18, 10, 3);
+      else if (player.dir === 'left') ctx.fillRect(-7, -18, 7, 3);
+      else if (player.dir === 'right') ctx.fillRect(0, -18, 7, 3);
+      else if (player.dir === 'up') ctx.fillRect(-5, -20, 10, 2);
+
+      ctx.fillStyle = '#0f172a';
+      const offset = (player.animFrame % 2 === 0) ? 2 : -2;
+      ctx.fillRect(-8, 10 + offset, 6, 5);
+      ctx.fillRect(2, 10 - offset, 6, 5);
+
+      ctx.restore();
+    }
+
+    function gameLoop() {
+      updateGame();
+      renderGame();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function sendResultToGoogleSheets(percentage, isPass) {
+      const syncPass = document.getElementById('sync-status-pass');
+      const syncFail = document.getElementById('sync-status-fail');
+      if (syncPass) syncPass.innerText = "Mengirim...";
+      if (syncFail) syncFail.innerText = "Mengirim...";
+
+      const payload = {
+        nama: studentData.nama,
+        kelas: studentData.kelas,
+        nis: studentData.nis,
+        skor: percentage,
+        benar: correctCount,
+        status: isPass ? "LULUS KKM (KOMPETEN)" : "BELUM LULUS"
+      };
+
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        if (syncPass) syncPass.innerText = "TERSIMPAN ✅";
+        if (syncFail) syncFail.innerText = "TERSIMPAN ✅";
+      }).catch(() => {
+        if (syncPass) syncPass.innerText = "GAGAL SYNC ❌";
+        if (syncFail) syncFail.innerText = "GAGAL SYNC ❌";
+      });
+    }
+
+    function evaluateFinalResult() {
+      isGameOver = true;
+      const percentage = Math.round((correctCount / 50) * 100);
+      const isPass = percentage >= 75;
+
+      if (isPass) {
+        playSfx('correct');
+        document.getElementById('vic-score').innerText = `${percentage}% (${correctCount}/50 Benar)`;
+        document.getElementById('modal-victory').classList.remove('hidden');
+      } else {
+        triggerGameOverScreen();
+      }
+
+      sendResultToGoogleSheets(percentage, isPass);
+    }
+
+    function triggerGameOverScreen() {
+      isGameOver = true;
+      playSfx('gameover');
+      document.getElementById('go-score').innerText = `${correctCount} / 50 Ruangan`;
+      document.getElementById('modal-gameover').classList.remove('hidden');
+
+      const percentage = Math.round((correctCount / 50) * 100);
+      sendResultToGoogleSheets(percentage, false);
+    }
+
+    function restartGameRun() {
+      isGameOver = false;
+      gameMode = 'STAGE_1';
+      roomIndex = 0;
+      masterSeqIndex = 0;
+      livesRemaining = 3;
+      correctCount = 0;
+
+      if (cooldownInterval) clearInterval(cooldownInterval);
+      isCooldownActive = false;
+
+      document.getElementById('modal-gameover').classList.add('hidden');
+      document.getElementById('modal-victory').classList.add('hidden');
+
+      setupRoom(0);
+    }
+
+    window.onload = function() {
+      const saved = localStorage.getItem('dkv1_game_student');
+      if (saved) {
+        try {
+          studentData = JSON.parse(saved);
+          document.getElementById('input-nama').value = studentData.nama || '';
+          document.getElementById('input-kelas').value = studentData.kelas || 'XI DKV 1';
+          document.getElementById('input-nis').value = studentData.nis || '';
+        } catch(e){}
+      }
+
+      runInitialLoading();
+    };
+  </script>
 </body>
 </html>
