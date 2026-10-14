@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>DKV 1 Photo & Video Master Dungeon - Google Sheets Edition</title>
+  <title>DKV 1 Photo & Video Master Dungeon - Kiosk Lock & Random Edition</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -59,7 +59,7 @@
 </head>
 <body class="h-full text-slate-100 flex flex-col justify-between bg-slate-950 font-sans">
 
-  <!-- ==================== 1. SCREEN INITIAL LOADING (5 DETIK) ==================== -->
+  <!-- ==================== 1. SCREEN INITIAL LOADING ==================== -->
   <div id="screen-loading" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-4">
     <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-8 shadow-2xl space-y-6 text-center">
       <div class="inline-flex p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 animate-bounce">
@@ -67,10 +67,9 @@
       </div>
       <div>
         <h1 class="font-pixel text-base sm:text-lg text-amber-400 mb-2">PHOTO & VIDEO DUNGEON</h1>
-        <p class="text-xs text-slate-400">MEMUAT LAB FOTOGRAFI & VIDEOGRAFI XI DKV 1...</p>
+        <p class="text-xs text-slate-400">MEMUAT & MENGACAK 100 SOAL DKV 1...</p>
       </div>
 
-      <!-- Retro Loading Bar -->
       <div class="space-y-2">
         <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800 p-0.5">
           <div id="loading-bar" class="bg-gradient-to-r from-amber-500 to-amber-300 h-full w-0 rounded-full transition-all duration-100 ease-linear"></div>
@@ -85,9 +84,9 @@
     <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
       <div class="text-center space-y-2">
         <div class="inline-flex p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 mb-1">
-          <i data-lucide="user-check" class="w-10 h-10"></i>
+          <i data-lucide="shield-check" class="w-10 h-10"></i>
         </div>
-        <h1 class="font-pixel text-base sm:text-lg text-amber-400">LOGIN CREATOR DKV</h1>
+        <h1 class="font-pixel text-base sm:text-lg text-amber-400">LOGIN UJIAN DKV</h1>
         <p class="text-xs text-slate-400">Evaluasi Praktikum Fotografi & Videografi XI DKV 1</p>
       </div>
 
@@ -117,9 +116,14 @@
           </div>
         </div>
 
+        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
+          <i data-lucide="lock" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+          <span>Mode Kunci Layar Aktif. Dilarang meminimize browser atau membuka aplikasi lain selama ujian.</span>
+        </div>
+
         <button type="submit" id="btn-start-game" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center space-x-2 active:scale-95">
           <i data-lucide="play" class="w-4 h-4"></i>
-          <span>MASUK STUDIO LAB</span>
+          <span>MULAI UJIAN (LOCK SCREEN)</span>
         </button>
       </form>
     </div>
@@ -136,19 +140,19 @@
         <i data-lucide="door-open" class="w-4 h-4 text-emerald-400"></i>
         <span class="text-xs font-bold text-slate-300">RUANGAN: <span id="ui-room" class="text-emerald-400 font-pixel text-xs">1 / 50</span></span>
       </div>
-      <div id="ui-mode-badge" class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-900/60 border border-blue-500/50 text-blue-300 font-pixel text-[9px]">
-        STAGE 1: TEKNIK DASAR DKV
+      <div id="ui-mode-badge" class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-emerald-900/60 border border-emerald-500/50 text-emerald-300 font-pixel text-[9px]">
+        KIOSK LOCK: SECURE
       </div>
     </div>
 
     <div class="flex items-center space-x-4">
       <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
-        <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
-        <span class="text-xs text-slate-300 font-bold">PERCOBAAN: <span id="ui-lives" class="text-rose-400 font-pixel text-xs">3</span></span>
+        <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+        <span class="text-xs text-slate-300 font-bold">PELANGGARAN: <span id="ui-cheat-count" class="text-amber-400 font-pixel text-xs">0/2</span></span>
       </div>
-      <div class="hidden sm:flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
-        <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
-        <span class="text-xs text-slate-300 font-bold">AKURASI: <span id="ui-acc" class="text-amber-400 font-pixel text-xs">0%</span></span>
+      <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+        <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+        <span class="text-xs text-slate-300 font-bold">NYAWA: <span id="ui-lives" class="text-rose-400 font-pixel text-xs">3</span></span>
       </div>
       <button id="btn-audio" onclick="toggleAudio()" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sky-400 transition">
         <i id="icon-audio" data-lucide="volume-2" class="w-4 h-4"></i>
@@ -165,14 +169,13 @@
       <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[92%] max-w-2xl bg-slate-950/90 border-2 border-indigo-500/80 rounded-xl p-3 shadow-2xl backdrop-blur-md z-10 flex flex-col items-center">
         <div class="flex items-center justify-between w-full mb-2">
           <span class="font-pixel text-[9px] text-indigo-400 tracking-wider flex items-center gap-1">
-            <i data-lucide="box" class="w-3 h-3"></i> ALTAR SOAL FOTO & VIDEO #<span id="altar-num">1</span>
+            <i data-lucide="box" class="w-3 h-3"></i> ALTAR SOAL DKV #<span id="altar-num">1</span>
           </span>
           <span id="carrying-indicator" class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 hidden">
             MEMBAWA KUNCI: <span id="carried-key-label" class="font-mono text-white font-bold"></span>
           </span>
         </div>
 
-        <!-- Flash Trigger Button & Cooldown Display -->
         <div class="w-full flex flex-col items-center gap-2">
           <button id="btn-flash-trigger" onclick="startFlashSequence()" class="w-full sm:w-auto px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg shadow-lg border border-amber-300 transition flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
             <i data-lucide="eye" class="w-4 h-4"></i>
@@ -214,7 +217,7 @@
         </div>
 
         <p class="text-[10px] text-slate-500 italic">
-          Teks akan menghilang otomatis! Pahami konsepnya dan temukan kuncinya di lab.
+          Soal acak antar-device. Pahami konsepnya dan temukan kuncinya!
         </p>
       </div>
     </div>
@@ -227,7 +230,7 @@
         </div>
         <div>
           <h2 class="font-pixel text-lg text-rose-500 mb-2">EVALUASI GAGAL!</h2>
-          <p class="text-slate-300 text-xs sm:text-sm">
+          <p id="gameover-reason" class="text-slate-300 text-xs sm:text-sm">
             Kesempatan habis! Pelajari kembali parameter kamera dan teknik videografi.
           </p>
         </div>
@@ -263,7 +266,7 @@
         <div>
           <h2 class="font-pixel text-lg text-emerald-400 mb-2">MASTER FOTO & VIDEO!</h2>
           <p class="text-slate-300 text-xs sm:text-sm">
-            Selamat! Kamu telah menguasai 50 parameter dan teknik fotografi & videografi XI DKV 1!
+            Selamat! Kamu berhasil menuntaskan evaluasi acak DKV 1 dengan sempurna!
           </p>
         </div>
 
@@ -323,12 +326,176 @@
   <script>
     lucide.createIcons();
 
-    // -------------------------------------------------------------
-    // CONFIG GOOGLE APPS SCRIPT BACKEND WEB APP URL
-    // -------------------------------------------------------------
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzl7nC2wlyrHvPcwgFq1AnPVTaaQZHFvHHmqOCdXJuDtkUlVyr5oQhcncjTS1mfoL-m7Q/exec";
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+    const GAS_WEB_APP_URL = "PASTE_URL_WEB_APP_GOOGLE_SHEETS_ANDA_DI_SINI";
 
     let studentData = { nama: "", kelas: "XI DKV 1", nis: "" };
+    let shuffledQuestions = [];
+
+    // =============================================================
+    // SISTEM KEAMANAN ANTI-PINDAH APLIKASI / ANTI-TAB SWITCH
+    // =============================================================
+    let cheatCount = 0;
+    const MAX_CHEAT_ALLOWED = 2;
+    let isGameStarted = false;
+
+    function enableFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log(err));
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && isGameStarted && !isGameOver) {
+        handleSecurityViolation("Anda keluar dari mode layar penuh (Fullscreen)!");
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && isGameStarted && !isGameOver) {
+        handleSecurityViolation("Terdeteksi membuka aplikasi/tab lain!");
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      if (isGameStarted && !isGameOver) {
+        handleSecurityViolation("Fokus layar terputus (pindah jendela/aplikasi)!");
+      }
+    });
+
+    function handleSecurityViolation(reason) {
+      cheatCount++;
+      playSfx('wrong');
+      document.getElementById('ui-cheat-count').innerText = `${cheatCount}/${MAX_CHEAT_ALLOWED}`;
+
+      if (cheatCount >= MAX_CHEAT_ALLOWED) {
+        document.getElementById('gameover-reason').innerText = `PELANGGARAN UTAMA: ${reason}\nAnda mencoba keluar aplikasi. Ujian dibatalkan!`;
+        triggerGameOverScreen();
+      } else {
+        alert(`PERINGATAN SISWA (${cheatCount}/${MAX_CHEAT_ALLOWED}):\n${reason}\n\nDilarang membuka aplikasi lain/Google selama ujian berlangsung!`);
+        enableFullscreen();
+      }
+    }
+
+    // =============================================================
+    // 100 BANK SOAL FOTOGRAFI & VIDEOGRAFI DKV 1
+    // =============================================================
+    const raw100BankSoal = [
+      { fragments: ["Segitiga Eksposure terdiri dari...", "tiga elemen dasar kamera,", "yaitu Aperture, Shutter Speed, dan..."], options: ["Focal Length", "ISO", "White Balance", "Frame Rate"], a: 1 },
+      { fragments: ["Pengaturan Aperture lebar...", "ditandai dengan nilai f-number kecil...", "seperti f/1.4 yang menghasilkan efek?"], options: ["Foto sangat tajam keseluruhan", "Ruang tajam dangkal (Bokeh)", "Foto gelap sempurna", "Gerakan membeku"], a: 1 },
+      { fragments: ["Untuk MEMBEKUKAN GERAKAN...", "subjek balap motor berkecepatan tinggi,", "parameter mana yang dinaikkan?"], options: ["Shutter Speed tinggi (1/1000s)", "Aperture sempit (f/22)", "White Balance Tungsten", "ISO paling rendah"], a: 0 },
+      { fragments: ["Dampak negatif penggunaan ISO...", "yang terlalu tinggi pada kondisi malam...", "akan menimbulkan apa pada foto?"], options: ["Distorsi lensa", "Noise / Grain tajam", "Motion blur", "Bayangan putih"], a: 1 },
+      { fragments: ["Sudut pengambilan gambar...", "dari bawah objek sehingga terlihat...", "sangat megah dinamakan?"], options: ["Bird Eye View", "Low Angle / Frog Eye", "Eye Level", "High Angle"], a: 1 },
+      { fragments: ["Pergerakan kamera horizontal...", "dari kiri ke kanan tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Tilting", "Panning", "Dolly", "Pedestal"], a: 1 },
+      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu utama yang menjadi pencahayaan...", "paling dominan pada subjek adalah?"], options: ["Fill Light", "Key Light", "Back Light", "Ambient Light"], a: 1 },
+      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu yang berfungsi memisahkan...", "subjek dari latar belakang adalah?"], options: ["Key Light", "Back Light / Hair Light", "Fill Light", "Softbox"], a: 1 },
+      { fragments: ["Lensa dengan panjang fokus tetap...", "tanpa fitur mekanis zoom,", "seperti lensa 50mm dinamakan?"], options: ["Lensa Telephoto", "Lensa Prime / Fix", "Lensa Wide", "Lensa Fisheye"], a: 1 },
+      { fragments: ["Standard Frame Rate (FPS)...", "yang digunakan dalam standar pembuatan...", "film sinematik komersial adalah?"], options: ["60 FPS", "24 FPS", "120 FPS", "12 FPS"], a: 1 },
+      { fragments: ["Efek ruang tajam luas...", "dimana latar depan dan belakang...", "sama-sama fokus dinamakan?"], options: ["Shallow Depth of Field", "Deep Depth of Field", "Bokeh Effect", "Motion Blur"], a: 1 },
+      { fragments: ["Lensa ultra-wide yang memiliki...", "distorsi melengkung ekstrim hingga 180°...", "dinamakan lensa?"], options: ["Lensa Macro", "Lensa Fisheye", "Lensa Telephoto", "Lensa Tilt-shift"], a: 1 },
+      { fragments: ["Komposisi membagi layar...", "menjadi 9 kotak sejajar...", "dengan 4 titik potong utama dinamakan?"], options: ["Symmetry", "Rule of Thirds", "Golden Ratio", "Leading Lines"], a: 1 },
+      { fragments: ["Elemen warna cahaya dikonfigurasi...", "agar warna putih tampak alami...", "menggunakan pengaturan?"], options: ["ISO", "White Balance (Kelvin)", "Shutter Speed", "Picture Profile"], a: 1 },
+      { fragments: ["Filter kamera yang berfungsi...", "menghilangkan pantulan air/kaca...", "serta membirukan langit dinamakan?"], options: ["Filter ND", "Filter CPL (Polarizer)", "Filter UV", "Filter Diffusion"], a: 1 },
+      { fragments: ["Filter 'kacamata hitam' kamera...", "yang mereduksi intensitas cahaya masuk...", "tanpa mengubah warna dinamakan?"], options: ["Filter CPL", "Filter ND (Neutral Density)", "Filter Infra Merah", "Filter Soft"], a: 1 },
+      { fragments: ["Profil warna datar (flat profile)...", "yang mempertahankan dynamic range tinggi...", "untuk kebutuhan color grading dinamakan?"], options: ["Standard Profile", "LOG / S-Log Profile", "Vivid Profile", "Monochrome"], a: 1 },
+      { fragments: ["Pergerakan kamera mendekati...", "atau menjauhi subjek menggunakan...", "rel / roda dinamakan?"], options: ["Panning", "Dolly (Dolly In/Out)", "Tilting", "Crabbing"], a: 1 },
+      { fragments: ["Aturan kontinuitas arah posisi...", "interaksi antar dua karakter...", "dalam sinematografi dinamakan?"], options: ["Aturan Rule of Thirds", "Aturan Garis 180 Derajat", "Aturan Golden Ratio", "Aturan 30 Derajat"], a: 1 },
+      { fragments: ["Ukuran bidang pandang sinematik...", "yang memperlihatkan seluruh tubuh subjek...", "dari kepala hingga kaki adalah?"], options: ["Close Up (CU)", "Full Shot (FS)", "Medium Shot (MS)", "Extreme Close Up"], a: 1 },
+      { fragments: ["Ukuran bidang pandang...", "yang memotong subjek dari dada...", "hingga atas kepala dinamakan?"], options: ["Extreme Close Up", "Medium Close Up (MCU)", "Long Shot", "Full Shot"], a: 1 },
+      { fragments: ["Potongan video pendukung...", "yang disisipkan untuk melengkapi...", "narasi video utama dinamakan?"], options: ["A-Roll", "B-Roll", "Raw Footage", "Master Shot"], a: 1 },
+      { fragments: ["File presets konfigurasi warna...", "yang diimpor saat color grading...", "video dinamakan?"], options: ["RAW", "LUT (Look-Up Table)", "CODEC", "FPS"], a: 1 },
+      { fragments: ["Format file foto mentah...", "yang menyimpan seluruh informasi...", "sensor kamera tanpa kompresi adalah?"], options: ["JPEG", "RAW", "PNG", "GIF"], a: 1 },
+      { fragments: ["Sudut kamera tegak lurus...", "dari atas subjek langsung...", "seperti mata burung dinamakan?"], options: ["Eye Level", "Bird's Eye View", "Low Angle", "Dutch Angle"], a: 1 },
+      { fragments: ["Kamera sengaja dimiringkan...", "untuk menciptakan kesan ketegangan...", "atau ketidakstabilan dinamakan?"], options: ["High Angle", "Dutch Angle / Canted", "Eye Level", "Frog Eye"], a: 1 },
+      { fragments: ["Suara latar alami sekitar lokasi...", "yang direkam untuk kebutuhan...", "penyelaras audio editing dinamakan?"], options: ["Voice Over", "Ambient Sound / Room Tone", "Foley Sound", "Sound Effect"], a: 1 },
+      { fragments: ["Suara buatan fisik yang dibuat...", "di studio untuk mereplikasi bunyi...", "langkah kaki atau gesekan baju adalah?"], options: ["Foley Sound", "Ambient Sound", "Voice Over", "MOS"], a: 0 },
+      { fragments: ["Istilah rekaman video sinematik...", "yang diambil tanpa merekam...", "suara langsung di lokasi adalah?"], options: ["Sync Sound", "MOS (Mit Out Sound)", "B-Roll", "Wild Track"], a: 1 },
+      { fragments: ["Sensitivitas sensor kamera...", "terhadap cahaya dinyatakan...", "dalam satuan?"], options: ["Kelvin", "ISO", "Milimeter (mm)", "F-Number"], a: 1 },
+      { fragments: ["Panjang fokus lensa (focal length)...", "dinyatakan dalam satuan...", "ukuran fisik apa?"], options: ["Pixel (px)", "Milimeter (mm)", "Kelvin (K)", "Second (s)"], a: 1 },
+      { fragments: ["Semakin panjang fokus lensa...", "seperti lensa Telephoto 200mm,", "maka sudut pandang (FOV) menjadi?"], options: ["Semakin lebar", "Semakin sempit & menyempit", "Tetap sama", "Melengkung fisheye"], a: 1 },
+      { fragments: ["Proses merekam video slow-motion...", "membutuhkan perekaman Frame Rate (FPS)...", "yang bersifat?"], options: ["FPS Rendah (12 FPS)", "FPS Tinggi (60/120+ FPS)", "FPS Sinematik (24 FPS)", "FPS Bebas"], a: 1 },
+      { fragments: ["Istilah bayangan gelap melingkar...", "di sudut-sudut foto akibat...", "lensa atau filter dinamakan?"], options: ["Noise", "Vignette", "Flare", "Chromatic Aberration"], a: 1 },
+      { fragments: ["Pantulan cahaya terang berlebih...", "saat kamera menghadap sumber sinar...", "langsung dinamakan?"], options: ["Bokeh", "Lens Flare", "Motion Blur", "Ghosting"], a: 1 },
+      { fragments: ["Alat pembendung sinar samping...", "yang dipasang di ujung lensa...", "untuk mencegah lens flare dinamakan?"], options: ["Lens Hood", "Filter UV", "Tripod", "Softbox"], a: 0 },
+      { fragments: ["Pergerakan kamera vertikal...", "ke atas atau ke bawah tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Panning", "Tilting (Tilt Up/Down)", "Pedestal", "Dolly"], a: 1 },
+      { fragments: ["Alat penyeimbang fisik mekanis...", "atau elektronik untuk merekam...", "video pergerakan mulus dinamakan?"], options: ["Tripod", "Gimbal / Stabilizer", "Slider", "Monopod"], a: 1 },
+      { fragments: ["Teknik pencahayaan lembut...", "menggunakan aksesoris diffuser...", "seperti kain tebal dinamakan?"], options: ["Hard Light", "Soft Light (Softbox)", "Direct Sun", "Spotlight"], a: 1 },
+      { fragments: ["Garis batas tepi warna melenceng...", "seperti garis ungu pada objek kontras...", "dinamakan?"], options: ["Chromatic Aberration", "Vignette", "Distorsi Pincushion", "Noise"], a: 0 },
+      { fragments: ["Ruang kosong di depan arah pandang...", "atau arah gerak subjek dinamakan...", "ruang komposisi apa?"], options: ["Headroom", "Nose Room / Lead Room", "Top Room", "Side Blur"], a: 1 },
+      { fragments: ["Ruang kosong di atas kepala...", "subjek hingga batas atas frame...", "dinamakan?"], options: ["Lead Room", "Headroom", "Footroom", "Bokeh Space"], a: 1 },
+      { fragments: ["Pergerakan kamera menaikkan...", "atau menurunkan seluruh badan kamera...", "secara vertikal dinamakan?"], options: ["Tilting", "Pedestal (Pedestal Up/Down)", "Crabbing", "Tracking"], a: 1 },
+      { fragments: ["Teknik foto malam hari...", "menggunakan shutter speed lambat...", "sehingga mengukir jejak lampu dinamakan?"], options: ["High-speed photography", "Light Painting / Long Exposure", "Macro photography", "HDR"], a: 1 },
+      { fragments: ["Sistem mikrofon nirkabel klip...", "yang dipasang pada baju subjek...", "dinamakan mikrofon?"], options: ["Shotgun Mic", "Lavalier / Clip-on Mic", "Condenser Studio Mic", "Ribbon Mic"], a: 1 },
+      { fragments: ["Mikrofon arah terfokus...", "yang dipasang di atas kamera atau boom pole...", "dinamakan?"], options: ["Lavalier Mic", "Shotgun Mic", "Dynamic Handheld Mic", "Omni Mic"], a: 1 },
+      { fragments: ["Proses penyesuaian suhu warna...", "gambar awal sebelum pewarnaan gaya sinematik...", "dinamakan?"], options: ["Color Grading", "Color Correction", "LUT Applied", "Chroma Key"], a: 1 },
+      { fragments: ["Proses pemberian nuansa gaya...", "atau efek suasana artistik pada video...", "dinamakan?"], options: ["Color Correction", "Color Grading", "White Balancing", "Exposure Lock"], a: 1 },
+      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada kondisi sinar matahari terik...", "siang hari (daylight) standar adalah?"], options: ["3200 K", "5600 K", "10000 K", "2000 K"], a: 1 },
+      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada lampu pijar tungsten indoor...", "standar adalah?"], options: ["5600 K", "3200 K", "7000 K", "1200 K"], a: 1 },
+      { fragments: ["Parameter Shutter Speed 1/50s...", "paling cocok dipadukan dengan...", "Frame Rate video berapa?"], options: ["24 / 25 FPS", "60 FPS", "120 FPS", "240 FPS"], a: 0 },
+      { fragments: ["Rasio aturan standar shutter...", "terhadap frame rate dalam videografi...", "sinematik dikenal sebagai aturan?"], options: ["Rule of Thirds", "Aturan 180 Shutter Angle", "Rule of Ratio", "Aturan Golden"], a: 1 },
+      { fragments: ["Lensa khusus untuk merekam...", "detail objek sangat kecil seperti...", "mata serangga dinamakan?"], options: ["Lensa Telephoto", "Lensa Macro", "Lensa Anamorphic", "Lensa Wide"], a: 1 },
+      { fragments: ["Aksesoris penyangga kamera...", "dengan tiga kaki penyangga...", "dinamakan?"], options: ["Monopod", "Tripod", "Stabilizer", "Rig"], a: 1 },
+      { fragments: ["Penyangga kamera ber-kaki satu...", "yang sangat fleksibel untuk liputan...", "olahraga dinamakan?"], options: ["Tripod", "Monopod", "Slider", "Cranes"], a: 1 },
+      { fragments: ["Alat berupa rel kecil...", "untuk menghasilkan pergerakan kamera...", "geser halus dinamakan?"], options: ["Gimbal", "Slider", "Tripod", "Dolly Wheel"], a: 1 },
+      { fragments: ["Pengubahan fokus secara perlahan...", "dari subjek depan ke subjek belakang...", "dalam satu shot video dinamakan?"], options: ["Rack Focus / Focus Pull", "Pan Focus", "Deep Focus", "Zoom In"], a: 0 },
+      { fragments: ["Format rasio layar aspek standar...", "untuk video widescreen modern HD/4K...", "adalah rasio?"], options: ["4:3", "16:9", "1:1", "9:16"], a: 1 },
+      { fragments: ["Rasio aspek layar vertikal...", "yang populer digunakan pada konten...", "Reels atau TikTok adalah?"], options: ["16:9", "9:16", "21:9", "4:3"], a: 1 },
+      { fragments: ["Gaya rasio layar paling lebar...", "yang digunakan pada film bioskop...", "layar lebar adalah rasio?"], options: ["21:9 / 2.39:1", "16:9", "4:3", "1:1"], a: 0 },
+      { fragments: ["Teknik pengambilan foto beruntun...", "dengan perbedaan eksposure yang...", "kemudian digabung dinamakan?"], options: ["HDR (High Dynamic Range)", "Bokeh", "Light Trail", "Panorama"], a: 0 },
+      { fragments: ["Sensitivitas dynamic range kamera...", "diukur dari rentang kemampuan...", "menangkap area gelap dan area?"], options: ["Warna", "Terang (Highlights)", "Bising (Noise)", "Fokus"], a: 1 },
+      { fragments: ["Teknik pergerakan kamera mengitari...", "subjek secara melingkar 360°...", "dinamakan shot?"], options: ["Arc Shot / Circular", "Pan Shot", "Tilt Shot", "Dolly Out"], a: 0 },
+      { fragments: ["Bidang gambar sangat jauh...", "dimana pemandangan alam mendominasi...", "subjek sangat kecil dinamakan?"], options: ["Extreme Long Shot (ELS)", "Medium Shot", "Close Up", "Big Close Up"], a: 0 },
+      { fragments: ["Bidang pandang dari dada...", "sampai atas kepala subjek...", "dinamakan?"], options: ["Medium Close Up", "Extreme Long Shot", "Macro Shot", "Full Shot"], a: 0 },
+      { fragments: ["Shot khusus memperlihatkan...", "ekspresi mata atau mata subjek...", "secara sangat dekat dinamakan?"], options: ["Extreme Close Up (ECU)", "Medium Shot", "Long Shot", "Full Shot"], a: 0 },
+      { fragments: ["Teknik mengubah sudut lensa...", "secara cepat menggunakan tombol zoom...", "dinamakan?"], options: ["Crash Zoom / Whip Zoom", "Dolly Zoom", "Focus Pull", "Pan Left"], a: 0 },
+      { fragments: ["Efek ilusi visual vertigo...", "kombinasi Dolly In dan Zoom Out...", "dinamakan efek?"], options: ["Dolly Zoom / Vertigo Effect", "Crash Zoom", "Pan Left", "Tilt Down"], a: 0 },
+      { fragments: ["Waktu emas pencahayaan alami...", "saat matahari terbit atau terbenam...", "dinamakan istilah?"], options: ["Blue Hour", "Golden Hour", "Midday Sun", "Dark Hour"], a: 1 },
+      { fragments: ["Waktu sesaat setelah terbenam...", "dimana langit berwarna biru pekat...", "dinamakan istilah?"], options: ["Golden Hour", "Blue Hour", "Red Hour", "Night Hour"], a: 1 },
+      { fragments: ["Cahaya keras matahari terik...", "di tengah hari tanpa awan...", "menghasilkan karakter cahaya?"], options: ["Hard Light", "Soft Light", "Ambient Light", "Diffused Light"], a: 0 },
+      { fragments: ["Aksesoris pemantul cahaya...", "untuk menerangi area bayangan gelap...", "pada subjek dinamakan?"], options: ["Reflektor", "Softbox", "Gobo", "Snoot"], a: 0 },
+      { fragments: ["Aksesoris pembatas berbentuk kerucut...", "untuk mengarahkan sorot cahaya sempit...", "dinamakan?"], options: ["Snoot", "Reflektor", "Softbox", "Umbrella"], a: 0 },
+      { fragments: ["Aksesoris payung studio...", "yang berfungsi menyebarkan cahaya...", "agar lebih lembut dinamakan?"], options: ["Diffuser Umbrella", "Snoot", "Reflektor Silver", "Barn Door"], a: 0 },
+      { fragments: ["Sirip katup pelindung lampu studio...", "untuk mengatur arah sebaran cahaya...", "dinamakan?"], options: ["Barn Door", "Softbox", "Snoot", "Gobo"], a: 0 },
+      { fragments: ["Latar belakang hijau atau biru...", "untuk kebutuhan penggantian background...", "editing dinamakan?"], options: ["Chroma Key / Green Screen", "Softbox", "Background Paper", "Gobo"], a: 0 },
+      { fragments: ["Proses menghapus latar belakang...", "hijau secara digital pada software...", "editing dinamakan?"], options: ["Keying / Chroma Keying", "Color Grading", "Masking", "Tracking"], a: 0 },
+      { fragments: ["Metode pelacakan gerakan objek...", "dalam video untuk menempelkan teks/efek...", "dinamakan?"], options: ["Motion Tracking", "Chroma Keying", "Color Grading", "Rendering"], a: 0 },
+      { fragments: ["File format kompresi video umum...", "yang efisien dengan ekstensi .mp4...", "menggunakan standar codec?"], options: ["H.264 / AVC", "ProRes 4444", "DNxHR", "RAW Video"], a: 0 },
+      { fragments: ["Format file kompresi video...", "versi generasi terbaru yang lebih efisien...", "dibanding H.264 adalah?"], options: ["H.265 / HEVC", "MPEG-2", "AVI", "WMV"], a: 0 },
+      { fragments: ["Ukuran resolusi piksel video...", "Standar Full HD adalah...", "berapa piksel?"], options: ["1280 x 720", "1920 x 1080", "3840 x 2160", "4096 x 2160"], a: 1 },
+      { fragments: ["Ukuran resolusi piksel video...", "Standar 4K Ultra HD adalah...", "berapa piksel?"], options: ["1920 x 1080", "3840 x 2160", "1280 x 720", "2560 x 1440"], a: 1 },
+      { fragments: ["Satuan kecepatan transfer data...", "video per detik yang memengaruhi kualitas...", "dan ukuran file adalah?"], options: ["Bitrate (Mbps)", "Frame Rate (FPS)", "Sample Rate (Hz)", "Resolusi"], a: 0 },
+      { fragments: ["Istilah gangguan kedipan garis...", "pada video saat merekam layar elektronik...", "dinamakan?"], options: ["Flicker", "Noise", "Rolling Shutter", "Moire"], a: 0 },
+      { fragments: ["Efek distorsi garis miring...", "pada sensor CMOS saat merekam pergerakan...", "cepat dinamakan?"], options: ["Rolling Shutter Effect", "Global Shutter", "Flicker", "Aliasing"], a: 0 },
+      { fragments: ["Pola garis bergelombang aneh...", "pada pakaian bermotif garis halus...", "saat terekam kamera dinamakan?"], options: ["Moire Effect", "Flicker", "Noise", "Vignette"], a: 0 },
+      { fragments: ["Komposisi meletakkan subjek...", "tepat di tengah-tengah bidang simetris...", "dinamakan?"], options: ["Center Composition / Symmetry", "Rule of Thirds", "Golden Ratio", "Diagonal"], a: 0 },
+      { fragments: ["Garis alami pada pemandangan...", "seperti jalan raya atau pagar yang...", "menuntun mata ke subjek dinamakan?"], options: ["Leading Lines", "Rule of Thirds", "Framing", "Symmetry"], a: 0 },
+      { fragments: ["Penggunaan elemen sekitar...", "seperti jendela atau dedaunan untuk...", "mewadahi subjek dinamakan?"], options: ["Framing / Natural Frame", "Leading Lines", "Rule of Thirds", "Symmetry"], a: 0 },
+      { fragments: ["Pengambilan gambar foto...", "yang sengaja membuat subjek berupa...", "bayangan hitam polos dinamakan?"], options: ["Silhouette", "High Key", "Low Key", "HDR"], a: 0 },
+      { fragments: ["Gaya pencahayaan serba terang...", "dengan dominasi warna putih polos...", "dinamakan?"], options: ["High Key Lighting", "Low Key Lighting", "Silhouette", "Chiaroscuro"], a: 0 },
+      { fragments: ["Gaya pencahayaan serba gelap...", "dengan nuansa misterius dramatis...", "dinamakan?"], options: ["Low Key Lighting", "High Key Lighting", "Soft Light", "Flat Light"], a: 0 },
+      { fragments: ["Tipe pergerakan cepat kamera...", "dari satu objek ke objek lain hingga...", "buram dinamakan?"], options: ["Whip Pan", "Dolly Zoom", "Pedestal", "Tracking"], a: 0 },
+      { fragments: ["Teknik memutar video...", "mundur dari akhir ke awal...", "dinamakan?"], options: ["Reverse Video", "Time-Lapse", "Slow Motion", "Looping"], a: 0 },
+      { fragments: ["Teknik merekam foto bertahap...", "dengan jeda waktu lama yang digabung...", "menjadi video cepat dinamakan?"], options: ["Time-Lapse", "Slow Motion", "Stop Motion", "Real-Time"], a: 0 },
+      { fragments: ["Teknik Time-Lapse yang dipadukan...", "dengan pergerakan kamera maju/berpindah...", "dinamakan?"], options: ["Hyper-Lapse", "Slow Motion", "Stop Motion", "Burst Shot"], a: 0 },
+      { fragments: ["Teknik animasi menggerakkan benda...", "fisik sedikit demi sedikit lalu difoto...", "satu per satu dinamakan?"], options: ["Stop Motion", "Time-Lapse", "Motion Graphic", "CGI"], a: 0 },
+      { fragments: ["Suhu warna lampu daylight...", "pada skala Kelvin bernilai...", "sekitar berapa?"], options: ["5600 K", "3200 K", "2000 K", "8000 K"], a: 0 },
+      { fragments: ["Tombol pengunci fokus & eksposure...", "pada kamera digital dinamakan?", options: ["AF-L / AE-L", "ISO Lock", "WB Lock", "Shutter Lock"], a: 0 },
+      { fragments: ["Fitur garis-garis zebra...", "pada layar kamera untuk mendeteksi...", "area overexposure dinamakan?"], options: ["Zebra Pattern", "Focus Peaking", "Histogram", "Grid Lines"], a: 0 }
+    ];
+
+    function shuffleArray(array) {
+      let arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
     function runInitialLoading() {
       const loadingBar = document.getElementById('loading-bar');
@@ -337,6 +504,8 @@
       const duration = 5000;
       const intervalTime = 50;
       const step = 100 / (duration / intervalTime);
+
+      shuffledQuestions = shuffleArray(raw100BankSoal).slice(0, 50);
 
       const timer = setInterval(() => {
         progress += step;
@@ -365,11 +534,14 @@
       document.getElementById('screen-auth').classList.add('hidden');
       document.getElementById('ui-user-badge').innerText = `${nis} | ${nama.split(' ')[0]}`;
       
+      isGameStarted = true;
+      enableFullscreen();
+
       setupRoom(0);
       requestAnimationFrame(gameLoop);
     }
 
-    // WEB AUDIO SYNTHESIZER
+    // AUDIO SYNTH
     let audioCtx = null;
     let audioEnabled = true;
 
@@ -447,92 +619,13 @@
       }
     }
 
-    // -------------------------------------------------------------
-    // 50 BANK SOAL KHUSUS FOTOGRAFI & VIDEOGRAFI DKV
-    // -------------------------------------------------------------
-    const dkvQuestionsPool = [
-      { fragments: ["Segitiga Eksposure terdiri dari...", "tiga elemen dasar kamera,", "yaitu Aperture, Shutter Speed, dan..."], options: ["Focal Length", "ISO", "White Balance", "Frame Rate"], a: 1 },
-      { fragments: ["Pengaturan Aperture lebar...", "ditandai dengan nilai f-number kecil...", "seperti f/1.4 yang menghasilkan efek?"], options: ["Foto sangat tajam keseluruhan", "Ruang tajam dangkal (Bokeh)", "Foto gelap sempurna", "Gerakan membeku"], a: 1 },
-      { fragments: ["Untuk MEMBEKUKAN GERAKAN...", "subjek balap motor berkecepatan tinggi,", "parameter mana yang dinaikkan?"], options: ["Shutter Speed tinggi (1/1000s)", "Aperture sempit (f/22)", "White Balance Tungsten", "ISO paling rendah"], a: 0 },
-      { fragments: ["Dampak negatif penggunaan ISO...", "yang terlalu tinggi pada kondisi malam...", "akan menimbulkan apa pada foto?"], options: ["Distorsi lensa", "Noise / Grain tajam", "Motion blur", "Banyangan putih"], a: 1 },
-      { fragments: ["Sudut pengambilan gambar...", "dari bawah objek sehingga terlihat...", "sangat megah dinamakan?"], options: ["Bird Eye View", "Low Angle / Frog Eye", "Eye Level", "High Angle"], a: 1 },
-      { fragments: ["Pergerakan kamera horizontal...", "dari kiri ke kanan tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Tilting", "Panning", "Dolly", "Pedestal"], a: 1 },
-      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu utama yang menjadi pencahayaan...", "paling dominan pada subjek adalah?"], options: ["Fill Light", "Key Light", "Back Light", "Ambient Light"], a: 1 },
-      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu yang berfungsi memisahkan...", "subjek dari latar belakang adalah?"], options: ["Key Light", "Back Light / Hair Light", "Fill Light", "Softbox"], a: 1 },
-      { fragments: ["Lensa dengan panjang fokus tetap...", "tanpa fitur mekanis zoom,", "seperti lensa 50mm dinamakan?"], options: ["Lensa Telephoto", "Lensa Prime / Fix", "Lensa Wide", "Lensa Fisheye"], a: 1 },
-      { fragments: ["Standard Frame Rate (FPS)...", "yang digunakan dalam standar pembuatan...", "film sinematik komersial adalah?"], options: ["60 FPS", "24 FPS", "120 FPS", "12 FPS"], a: 1 },
-      { fragments: ["Efek ruang tajam luas...", "dimana latar depan dan belakang...", "sama-sama fokus dinamakan?"], options: ["Shallow Depth of Field", "Deep Depth of Field", "Bokeh Effect", "Motion Blur"], a: 1 },
-      { fragments: ["Lensa ultra-wide yang memiliki...", "distorsi melengkung ekstrim hingga 180°...", "dinamakan lensa?"], options: ["Lensa Macro", "Lensa Fisheye", "Lensa Telephoto", "Lensa Tilt-shift"], a: 1 },
-      { fragments: ["Komposisi membagi layar...", "menjadi 9 kotak sejajar...", "dengan 4 titik potong utama dinamakan?"], options: ["Symmetry", "Rule of Thirds", "Golden Ratio", "Leading Lines"], a: 1 },
-      { fragments: ["Elemen warna cahaya dikonfigurasi...", "agar warna putih tampak alami...", "menggunakan pengaturan?"], options: ["ISO", "White Balance (Kelvin)", "Shutter Speed", "Picture Profile"], a: 1 },
-      { fragments: ["Filter kamera yang berfungsi...", "menghilangkan pantulan air/kaca...", "serta membirukan langit dinamakan?"], options: ["Filter ND", "Filter CPL (Polarizer)", "Filter UV", "Filter Diffusion"], a: 1 },
-      { fragments: ["Filter 'kacamata hitam' kamera...", "yang mereduksi intensitas cahaya masuk...", "tanpa mengubah warna dinamakan?"], options: ["Filter CPL", "Filter ND (Neutral Density)", "Filter Infra Merah", "Filter Soft"], a: 1 },
-      { fragments: ["Profil warna datar (flat profile)...", "yang mempertahankan dynamic range tinggi...", "untuk kebutuhan color grading dinamakan?"], options: ["Standard Profile", "LOG / S-Log Profile", "Vivid Profile", "Monochrome"], a: 1 },
-      { fragments: ["Pergerakan kamera mendekati...", "atau menjauhi subjek menggunakan...", "rel / roda dinamakan?"], options: ["Panning", "Dolly (Dolly In/Out)", "Tilting", "Crabbing"], a: 1 },
-      { fragments: ["Aturan kontinuitas arah posisi...", "interaksi antar dua karakter...", "dalam sinematografi dinamakan?"], options: ["Aturan Rule of Thirds", "Aturan Garis 180 Derajat", "Aturan Golden Ratio", "Aturan 30 Derajat"], a: 1 },
-      { fragments: ["Ukuran bidang pandang sinematik...", "yang memperlihatkan seluruh tubuh subjek...", "dari kepala hingga kaki adalah?"], options: ["Close Up (CU)", "Full Shot (FS)", "Medium Shot (MS)", "Extreme Close Up"], a: 1 },
-      { fragments: ["Ukuran bidang pandang...", "yang memotong subjek dari dada...", "hingga atas kepala dinamakan?"], options: ["Extreme Close Up", "Medium Close Up (MCU)", "Long Shot", "Full Shot"], a: 1 },
-      { fragments: ["Potongan video pendukung...", "yang disisipkan untuk melengkapi...", "narasi video utama dinamakan?"], options: ["A-Roll", "B-Roll", "Raw Footage", "Master Shot"], a: 1 },
-      { fragments: ["File presets konfigurasi warna...", "yang diimpor saat color grading...", "video dinamakan?"], options: ["RAW", "LUT (Look-Up Table)", "CODEC", "FPS"], a: 1 },
-      { fragments: ["Format file foto mentah...", "yang menyimpan seluruh informasi...", "sensor kamera tanpa kompresi adalah?"], options: ["JPEG", "RAW", "PNG", "GIF"], a: 1 },
-      { fragments: ["Sudut kamera tegak lurus...", "dari atas subjek langsung...", "seperti mata burung dinamakan?"], options: ["Eye Level", "Bird's Eye View", "Low Angle", "Dutch Angle"], a: 1 },
-      { fragments: ["Kamera sengaja dimiringkan...", "untuk menciptakan kesan ketegangan...", "atau ketidakstabilan dinamakan?"], options: ["High Angle", "Dutch Angle / Canted", "Eye Level", "Frog Eye"], a: 1 },
-      { fragments: ["Suara latar alami sekitar lokasi...", "yang direkam untuk kebutuhan...", "penyelaras audio editing dinamakan?"], options: ["Voice Over", "Ambient Sound / Room Tone", "Foley Sound", "Sound Effect"], a: 1 },
-      { fragments: ["Suara buatan fisik yang dibuat...", "di studio untuk mereplikasi bunyi...", "langkah kaki atau gesekan baju adalah?"], options: ["Foley Sound", "Ambient Sound", "Voice Over", "MOS"], a: 0 },
-      { fragments: ["Istilah rekaman video sinematik...", "yang diambil tanpa merekam...", "suara langsung di lokasi adalah?"], options: ["Sync Sound", "MOS (Mit Out Sound)", "B-Roll", "Wild Track"], a: 1 },
-      { fragments: ["Sensitivitas sensor kamera...", "terhadap cahaya dinyatakan...", "dalam satuan?"], options: ["Kelvin", "ISO", "Milimeter (mm)", "F-Number"], a: 1 },
-      { fragments: ["Panjang fokus lensa (focal length)...", "dinyatakan dalam satuan...", "ukuran fisik apa?"], options: ["Pixel (px)", "Milimeter (mm)", "Kelvin (K)", "Second (s)"], a: 1 },
-      { fragments: ["Semakin panjang fokus lensa...", "seperti lensa Telephoto 200mm,", "maka sudut pandang (FOV) menjadi?"], options: ["Semakin lebar", "Semakin sempit & menyempit", "Tetap sama", "Melengkung fisheye"], a: 1 },
-      { fragments: ["Proses merekam video slow-motion...", "membutuhkan perekaman Frame Rate (FPS)...", "yang bersifat?"], options: ["FPS Rendah (12 FPS)", "FPS Tinggi (60/120+ FPS)", "FPS Sinematik (24 FPS)", "FPS Bebas"], a: 1 },
-      { fragments: ["Istilah bayangan gelap melingkar...", "di sudut-sudut foto akibat...", "lensa atau filter dinamakan?"], options: ["Noise", "Vignette", "Flare", "Chromatic Aberration"], a: 1 },
-      { fragments: ["Pantulan cahaya terang berlebih...", "saat kamera menghadap sumber sinar...", "langsung dinamakan?"], options: ["Bokeh", "Lens Flare", "Motion Blur", "Ghosting"], a: 1 },
-      { fragments: ["Alat pembendung sinar samping...", "yang dipasang di ujung lensa...", "untuk mencegah lens flare dinamakan?"], options: ["Lens Hood", "Filter UV", "Tripod", "Softbox"], a: 0 },
-      { fragments: ["Pergerakan kamera vertikal...", "ke atas atau ke bawah tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Panning", "Tilting (Tilt Up/Down)", "Pedestal", "Dolly"], a: 1 },
-      { fragments: ["Alat penyeimbang fisik mekanis...", "atau elektronik untuk merekam...", "video pergerakan mulus dinamakan?"], options: ["Tripod", "Gimbal / Stabilizer", "Slider", "Monopod"], a: 1 },
-      { fragments: ["Teknik pencahayaan lembut...", "menggunakan aksesoris diffuser...", "seperti kain tebal dinamakan?"], options: ["Hard Light", "Soft Light (Softbox)", "Direct Sun", "Spotlight"], a: 1 },
-      { fragments: ["Garis batas tepi warna melenceng...", "seperti garis ungu pada objek kontras...", "dinamakan?"], options: ["Chromatic Aberration", "Vignette", "Distorsi Pincushion", "Noise"], a: 0 },
-      { fragments: ["Ruang kosong di depan arah pandang...", "atau arah gerak subjek dinamakan...", "ruang komposisi apa?"], options: ["Headroom", "Nose Room / Lead Room", "Top Room", "Side Blur"], a: 1 },
-      { fragments: ["Ruang kosong di atas kepala...", "subjek hingga batas atas frame...", "dinamakan?"], options: ["Lead Room", "Headroom", "Footroom", "Bokeh Space"], a: 1 },
-      { fragments: ["Pergerakan kamera menaikkan...", "atau menurunkan seluruh badan kamera...", "secara vertikal dinamakan?"], options: ["Tilting", "Pedestal (Pedestal Up/Down)", "Crabbing", "Tracking"], a: 1 },
-      { fragments: ["Teknik foto malam hari...", "menggunakan shutter speed lambat...", "sehingga mengukir jejak lampu dinamakan?"], options: ["High-speed photography", "Light Painting / Long Exposure", "Macro photography", "HDR"], a: 1 },
-      { fragments: ["Sistem mikrofon nirkabel klip...", "yang dipasang pada baju subjek...", "dinamakan mikrofon?"], options: ["Shotgun Mic", "Lavalier / Clip-on Mic", "Condenser Studio Mic", "Ribbon Mic"], a: 1 },
-      { fragments: ["Mikrofon arah terfokus...", "yang dipasang di atas kamera atau boom pole...", "dinamakan?"], options: ["Lavalier Mic", "Shotgun Mic", "Dynamic Handheld Mic", "Omni Mic"], a: 1 },
-      { fragments: ["Proses penyesuaian suhu warna...", "gambar awal sebelum pewarnaan gaya sinematik...", "dinamakan?"], options: ["Color Grading", "Color Correction", "LUT Applied", "Chroma Key"], a: 1 },
-      { fragments: ["Proses pemberian nuansa gaya...", "atau efek suasana artistik pada video...", "dinamakan?"], options: ["Color Correction", "Color Grading", "White Balancing", "Exposure Lock"], a: 1 },
-      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada kondisi sinar matahari terik...", "siang hari (daylight) standar adalah?"], options: ["3200 K", "5600 K", "10000 K", "2000 K"], a: 1 },
-      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada lampu pijar tungsten indoor...", "standar adalah?"], options: ["5600 K", "3200 K", "7000 K", "1200 K"], a: 1 }
-    ];
-
-    // STAGE MASTER SEQUENCES
-    const masterSequences = [
-      {
-        title: "Alur Kerja Pra-Produksi Video",
-        fragments: ["Susunlah urutan", "tahapan Pra-Produksi", "pembuatan karya video DKV!"],
-        seq: ["Ide Konsep", "Naskah", "Storyboard", "Location Scouting", "Shooting"],
-        options: ["Ide Konsep", "Naskah", "Storyboard", "Location Scouting", "Shooting", "Editing", "Rendering"]
-      },
-      {
-        title: "Alur Kerja Ekosistem Pascaproduksi",
-        fragments: ["Susunlah hirarki", "tahapan Pascaproduksi", "editing video sinematik!"],
-        seq: ["Import Footage", "Assembly Cut", "Color Correction", "Audio Mixing", "Export Video"],
-        options: ["Import Footage", "Assembly Cut", "Color Correction", "Audio Mixing", "Export Video", "Shooting", "Lighting"]
-      }
-    ];
-
-    // CANVAS & GAME STATE
+    // CANVAS ENGINE
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const V_WIDTH = 800; const V_HEIGHT = 600;
+    canvas.width = V_WIDTH; canvas.height = V_HEIGHT;
 
-    const V_WIDTH = 800;
-    const V_HEIGHT = 600;
-    canvas.width = V_WIDTH;
-    canvas.height = V_HEIGHT;
-
-    let gameMode = 'STAGE_1';
     let roomIndex = 0;
-    let masterSeqIndex = 0;
-    let currentSeqStep = 0;
-
     let livesRemaining = 3;
     let correctCount = 0;
     let currentQuestionData = null;
@@ -545,17 +638,12 @@
     let cooldownTimer = 0;
     let cooldownInterval = null;
 
-    const player = {
-      x: 400, y: 460, width: 32, height: 36, speed: 4.5,
-      dir: 'down', isCarrying: false, animTimer: 0, animFrame: 0
-    };
-
+    const player = { x: 400, y: 460, width: 32, height: 36, speed: 4.5, dir: 'down', isCarrying: false, animTimer: 0, animFrame: 0 };
     const altarBox = { x: 350, y: 110, width: 100, height: 60 };
     let keysInRoom = [];
     let particleEffects = [];
 
     const inputKeys = { Up: false, Down: false, Left: false, Right: false, Space: false };
-
     function setKey(dir, val) { inputKeys[dir] = val; }
 
     window.addEventListener('keydown', (e) => {
@@ -564,10 +652,7 @@
       if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') inputKeys.Down = true;
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inputKeys.Left = true;
       if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inputKeys.Right = true;
-      if (e.key === ' ' || e.key === 'Enter') {
-        inputKeys.Space = true;
-        triggerAction();
-      }
+      if (e.key === ' ' || e.key === 'Enter') { inputKeys.Space = true; triggerAction(); }
     });
 
     window.addEventListener('keyup', (e) => {
@@ -647,28 +732,13 @@
     }
 
     function setupRoom(idx) {
-      player.x = 384;
-      player.y = 480;
-      player.isCarrying = false;
-      carriedKeyIndex = null;
+      player.x = 384; player.y = 480;
+      player.isCarrying = false; carriedKeyIndex = null;
       isAltarUnlocked = false;
 
-      const badge = document.getElementById('ui-mode-badge');
-
-      if (gameMode === 'STAGE_1') {
-        roomIndex = idx;
-        currentQuestionData = dkvQuestionsPool[roomIndex];
-        document.getElementById('altar-num').innerText = roomIndex + 1;
-        badge.innerText = "STAGE 1: TEKNIK DASAR DKV";
-        badge.className = "hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-900/60 border border-blue-500/50 text-blue-300 font-pixel text-[9px]";
-      } else {
-        masterSeqIndex = idx;
-        currentSeqStep = 0;
-        currentQuestionData = masterSequences[masterSeqIndex];
-        document.getElementById('altar-num').innerText = `M-${masterSeqIndex + 1}`;
-        badge.innerText = "STAGE 2: MASTER ALUR DKV";
-        badge.className = "hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-900/80 border border-amber-500/80 text-amber-300 font-pixel text-[9px] animate-pulse";
-      }
+      roomIndex = idx;
+      currentQuestionData = shuffledQuestions[roomIndex];
+      document.getElementById('altar-num').innerText = roomIndex + 1;
 
       document.getElementById('carrying-indicator').classList.add('hidden');
       document.getElementById('status-altar-lock').innerHTML = `
@@ -682,21 +752,18 @@
         document.getElementById('flash-btn-label').innerText = "LIHAT FRAGMEN SOAL (FLASH)";
       }
 
-      const rawOptions = [...currentQuestionData.options].sort(() => Math.random() - 0.5);
+      const rawOptions = shuffleArray(currentQuestionData.options);
       const cols = 4;
       
       keysInRoom = rawOptions.map((optText, i) => {
         const row = Math.floor(i / cols);
         const col = i % cols;
         return {
-          id: i,
-          label: optText,
+          id: i, label: optText,
           x: 100 + col * 160 + (Math.random() * 20 - 10),
           y: 220 + row * 110 + (Math.random() * 20 - 10),
-          width: 90,
-          height: 42,
-          isCarried: false,
-          isSocketed: false,
+          width: 90, height: 42,
+          isCarried: false, isSocketed: false,
           floatOffset: Math.random() * Math.PI * 2
         };
       });
@@ -705,9 +772,9 @@
     }
 
     function updateHUD() {
-      document.getElementById('ui-room').innerText = gameMode === 'STAGE_1' ? `${roomIndex + 1} / 50` : `M-${masterSeqIndex + 1} / ${masterSequences.length}`;
+      document.getElementById('ui-room').innerText = `${roomIndex + 1} / 50`;
       document.getElementById('ui-lives').innerText = livesRemaining;
-      
+      document.getElementById('ui-cheat-count').innerText = `${cheatCount}/${MAX_CHEAT_ALLOWED}`;
       const acc = Math.round((correctCount / 50) * 100);
       document.getElementById('ui-acc').innerText = `${acc}%`;
     }
@@ -728,14 +795,11 @@
           }
 
           const chosenKey = keysInRoom[carriedKeyIndex];
-          checkAnswer(chosenKey.label, chosenKey.id);
+          checkAnswer(chosenKey.label);
         } else {
           const k = keysInRoom[carriedKeyIndex];
-          k.isCarried = false;
-          k.x = player.x - 30;
-          k.y = player.y + 10;
-          player.isCarrying = false;
-          carriedKeyIndex = null;
+          k.isCarried = false; k.x = player.x - 30; k.y = player.y + 10;
+          player.isCarrying = false; carriedKeyIndex = null;
           document.getElementById('carrying-indicator').classList.add('hidden');
           playSfx('step');
         }
@@ -748,13 +812,9 @@
 
         const dist = Math.hypot((player.x + player.width/2) - (k.x + k.width/2), (player.y + player.height/2) - (k.y + k.height/2));
         if (dist < 65) {
-          k.isCarried = true;
-          player.isCarrying = true;
-          carriedKeyIndex = i;
-          
+          k.isCarried = true; player.isCarrying = true; carriedKeyIndex = i;
           document.getElementById('carried-key-label').innerText = k.label;
           document.getElementById('carrying-indicator').classList.remove('hidden');
-          
           playSfx('pickup');
           createParticles(player.x, player.y, '#38bdf8', 12);
           break;
@@ -762,86 +822,45 @@
       }
     }
 
-    function checkAnswer(chosenLabel, chosenIndex) {
-      if (gameMode === 'STAGE_1') {
-        const correctAnswerLabel = currentQuestionData.options[currentQuestionData.a];
-        const isCorrect = (chosenLabel.trim() === correctAnswerLabel.trim());
+    function checkAnswer(chosenLabel) {
+      const correctAnswerLabel = currentQuestionData.options[currentQuestionData.a];
+      const isCorrect = (chosenLabel.trim() === correctAnswerLabel.trim());
 
-        if (isCorrect) {
-          playSfx('correct');
-          correctCount++;
-          createParticles(altarBox.x + 50, altarBox.y + 30, '#10b981', 30);
+      if (isCorrect) {
+        playSfx('correct');
+        correctCount++;
+        createParticles(altarBox.x + 50, altarBox.y + 30, '#10b981', 30);
 
-          if (roomIndex < 49) {
-            setupRoom(roomIndex + 1);
-          } else {
-            const finalPercent = Math.round((correctCount / 50) * 100);
-            if (finalPercent >= 75) {
-              gameMode = 'MASTER_STAGE';
-              setupRoom(0);
-            } else {
-              evaluateFinalResult();
-            }
-          }
+        if (roomIndex < 49) {
+          setupRoom(roomIndex + 1);
         } else {
-          playSfx('wrong');
-          livesRemaining--;
-          updateHUD();
-
-          const frame = document.getElementById('game-frame');
-          frame.classList.add('shake-screen');
-          setTimeout(() => frame.classList.remove('shake-screen'), 400);
-
-          createParticles(altarBox.x + 50, altarBox.y + 30, '#ef4444', 30);
-
-          if (livesRemaining <= 0) {
-            triggerGameOverScreen();
-          } else {
-            mutateCurrentRoom();
-          }
+          evaluateFinalResult();
         }
       } else {
-        const expectedTag = currentQuestionData.seq[currentSeqStep];
-        if (chosenLabel.trim() === expectedTag.trim()) {
-          playSfx('correct');
-          currentSeqStep++;
-          player.isCarrying = false;
-          carriedKeyIndex = null;
-          document.getElementById('carrying-indicator').classList.add('hidden');
+        playSfx('wrong');
+        livesRemaining--;
+        updateHUD();
 
-          if (currentSeqStep >= currentQuestionData.seq.length) {
-            masterSeqIndex++;
-            if (masterSeqIndex < masterSequences.length) {
-              setupRoom(masterSeqIndex);
-            } else {
-              evaluateFinalResult();
-            }
-          }
+        const frame = document.getElementById('game-frame');
+        frame.classList.add('shake-screen');
+        setTimeout(() => frame.classList.remove('shake-screen'), 400);
+        createParticles(altarBox.x + 50, altarBox.y + 30, '#ef4444', 30);
+
+        if (livesRemaining <= 0) {
+          document.getElementById('gameover-reason').innerText = "Nyawa Anda habis karena salah memasukkan kunci jawaban!";
+          triggerGameOverScreen();
         } else {
-          playSfx('wrong');
-          const frame = document.getElementById('game-frame');
-          frame.classList.add('shake-screen');
-          setTimeout(() => frame.classList.remove('shake-screen'), 400);
-          setupRoom(masterSeqIndex);
+          setupRoom(roomIndex);
         }
       }
-    }
-
-    function mutateCurrentRoom() {
-      let newIdx = Math.floor(Math.random() * dkvQuestionsPool.length);
-      dkvQuestionsPool[roomIndex] = dkvQuestionsPool[newIdx];
-      setupRoom(roomIndex);
     }
 
     function createParticles(x, y, color, count) {
       for (let i = 0; i < count; i++) {
         particleEffects.push({
           x: x, y: y,
-          vx: (Math.random() - 0.5) * 6,
-          vy: (Math.random() - 0.5) * 6,
-          radius: Math.random() * 4 + 2,
-          color: color,
-          life: 25
+          vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
+          radius: Math.random() * 4 + 2, color: color, life: 25
         });
       }
     }
@@ -876,8 +895,7 @@
         k.y = player.y - 35;
       }
 
-      let nearKey = false;
-      let nearAltar = false;
+      let nearKey = false; let nearAltar = false;
 
       if (player.isCarrying) {
         const distToAltar = Math.hypot((player.x + player.width/2) - (altarBox.x + altarBox.width/2), (player.y + player.height/2) - (altarBox.y + altarBox.height/2));
@@ -916,11 +934,9 @@
     }
 
     function renderGame() {
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
 
-      ctx.strokeStyle = '#1e293b';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
       for (let x = 40; x < V_WIDTH - 40; x += 40) {
         for (let y = 40; y < V_HEIGHT - 40; y += 40) {
           ctx.strokeRect(x, y, 40, 40);
@@ -928,13 +944,10 @@
       }
 
       ctx.fillStyle = '#020617';
-      ctx.fillRect(0, 0, V_WIDTH, 50);
-      ctx.fillRect(0, V_HEIGHT - 40, V_WIDTH, 40);
-      ctx.fillRect(0, 0, 40, V_HEIGHT);
-      ctx.fillRect(V_WIDTH - 40, 0, 40, V_HEIGHT);
+      ctx.fillRect(0, 0, V_WIDTH, 50); ctx.fillRect(0, V_HEIGHT - 40, V_WIDTH, 40);
+      ctx.fillRect(0, 0, 40, V_HEIGHT); ctx.fillRect(V_WIDTH - 40, 0, 40, V_HEIGHT);
 
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 4;
       ctx.strokeRect(40, 50, V_WIDTH - 80, V_HEIGHT - 90);
 
       // Altar
@@ -945,18 +958,11 @@
       ctx.strokeRect(altarBox.x, altarBox.y, altarBox.width, altarBox.height);
 
       ctx.fillStyle = isAltarUnlocked ? '#10b981' : '#f43f5e';
-      ctx.font = '9px "Press Start 2P"';
-      ctx.textAlign = 'center';
+      ctx.font = '9px "Press Start 2P"'; ctx.textAlign = 'center';
       ctx.fillText(isAltarUnlocked ? 'UNLOCKED' : 'LOCKED', altarBox.x + 50, altarBox.y - 10);
 
       ctx.fillStyle = isAltarUnlocked ? '#059669' : '#e11d48';
       ctx.fillRect(altarBox.x + 10, altarBox.y + 10, 80, 40);
-
-      if (gameMode === 'MASTER_STAGE' && isAltarUnlocked) {
-        ctx.fillStyle = '#fbbf24';
-        ctx.font = 'bold 12px "VT323"';
-        ctx.fillText(`SLOT ${currentSeqStep + 1}/${currentQuestionData.seq.length}`, altarBox.x + 50, altarBox.y + 34);
-      }
 
       // Keys
       keysInRoom.forEach((k) => {
@@ -973,8 +979,7 @@
         ctx.strokeRect(k.x, floatY, k.width, k.height);
 
         ctx.fillStyle = k.isCarried ? '#0f172a' : '#f8fafc';
-        ctx.font = 'bold 11px "Plus Jakarta Sans"';
-        ctx.textAlign = 'center';
+        ctx.font = 'bold 11px "Plus Jakarta Sans"'; ctx.textAlign = 'center';
         ctx.fillText(k.label, k.x + k.width / 2, floatY + 25);
 
         ctx.restore();
@@ -982,26 +987,19 @@
 
       // Particles
       particleEffects.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = p.color; ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
       });
 
       // Player Avatar
       ctx.save();
       ctx.translate(player.x + player.width/2, player.y + player.height/2);
 
-      ctx.fillStyle = 'rgba(0,0,0,0.4)';
-      ctx.beginPath();
-      ctx.ellipse(0, player.height/2 - 2, 12, 5, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath();
+      ctx.ellipse(0, player.height/2 - 2, 12, 5, 0, 0, Math.PI * 2); ctx.fill();
 
-      ctx.fillStyle = '#4f46e5';
-      ctx.fillRect(-12, -14, 24, 24);
-
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(-9, -22, 18, 12);
+      ctx.fillStyle = '#4f46e5'; ctx.fillRect(-12, -14, 24, 24);
+      ctx.fillStyle = '#f8fafc'; ctx.fillRect(-9, -22, 18, 12);
 
       ctx.fillStyle = '#818cf8';
       if (player.dir === 'down') ctx.fillRect(-5, -18, 10, 3);
@@ -1018,8 +1016,7 @@
     }
 
     function gameLoop() {
-      updateGame();
-      renderGame();
+      updateGame(); renderGame();
       requestAnimationFrame(gameLoop);
     }
 
@@ -1035,12 +1032,12 @@
         nis: studentData.nis,
         skor: percentage,
         benar: correctCount,
+        pelanggaran: cheatCount,
         status: isPass ? "LULUS KKM (KOMPETEN)" : "BELUM LULUS"
       };
 
       fetch(GAS_WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       }).then(() => {
@@ -1062,6 +1059,7 @@
         document.getElementById('vic-score').innerText = `${percentage}% (${correctCount}/50 Benar)`;
         document.getElementById('modal-victory').classList.remove('hidden');
       } else {
+        document.getElementById('gameover-reason').innerText = "Nilai Anda belum mencapai KKM 75%.";
         triggerGameOverScreen();
       }
 
@@ -1069,8 +1067,7 @@
     }
 
     function triggerGameOverScreen() {
-      isGameOver = true;
-      playSfx('gameover');
+      isGameOver = true; playSfx('gameover');
       document.getElementById('go-score').innerText = `${correctCount} / 50 Ruangan`;
       document.getElementById('modal-gameover').classList.remove('hidden');
 
@@ -1080,14 +1077,12 @@
 
     function restartGameRun() {
       isGameOver = false;
-      gameMode = 'STAGE_1';
-      roomIndex = 0;
-      masterSeqIndex = 0;
-      livesRemaining = 3;
-      correctCount = 0;
+      roomIndex = 0; livesRemaining = 3; correctCount = 0; cheatCount = 0;
 
       if (cooldownInterval) clearInterval(cooldownInterval);
       isCooldownActive = false;
+
+      shuffledQuestions = shuffleArray(raw100BankSoal).slice(0, 50);
 
       document.getElementById('modal-gameover').classList.add('hidden');
       document.getElementById('modal-victory').classList.add('hidden');
