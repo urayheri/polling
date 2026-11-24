@@ -1,1007 +1,2308 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-950 select-none overflow-hidden">
+<!doctype html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Photo & Video Master Dungeon - Hasil Nilai Edition</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Plus+Jakarta+Sans:wght@500;700;800&family=VT323&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pendakian 3 Bukit XI RPL - Pemrograman Web SMKN 1 Semparuk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{
+  --ink:#0d1b2a; --ink-2:#27475f; --snow:#f0f6fc; --sky:#070e1a; --pine:#2d7a55;
+  --sun:#ffb62b; --sun-d:#c98400; --berry:#e5383b; --paper:#fffdf5; --line:#d7e3ee; --glass:rgba(8,16,28,.88);
+  --display:"Baloo 2",system-ui,sans-serif; --body:"Nunito",system-ui,sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;margin:0;padding:0}
+body{background:var(--sky);color:var(--ink);font-family:var(--body);overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+[hidden]:not([hidden=until-found i]){display:none!important}
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 
-  <style>
-    .font-pixel { font-family: 'Press Start 2P', monospace; }
-    .font-sans { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-vt { font-family: 'VT323', monospace; }
+#fearVignette{
+  position:fixed;inset:0;pointer-events:none;z-index:4;
+  background:radial-gradient(circle, transparent 40%, rgba(180,15,25,0.72) 100%);
+  opacity:0;transition:opacity .18s ease;
+}
 
-    .crt-overlay::after {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
-      background-size: 100% 4px;
-      z-index: 10;
-      pointer-events: none;
-      opacity: 0.3;
-    }
+/* ---------- HUD ---------- */
+#hud{position:fixed;inset:0;pointer-events:none;color:var(--snow);z-index:5}
+#hud>*{pointer-events:auto}
+.row-top{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 10px);display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:flex-start;padding:0 max(12px,env(safe-area-inset-left,0px)) 0 max(12px,env(safe-area-inset-right,0px));pointer-events:none}
+.row-top>*{pointer-events:auto}
+.panel{background:var(--glass);border-radius:12px;padding:8px 12px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14)}
+.who{display:flex;gap:10px;align-items:baseline;min-width:0}
+.who b{font-family:var(--display);font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
+.who span{font-size:.85rem;opacity:.85}
+.who .clock{font-variant-numeric:tabular-nums;font-weight:800}
+.who .warn-badge{background:var(--berry);color:#fff;padding:2px 7px;border-radius:6px;font-size:.75rem;font-weight:800}
+.who .online-badge{background:#1b4332;color:#7bd88f;border:1px solid #40916c;padding:2px 7px;border-radius:6px;font-size:.75rem;font-weight:800}
+.alt{flex:1 1 160px;max-width:280px;min-width:140px}
+.alt .lbl{display:flex;justify-content:space-between;font-size:.8rem;font-weight:800;margin-bottom:5px;letter-spacing:.03em;text-transform:uppercase}
+.altbar{height:10px;border-radius:6px;background:rgba(255,255,255,.16);overflow:hidden}
+.altbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4cc9f0,#ffd25a,#fff);border-radius:6px}
+.btns{display:flex;gap:7px;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:9px 13px;font-weight:800;font-size:.9rem;color:var(--ink);background:var(--snow);box-shadow:0 4px 0 rgba(0,0,0,.35);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn.sun{background:var(--sun)}
+.btn.go{background:#7bd88f}
+.btn.dark{background:#1b263b;color:#f0f6fc;border:1px solid rgba(255,255,255,.2)}
+.btn.dark.off{opacity:.65}
+.btn.tts{background:#2563eb;color:#fff;padding:11px 18px;font-size:1rem;box-shadow:0 4px 0 rgba(13,27,42,.35)}
+.btn.tts.speaking{background:#e5383b}
+.btn.ghost{background:transparent;box-shadow:none;border:2px solid var(--line);color:var(--ink)}
+.btn b{font-variant-numeric:tabular-nums}
+.compass{position:absolute;left:max(12px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 78px);display:flex;gap:10px;align-items:center;pointer-events:none}
+.compass .dial{width:44px;height:44px;border-radius:50%;background:var(--glass);display:grid;place-items:center;border:1px solid rgba(255,255,255,.18)}
+#arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:22px solid var(--sun);transition:transform .1s linear}
+.compass span{background:var(--glass);border-radius:10px;padding:6px 12px;font-size:.85rem;font-weight:800;border:1px solid rgba(255,255,255,.14)}
+.alert-banner{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 78px);transform:translateX(-50%);padding:6px 14px;border-radius:10px;font-size:.82rem;font-weight:800;pointer-events:none;border:1px solid rgba(255,255,255,.3);box-shadow:0 4px 12px rgba(0,0,0,.4);white-space:nowrap}
+.alert-banner.bridge{background:rgba(180,83,9,.95);color:#fff}
+.alert-banner.ghost{background:rgba(185,28,28,.94);color:#fff;animation:pulseWarn .7s infinite alternate}
+@keyframes pulseWarn{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.04)}}
+.hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);background:var(--glass);border-radius:10px;padding:6px 12px;font-size:.8rem;font-weight:700;white-space:nowrap;pointer-events:none}
+#stick,#jumpBtn{display:none}
+.touchy #stick{display:block;position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:132px;height:132px;border-radius:50%;background:rgba(12,24,40,.55);border:3px solid rgba(255,255,255,.45);touch-action:none}
+.touchy #knob{position:absolute;left:50%;top:50%;width:54px;height:54px;border-radius:50%;background:var(--snow);transform:translate(-50%,-50%);box-shadow:0 3px 0 rgba(0,0,0,.4)}
+.touchy #jumpBtn{display:block;position:absolute;right:max(22px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 36px);width:88px;height:88px;border-radius:50%;border:3px solid rgba(255,255,255,.6);background:rgba(255,182,43,.9);color:var(--ink);font-weight:800;font-size:1rem;touch-action:none}
+.touchy .hint{display:none}
 
-    @keyframes shake {
-      0%, 100% { transform: translate(0, 0); }
-      10%, 30%, 50%, 70%, 90% { transform: translate(-6px, 4px); }
-      20%, 40%, 60%, 80% { transform: translate(6px, -4px); }
-    }
-    .shake-screen { animation: shake 0.4s ease-in-out; }
+/* ---------- Kartu & modal ---------- */
+.overlay{position:fixed;inset:0;display:grid;place-items:center;padding:16px;overflow:auto;touch-action:pan-y;-webkit-user-select:auto;user-select:auto;z-index:10}
+.overlay.dim{background:rgba(5,10,20,.72)}
+.overlay.lock{background:rgba(10,18,32,.96);z-index:40}
+.card{background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.55);width:min(100%,520px);padding:22px;box-sizing:border-box;margin:auto}
+.card.wide{width:min(100%,640px)}
+h1,h2{font-family:var(--display);margin:0;line-height:1.05;text-wrap:balance}
+h1{font-size:2.2rem;font-weight:800}
+h2{font-size:1.5rem;font-weight:700}
+.lead{margin:8px 0 16px;font-size:1rem;line-height:1.5;color:var(--ink-2)}
+label.f{display:block;font-weight:800;font-size:.85rem;margin:12px 0 5px;letter-spacing:.03em;text-transform:uppercase}
+input[type=text]{width:100%;box-sizing:border-box;border:2px solid var(--ink);border-radius:10px;padding:11px 12px;font:700 1rem var(--body);background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:38px;height:38px;border-radius:10px;border:3px solid transparent;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+.sw[aria-checked=true]{border-color:var(--ink);box-shadow:0 0 0 3px var(--sun)}
+.err{color:var(--berry);font-weight:800;min-height:1.3em;margin:10px 0 0;font-size:.9rem}
+.start{width:100%;margin-top:6px;padding:13px;font-size:1.15rem;font-family:var(--display)}
+.rules{margin:16px 0 0;padding:12px 14px;background:#eaf5ff;border-radius:10px;font-size:.85rem;line-height:1.55}
+.rules b{font-weight:800}
 
-    @keyframes text-flash {
-      0% { opacity: 0; transform: scale(0.92); }
-      15% { opacity: 1; transform: scale(1); }
-      85% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.05); }
-    }
-    .animate-flash { animation: text-flash 1.8s ease-in-out forwards; }
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.chip{background:var(--ink);color:var(--snow);border-radius:8px;padding:4px 10px;font-weight:800;font-size:.85rem;font-variant-numeric:tabular-nums}
+.chip.ok{background:var(--pine)}
 
-    .touch-btn:active {
-      transform: scale(0.9);
-      background-color: #38bdf8 !important;
-      color: #0f172a !important;
-    }
-  </style>
+.audio-stage{
+  background:#0d1b2a;
+  color:var(--snow);
+  border-radius:14px;
+  padding:20px 16px;
+  text-align:center;
+  margin-bottom:16px;
+  border:2px solid #27475f;
+}
+.wave-bars{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  gap:6px;
+  height:36px;
+  margin-bottom:12px;
+}
+.wave-bars span{
+  display:block;
+  width:7px;
+  height:10px;
+  background:var(--sun);
+  border-radius:4px;
+  transition:height .15s ease;
+}
+.audio-stage.playing .wave-bars span{
+  animation:eqPulse .55s infinite ease-in-out alternate;
+}
+.audio-stage.playing .wave-bars span:nth-child(2){animation-delay:.12s}
+.audio-stage.playing .wave-bars span:nth-child(3){animation-delay:.25s}
+.audio-stage.playing .wave-bars span:nth-child(4){animation-delay:.08s}
+.audio-stage.playing .wave-bars span:nth-child(5){animation-delay:.32s}
+.audio-stage.playing .wave-bars span:nth-child(6){animation-delay:.18s}
+@keyframes eqPulse{
+  0%{height:8px;background:#4cc9f0}
+  100%{height:34px;background:#ffb62b}
+}
+.audio-hint{
+  font-size:.95rem;
+  font-weight:700;
+  margin:0 0 14px;
+  color:#cbd5e1;
+}
+
+.opts-audio{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media (max-width:420px){.opts-audio{grid-template-columns:repeat(3,1fr)}}
+.opt-ltr{
+  display:grid;
+  place-items:center;
+  border:3px solid var(--ink);
+  background:#fff;
+  border-radius:14px;
+  padding:14px 0;
+  font-family:var(--display);
+  font-size:1.55rem;
+  font-weight:800;
+  color:var(--ink);
+  box-shadow:0 4px 0 rgba(18,38,58,.25);
+  transition:transform .08s, background .12s;
+}
+.opt-ltr:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(18,38,58,.25)}
+.opt-ltr[aria-pressed=true]{background:var(--sun);color:var(--ink)}
+
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.qfoot small{color:var(--ink-2);font-weight:700}
+
+.treasure-box{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#fff;
+  border:3px solid #fbbf24;
+  border-radius:14px;
+  padding:18px;
+  margin:14px 0;
+  text-align:center;
+}
+.voucher-card{
+  background:linear-gradient(135deg,#118eea,#0c6ebd);
+  border:2px dashed #bae6fd;
+  border-radius:12px;
+  padding:14px;
+  margin:12px 0;
+  color:#fff;
+}
+.voucher-code{
+  display:inline-block;
+  background:#0f172a;
+  color:#fbbf24;
+  font-family:monospace;
+  font-size:1.15rem;
+  font-weight:800;
+  padding:6px 14px;
+  border-radius:8px;
+  margin-top:6px;
+  letter-spacing:.08em;
+  -webkit-user-select:text;
+  user-select:text;
+}
+.treasure-locked{
+  background:#fef2f2;
+  border:2px solid #fca5a5;
+  color:#991b1b;
+  border-radius:12px;
+  padding:14px;
+  margin:12px 0;
+  font-weight:700;
+}
+
+.bag{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin:14px 0}
+.bag button{aspect-ratio:1;border-radius:9px;border:2px solid var(--ink);font:800 .95rem var(--display);padding:0;background:var(--sun);color:var(--ink);font-variant-numeric:tabular-nums}
+.bag button.done{background:#7bd88f}
+.bag button.lock{background:transparent;border:2px dashed #9fb3c4;color:#9fb3c4;cursor:default}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;font-weight:700}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;border:2px solid var(--ink);margin-right:5px;vertical-align:-2px}
+@media (max-width:420px){.bag{grid-template-columns:repeat(5,1fr)} h1{font-size:2rem}}
+
+.score{font-family:var(--display);font-weight:800;font-size:4.6rem;line-height:1;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stat{background:#eaf5ff;border-radius:10px;padding:9px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:1.5rem}
+.stat span{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2)}
+.sync-status{padding:10px 12px;border-radius:10px;font-size:.88rem;font-weight:800;margin:10px 0;background:#eaf5ff;color:var(--ink-2)}
+.sync-status.ok{background:#dff7e6;color:var(--pine)}
+.sync-status.err{background:#fde8ea;color:var(--berry)}
+details{margin-top:10px;border:2px solid var(--line);border-radius:10px;padding:8px 12px}
+summary{font-weight:800;cursor:pointer}
+.rev{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:.88rem;line-height:1.4}
+.rev li{border-bottom:1px solid var(--line);padding-bottom:8px}
+.rev .t{font-weight:800}
+.rev .bad{color:var(--berry);font-weight:800}
+.rev .good{color:var(--pine);font-weight:800}
+textarea#copyBox{width:100%;box-sizing:border-box;height:120px;margin-top:10px;font:600 .8rem/1.4 monospace;border:2px solid var(--line);border-radius:10px;padding:8px;-webkit-user-select:text;user-select:text}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 124px);transform:translateX(-50%);background:var(--ink);color:var(--snow);padding:10px 16px;border-radius:12px;font-weight:800;font-size:.95rem;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);max-width:88vw;text-align:center;z-index:50}
+#nogl{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;font-weight:800;color:#fff}
+@media (prefers-reduced-motion:reduce){#arrow{transition:none}}
+</style>
 </head>
-<body class="h-full text-slate-100 flex flex-col justify-between bg-slate-950 font-sans">
+<body>
 
-  <!-- 1. SCREEN LOADING -->
-  <div id="screen-loading" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-8 shadow-2xl space-y-6 text-center">
-      <div class="inline-flex p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 animate-bounce">
-        <i class="fa-solid fa-camera-retro text-4xl"></i>
-      </div>
-      <div>
-        <h1 class="font-pixel text-base sm:text-lg text-amber-400 mb-2">PHOTO & VIDEO DUNGEON</h1>
-        <p class="text-xs text-slate-400">MEMUAT & MENGACAK BANK SOAL UJIAN...</p>
-      </div>
+<canvas id="gl" aria-label="Pemandangan 3 bukit terpisah jurang dalam 3D"></canvas>
+<div id="fearVignette"></div>
 
-      <div class="space-y-2">
-        <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800 p-0.5">
-          <div id="loading-bar" class="bg-gradient-to-r from-amber-500 to-amber-300 h-full w-0 rounded-full transition-all duration-75 ease-linear"></div>
-        </div>
-        <p id="loading-percentage" class="text-xs text-amber-400 font-pixel text-[10px]">0%</p>
-      </div>
+<div id="hud" hidden>
+  <div class="row-top">
+    <div class="panel who">
+      <b id="whoName"></b>
+      <span id="whoClass"></span>
+      <span class="clock" id="clock">00:00</span>
+      <span class="online-badge" id="onlineBadge">👥 1 Pendaki</span>
+      <span class="warn-badge" id="warnBadge" hidden>Pelanggaran: 0/3</span>
+    </div>
+    <div class="panel alt"><div class="lbl"><span id="hillLbl">Bukit 1/3</span><span id="altTxt">0 m</span></div><div class="altbar"><i id="altFill"></i></div></div>
+    <div class="btns">
+      <button class="btn dark" id="btnLight" type="button" title="Tekan F">🔦 Senter: ON</button>
+      <button class="btn dark" id="btnSound" type="button">🔊 Suara</button>
+      <button class="btn sun" id="btnBag" type="button">Tas soal <b id="bagCount">0/40</b></button>
+      <button class="btn" id="btnFinish" type="button">Kumpulkan</button>
     </div>
   </div>
+  <div class="compass"><div class="dial"><div id="arrow"></div></div><span id="compTxt">Cari kertas soal</span></div>
+  <div class="alert-banner bridge" id="bridgeWarn" hidden>🪵 Hati-hati! Meniti jembatan 1 batang kayu di atas jurang dalam!</div>
+  <div class="alert-banner ghost" id="ghostWarn" hidden>👁️ Bahaya mendekat! Matikan senter (F) atau menghindar!</div>
+  <div class="hint">WASD/Panah: jalan · Spasi: lompat · F: senter · B: tas soal · Seret mouse/Q/E: kamera</div>
+  <div id="stick"><div id="knob"></div></div>
+  <button id="jumpBtn" type="button">Lompat</button>
+</div>
 
-  <!-- 2. SCREEN LOGIN -->
-  <div id="screen-auth" class="fixed inset-0 bg-slate-950 z-40 flex flex-col items-center justify-center p-4 hidden">
-    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-      <div class="text-center space-y-2">
-        <div class="inline-flex p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-400 mb-1">
-          <i class="fa-solid fa-user-shield text-3xl"></i>
-        </div>
-        <h1 class="font-pixel text-base sm:text-lg text-amber-400">LOGIN UJIAN SISWA</h1>
-        <p class="text-xs text-slate-400">Evaluasi Praktikum Fotografi & Videografi</p>
+<div class="overlay" id="login">
+  <form class="card" id="loginForm" autocomplete="off" novalidate>
+    <h1>Ekspedisi 3 Bukit RPL</h1>
+    <p class="lead">Asesmen Pemrograman Web <b>XI RPL 1 & 2</b>! Taklukkan 3 bukit terpisah <b>jurang dalam</b> melalui <b>jembatan 1 batang kayu</b>, hindari hantu & binatang buas, lalu buka <b>Peti Harta Karun</b> di puncak tertinggi!</p>
+    <label class="f" for="inName">Nama lengkap (Ketik GURU untuk Mode Pengawas)</label>
+    <input type="text" id="inName" maxlength="32" placeholder="mis. Ahmad Fauzi">
+    <label class="f" for="inClass">Kelas</label>
+    <input type="text" id="inClass" maxlength="16" placeholder="mis. XI RPL 1">
+    <div id="codeWrap" hidden>
+      <label class="f" for="inCode">Kode ujian</label>
+      <input type="text" id="inCode" maxlength="24">
+    </div>
+    <label class="f" id="swLbl">Warna jaketmu</label>
+    <div class="swatches" id="swatches" role="radiogroup" aria-labelledby="swLbl"></div>
+    <p class="err" id="loginErr" role="alert"></p>
+    <button class="btn sun start" type="submit">Mulai Pendakian 3 Bukit</button>
+    <div class="rules">
+      <b>Misi & Hadiah Peti Harta Karun (XI RPL):</b><br>
+      1. <b>3 Bukit Terpisah Jurang Dalam:</b> Ikuti jalan setapak berlentera menuju jembatan <b>1 batang kayu</b> di atas jurang dari Bukit 1 → Bukit 2 → Bukit 3.<br>
+      2. <b>Soal 100% Audio (HTML, CSS, CRUD & phpMyAdmin):</b> Dengarkan suara pertanyaan & pilihan A–E saat menemukan kertas soal.<br>
+      3. <b>Peti Harta Karun (Nilai ≥ 80):</b> Di puncak Bukit 3 terdapat Peti Harta Karun berisi <b>Voucher DANA Rp 5.000</b> & <b>Download Kisi-Kisi Ulangan Pemrograman Web (PDF)</b>!
+    </div>
+  </form>
+</div>
+
+<div class="overlay dim" id="qModal" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="qTitle">
+    <div class="qhead">
+      <span class="chip" id="qTitle">Soal Audio 1 / 40</span>
+      <span class="chip" id="qState">Belum dijawab</span>
+    </div>
+    <div class="audio-stage" id="audioStage">
+      <div class="wave-bars" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
+      <p class="audio-hint" id="audioStatusTxt">Dengarkan pertanyaan & pilihan A–E dengan saksama</p>
+      <button class="btn tts" id="btnSpeakQ" type="button">🔊 Dengarkan Soal</button>
+    </div>
+    <div class="opts-audio" id="qOpts"></div>
+    <div class="qfoot"><small id="qNote">Pilih huruf A, B, C, D, atau E sesuai suara</small><button class="btn go" id="qClose" type="button">Lanjut mendaki</button></div>
+  </div>
+</div>
 
-      <form id="form-login" onsubmit="submitLogin(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Lengkap Siswa</label>
-          <div class="relative">
-            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-            <input type="text" id="input-nama" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
-          </div>
+<!-- Modal Peti Harta Karun di Puncak Bukit 3 -->
+<div class="overlay dim" id="chestModal" hidden>
+  <div class="card wide" role="dialog" aria-modal="true" aria-labelledby="chTitle">
+    <h2 id="chTitle">🏆 Peti Harta Karun Puncak Tertinggi</h2>
+    <p class="lead" id="chLead"></p>
+    <div id="chestUnlocked" hidden>
+      <div class="treasure-box">
+        <div style="font-size:1.1rem;font-weight:800;color:#fbbf24">✨ SELAMAT! NILAI KAMU MEMENUHI SYARAT (≥ 80) ✨</div>
+        <div class="voucher-card">
+          <div style="font-size:.85rem;font-weight:800;letter-spacing:.05em">VOUCHER SALDO DANA</div>
+          <div style="font-family:var(--display);font-size:2.1rem;font-weight:800;line-height:1.1">Rp 5.000</div>
+          <div style="font-size:.8rem;opacity:.9">Tunjukkan kode & screenshot ini ke Pak U. Heri Mukti</div>
+          <div class="voucher-code" id="voucherCodeTxt">DANA5K-XXXX</div>
         </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Kelas</label>
-            <div class="relative">
-              <i class="fa-solid fa-graduation-cap absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-              <input type="text" id="input-kelas" required placeholder="Contoh: XI DKV" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
-            </div>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">NIS / Absen</label>
-            <div class="relative">
-              <i class="fa-solid fa-hashtag absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-              <input type="text" id="input-nis" required placeholder="01 / 1234" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-amber-400 transition">
-            </div>
-          </div>
-        </div>
-
-        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-[11px] text-amber-300 flex items-start gap-2">
-          <i class="fa-solid fa-lock text-amber-400 shrink-0 mt-0.5"></i>
-          <span>Mode Kunci Layar Aktif. Dilarang meminimize browser atau membuka aplikasi lain selama ujian.</span>
-        </div>
-
-        <button type="submit" id="btn-start-game" class="w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center space-x-2 active:scale-95">
-          <i class="fa-solid fa-play"></i>
-          <span>MULAI UJIAN (LOCK SCREEN)</span>
+        <button class="btn sun" id="btnDownloadPdf" type="button" style="width:100%;font-size:1rem;padding:12px">
+          📄 Download Kisi-Kisi Pemrograman Web (PDF)
         </button>
-      </form>
+      </div>
+    </div>
+    <div id="chestLocked" hidden>
+      <div class="treasure-locked" id="chestLockedMsg"></div>
+    </div>
+    <div class="actions">
+      <button class="btn go" id="chFinishBtn" type="button">Kumpulkan Ujian Sekarang</button>
+      <button class="btn ghost" id="chCloseBtn" type="button">Tutup & Cek Tas Soal</button>
     </div>
   </div>
+</div>
 
-  <!-- HEADER -->
-  <header class="w-full bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between z-20 shadow-lg">
-    <div class="flex items-center space-x-3">
-      <div class="bg-indigo-600/30 border border-indigo-500/50 px-2.5 py-1 rounded-lg flex items-center space-x-2">
-        <i class="fa-solid fa-compact-disc text-indigo-400 text-xs"></i>
-        <span id="ui-user-badge" class="font-pixel text-[10px] text-indigo-300">SISWA</span>
-      </div>
-      <div class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg flex items-center space-x-2">
-        <i class="fa-solid fa-door-open text-emerald-400 text-xs"></i>
-        <span class="text-xs font-bold text-slate-300">RUANGAN: <span id="ui-room" class="text-emerald-400 font-pixel text-xs">1 / 50</span></span>
-      </div>
-      <div id="ui-mode-badge" class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-emerald-900/60 border border-emerald-500/50 text-emerald-300 font-pixel text-[9px]">
-        KIOSK LOCK: SECURE
-      </div>
+<div class="overlay dim" id="bagModal" hidden>
+  <div class="card wide" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
+    <h2 id="bagTitle">Tas soal</h2>
+    <p class="lead" id="bagLead"></p>
+    <div class="bag" id="bagGrid"></div>
+    <div class="legend"><span><i style="background:#ffb62b"></i>Diambil, belum dijawab</span><span><i style="background:#7bd88f"></i>Sudah dijawab</span><span><i style="border-style:dashed;border-color:#9fb3c4"></i>Belum ditemukan</span></div>
+    <div class="actions"><button class="btn go" id="bagClose" type="button">Kembali mendaki</button></div>
+  </div>
+</div>
+
+<div class="overlay dim" id="confirmModal" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+    <h2 id="cfTitle">Kumpulkan jawaban?</h2>
+    <p class="lead" id="cfText"></p>
+    <div class="actions"><button class="btn go" id="cfYes" type="button">Ya, kumpulkan</button><button class="btn ghost" id="cfNo" type="button">Kembali mendaki</button></div>
+  </div>
+</div>
+
+<div class="overlay lock" id="lockModal" hidden>
+  <div class="card" role="alertdialog" aria-modal="true" aria-labelledby="lkTitle">
+    <h2 id="lkTitle" style="color:var(--berry)">Peringatan Pengawas!</h2>
+    <p class="lead" id="lkText"></p>
+    <div class="actions">
+      <button class="btn sun" id="lkResume" type="button" style="width:100%">Kembali ke Layar Penuh & Lanjutkan</button>
     </div>
+  </div>
+</div>
 
-    <div class="flex items-center space-x-4">
-      <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
-        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i>
-        <span class="text-xs text-slate-300 font-bold">PELANGGARAN: <span id="ui-cheat-count" class="text-amber-400 font-pixel text-xs">0/2</span></span>
-      </div>
-      <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
-        <i class="fa-solid fa-heart text-rose-500 text-xs"></i>
-        <span class="text-xs text-slate-300 font-bold">NYAWA: <span id="ui-lives" class="text-rose-400 font-pixel text-xs">3</span></span>
-      </div>
-      <button id="btn-audio" onclick="toggleAudio()" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sky-400 transition">
-        <i id="icon-audio" class="fa-solid fa-volume-high text-xs"></i>
-      </button>
+<div class="overlay" id="result" hidden>
+  <div class="card wide">
+    <h2 id="rsName"></h2>
+    <p class="lead" id="rsMeta" style="margin-bottom:0"></p>
+    <div class="score" id="rsScore">0</div>
+    <p class="lead" id="rsMsg" style="margin-top:0"></p>
+    <div class="stats">
+      <div class="stat"><b id="rsOk">0</b><span>Benar</span></div>
+      <div class="stat"><b id="rsBad">0</b><span>Salah</span></div>
+      <div class="stat"><b id="rsTime">0</b><span>Waktu</span></div>
     </div>
-  </header>
-
-  <!-- MAIN CANVAS -->
-  <main id="main-viewport" class="relative flex-1 flex items-center justify-center p-2 sm:p-4 overflow-hidden crt-overlay">
-    <div id="game-frame" class="relative w-full max-w-4xl h-full max-h-[620px] bg-slate-900 border-4 border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
-      <canvas id="gameCanvas" class="block w-full h-full object-contain"></canvas>
-
-      <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[92%] max-w-2xl bg-slate-950/90 border-2 border-indigo-500/80 rounded-xl p-3 shadow-2xl backdrop-blur-md z-10 flex flex-col items-center">
-        <div class="flex items-center justify-between w-full mb-2">
-          <span class="font-pixel text-[9px] text-indigo-400 tracking-wider flex items-center gap-1">
-            <i class="fa-solid fa-box-archive text-xs"></i> ALTAR SOAL #<span id="altar-num">1</span>
-          </span>
-          <span id="carrying-indicator" class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 hidden">
-            MEMBAWA KUNCI: <span id="carried-key-label" class="font-mono text-white font-bold"></span>
-          </span>
-        </div>
-
-        <div class="w-full flex flex-col items-center gap-2">
-          <button id="btn-flash-trigger" onclick="startFlashSequence()" class="w-full sm:w-auto px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg shadow-lg border border-amber-300 transition flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-eye text-xs"></i>
-            <span id="flash-btn-label">LIHAT FRAGMEN SOAL (FLASH)</span>
-          </button>
-          
-          <div id="status-altar-lock" class="text-[11px] font-bold text-rose-400 flex items-center gap-1">
-            <i class="fa-solid fa-lock text-xs"></i>
-            <span>ALTAR TERKUNCI (Lihat fragmen soal terlebih dahulu!)</span>
-          </div>
-        </div>
-      </div>
-
-      <div id="action-prompt" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/95 border-2 border-amber-400 px-5 py-2 rounded-full shadow-2xl flex items-center space-x-2 z-20">
-        <span id="prompt-btn-badge" class="bg-amber-400 text-slate-950 px-2 py-0.5 rounded font-pixel text-[10px] font-bold animate-bounce">SPASI</span>
-        <span id="prompt-text" class="text-xs font-bold text-amber-200">Tekan SPASI untuk Mengambil Kunci</span>
-      </div>
+    <div id="rsRewardZone"></div>
+    <div class="sync-status" id="syncStatus" hidden>Mengirim nilai ke server guru...</div>
+    <details id="rsDetails"><summary>Lihat ringkasan nomor soal</summary><ul class="rev" id="rsList"></ul></details>
+    <textarea id="copyBox" readonly hidden aria-label="Ringkasan hasil"></textarea>
+    <div class="actions">
+      <button class="btn sun" id="rsCopy" type="button">Salin hasil untuk guru</button>
+      <button class="btn ghost" id="rsRetrySync" type="button" hidden>Kirim ulang nilai</button>
+      <button class="btn ghost" id="rsExit" type="button">Keluar</button>
     </div>
+  </div>
+</div>
 
-    <!-- MODAL FLASH -->
-    <div id="modal-flash" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-      <div class="bg-slate-900 border-2 border-amber-500/80 w-full max-w-lg rounded-2xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-          <span class="font-pixel text-[10px] text-amber-400 flex items-center gap-1.5">
-            <i class="fa-solid fa-bolt text-amber-400 text-xs"></i> FLASH FRAGMENT SYSTEM
-          </span>
-          <span id="flash-counter" class="text-xs font-bold text-slate-400">FRAGMEN 1 / 3</span>
-        </div>
+<div id="toast" hidden></div>
 
-        <div class="min-h-[120px] flex items-center justify-center px-4">
-          <p id="flash-fragment-text" class="text-lg sm:text-xl font-extrabold text-sky-300 tracking-wide leading-relaxed">
-            ...
-          </p>
-        </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
 
-        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-          <div id="flash-progress-bar" class="bg-amber-400 h-full w-0 transition-all duration-300"></div>
-        </div>
+/* =====================================================================
+   PENGATURAN GURU (U. Heri Mukti, S.Tr.Kom - SMKN 1 Semparuk)
+   Soal Pemrograman Web Kelas XI RPL 1 & 2 (Tahun Pelajaran 2026/2027)
+   ===================================================================== */
+var CFG = {
+  ACCESS_CODE: '',
+  GAS_URL: 'https://script.google.com/macros/s/AKfycbyQVKx123WE7mgEFr20B52_ZAmxG53cv5cNVsB6nQBrXe9am2GwESjUEPziNjRnReyj/exec',
+  LOCKDOWN: true,
+  MAX_VIOLATIONS: 3,
+  SHOW_REVIEW: true,
+  WORLD_SIZE: 360,
+  PEAK: 92
+};
 
-        <p class="text-[10px] text-slate-500 italic">Soal acak antar-device. Pahami konsepnya dan temukan kuncinya!</p>
-      </div>
-    </div>
+function Q(q){ return {q:q,o:Array.prototype.slice.call(arguments,1)}; }
 
-    <!-- MODAL GAMEOVER -->
-    <div id="modal-gameover" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div class="bg-slate-900 border-2 border-rose-500/80 w-full max-w-lg rounded-2xl p-6 text-center space-y-5 shadow-2xl">
-        <div class="inline-flex p-4 bg-rose-500/10 border border-rose-500/30 rounded-full text-rose-500">
-          <i class="fa-solid fa-skull text-4xl"></i>
-        </div>
-        <div>
-          <h2 class="font-pixel text-lg text-rose-500 mb-2">EVALUASI GAGAL!</h2>
-          <p id="gameover-reason" class="text-slate-300 text-xs sm:text-sm">Kesempatan habis!</p>
-        </div>
+var SOAL = [
+  Q("Kepanjangan dari HTML adalah...", "Hyper Text Markup Language", "Hyper Text MakeUp Language", "Hide Text Markup Language", "Hide Text Makeup Language", "High Text Markup Language"),
+  Q("Tag yang digunakan untuk menambahkan baris baru pada HTML adalah...", "Tag br", "Tag td", "Tag tr", "Tag p", "Tag insert"),
+  Q("Tag yang digunakan untuk membuat teks atau objek bergerak pada HTML adalah...", "Tag marquee", "Tag mark", "Tag action", "Tag move", "Tag input"),
+  Q("Tag body dengan atribut bgcolor sama dengan yellow berfungsi untuk...", "Memberi warna pada background", "Memberi warna pada teks", "Menambahkan gambar", "Menambahkan video", "Menambahkan gambar background"),
+  Q("Untuk mengatur tampilan pada HTML diperlukan style yang biasa disebut dengan...", "CSS", "CCS", "Doc", "CSC", "SSC"),
+  Q("Tag font dengan atribut face sama dengan arial digunakan untuk...", "Mengganti jenis tulisan", "Mengganti warna tulisan", "Mengganti ukuran tulisan", "Membuat tulisan berjalan", "Mengganti warna background"),
+  Q("Kepanjangan dari CSS pada HTML adalah...", "Cascading Style Sheets", "Cascading Sheets Style", "Casting Style Sheets", "Casting Sheets Style", "Customer Service Style"),
+  Q("Untuk membuat judul pada tab web browser seperti Latihan HTML menggunakan tag...", "Tag title", "Tag p", "Tag i", "Tag b", "Tag u"),
+  Q("Berikut adalah tag untuk membuat tulisan menjadi tebal pada HTML...", "Tag b", "Tag i", "Tag u", "Tag a", "Tag p"),
+  Q("Ukuran font header yang paling kecil pada HTML adalah...", "h6", "h1", "h2", "h3", "h4"),
+  Q("Dalam pembuatan web, untuk memasukkan gambar pada halaman HTML menggunakan sintaks yang benar yaitu...", "img src sama dengan gambar1 titik jpg", "img scr sama dengan gambar1 titik jpg", "img src sama dengan gambar1 titik psd", "img scr sama dengan gambar1 titik psd", "img scr sama dengan gambar1 titik png"),
+  Q("Tag button dengan atribut style color red bertuliskan masuk merupakan tag untuk membuat...", "Tombol", "Kotak", "Tabel", "Pencarian", "Menu bar"),
+  Q("Nilai atribut pada tag body yang harus diubah untuk memberi warna pada background adalah...", "bgcolor", "Body", "color", "head", "title"),
+  Q("Tujuan CSS berikut yang paling tepat adalah...", "Mengatur gaya tampilan web", "Mengatur bahasa pemrograman", "Mengatur penyimpanan", "Mengatur cahaya tampilan", "Menggabungkan web"),
+  Q("Berikut adalah properti atau atribut CSS yang berfungsi untuk mengubah jenis font adalah...", "font-family", "body", "arial", "sans-serif", "trebuchet Ms"),
+  Q("Nilai properti text-align pada CSS yang digunakan untuk membuat tulisan rata kanan adalah...", "right", "left", "justify", "center", "right-justify"),
+  Q("Bagaimana cara menuliskan tag heading teks yang benar pada HTML?", "Tag pembuka h1 teks tag penutup h1", "Tag h teks tag h", "Tag heading teks tag penutup heading", "Tag h7 teks tag penutup h7", "Tag 1h teks tag penutup 1h"),
+  Q("Tag untuk membuat tampilan huruf cetak miring pada HTML adalah...", "Tag i", "Tag u", "Tag p", "Tag b", "Tag a"),
+  Q("Untuk mengatur ukuran font pada CSS dapat menggunakan properti...", "font-size", "font-color", "font-face", "font-family", "font-height"),
+  Q("Apa kepanjangan dari CSS?", "Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets", "Colorful Style Sheets", "Custom Style Sheets"),
+  Q("Apa kepanjangan dari WWW?", "World Wide Web", "Wide Wide Web", "World World Wide", "Web Wide World", "Wide World Web"),
+  Q("Apa fungsi utama dari tag head dalam dokumen HTML?", "Mendefinisikan informasi terkait dokumen", "Menampilkan isi dokumen", "Mendefinisikan area utama dokumen", "Menyertakan tautan ke halaman lain", "Mengatur isi paragraf"),
+  Q("Tag HTML untuk membuat heading terbesar adalah...", "Tag h1", "Tag heading", "Tag header", "Tag head", "Tag h6"),
+  Q("Tag yang digunakan untuk menampilkan gambar pada HTML adalah...", "Tag img", "Tag picture", "Tag graphic", "Tag image", "Tag imgsrc"),
+  Q("Tag HTML yang digunakan untuk membuat setiap item daftar di dalam list adalah...", "Tag li", "Tag ul", "Tag ol", "Tag list", "Tag item"),
+  Q("Apa fungsi dari atribut alt pada tag img?", "Menentukan teks alternatif untuk gambar", "Menentukan warna gambar", "Menentukan ukuran gambar", "Menentukan posisi gambar", "Menentukan sumber gambar"),
+  Q("CSS berfungsi untuk mengatur...", "Tampilan halaman web", "Struktur halaman web", "Fungsi skrip halaman web", "Konten halaman web", "Interaksi database"),
+  Q("Tag yang digunakan untuk membuat baris baru adalah...", "Tag br", "Tag newline", "Tag break", "Tag nl", "Tag linebreak"),
+  Q("Kode sintaks tag b Ini adalah Kalimat tag penutup b memiliki fungsi untuk...", "Menebalkan tulisan", "Memiringkan tulisan", "Menambah warna tulisan", "Membuat tulisan tebal dan miring", "Membuat paragraf"),
+  Q("Pada struktur dokumen HTML standar dengan tag title di baris 6, tag b di baris 9, tag i di baris 10, dan tag u di baris 11, pada baris ke berapa tulisan menjadi miring?", "Line 10", "Line 2", "Line 3", "Line 9", "Line 11"),
+  Q("Pada struktur dokumen HTML tersebut, apa fungsi kode sintaks tag b pada Line 9?", "Untuk menebalkan teks", "Untuk memiringkan teks", "Untuk menambahkan judul pada web", "Untuk menambahkan gambar", "Untuk memberikan warna background"),
+  Q("Pada struktur dokumen HTML tersebut, apa fungsi kode sintaks tag title pada Line 6?", "Untuk menambahkan judul pada tab web", "Untuk menebalkan teks", "Untuk memiringkan teks", "Untuk menambahkan gambar", "Untuk memberikan warna background"),
+  Q("Pada struktur dokumen HTML dengan tag b di baris 9, tag i di baris 10, dan tag u di baris 11, pada baris ke berapa tulisan digarisbawahi?", "Line 11", "Line 1", "Line 2", "Line 3", "Line 9"),
+  Q("Manakah kode sintaks berikut yang benar untuk memasukkan gambar pada HTML?", "img src sama dengan gambar1 titik png", "img scr sama dengan gambar1 titik png", "img scr sama dengan gambar1 titik jpg", "img src sama dengan gambar1", "image src sama dengan gambar1"),
+  Q("Apakah kepanjangan dari CRUD dalam pemrograman basis data?", "Create, Read, Update, dan Delete", "Create dan Update", "Create and Delete", "Create, Read, dan Update", "Create, Read, dan Delete"),
+  Q("Ketika membuat struktur tabel baru pada antarmuka phpMyAdmin, opsi manakah yang harus dicentang pada kolom id agar nomor urut bertambah otomatis dan menjadi kunci utama?", "Mencentang kotak A_I Auto Increment dan memastikan indeksnya adalah PRIMARY", "Mencentang kotak Null dan memilih indeks UNIQUE", "Memilih tipe data TEXT dan mencentang kotak A_I", "Mengisi kolom Default dengan angka 1 dan memilih indeks INDEX", "Mencentang kotak A_I tanpa perlu memberikan indeks apa pun"),
+  Q("Saat membuat kolom id pada tabel baru di phpMyAdmin yang menggunakan fitur Auto Increment, tipe data manakah yang paling standar dan tepat dipilih pada kolom Type?", "INT", "VARCHAR", "TEXT", "DATE", "BOOLEAN"),
+  Q("Kamu diminta membuat kolom nama lengkap dan alamat lengkap pada tabel siswa di phpMyAdmin. Kombinasi tipe data yang paling efisien adalah...", "VARCHAR dengan panjang karakter 100 untuk nama lengkap dan TEXT untuk alamat lengkap", "INT untuk nama lengkap dan VARCHAR untuk alamat lengkap", "CHAR untuk nama lengkap dan DATE untuk alamat lengkap", "TEXT untuk nama lengkap dan INT untuk alamat lengkap", "DECIMAL untuk nama lengkap dan BLOB untuk alamat lengkap"),
+  Q("Ketika membuat tabel produk di phpMyAdmin, terdapat kolom harga untuk nominal uang bulat dan kolom tanggal masuk untuk mencatat tanggal barang tiba. Tipe data yang sesuai adalah...", "INT atau DECIMAL dan DATE", "VARCHAR dan TIME", "TEXT dan YEAR", "BOOLEAN dan DATETIME", "CHAR dan INT"),
+  Q("Dalam pembuatan tabel di phpMyAdmin, mengapa kolom VARCHAR wajib diisi nilai pada bagian Length atau Values, sedangkan kolom bertipe TEXT atau DATE tidak perlu diisi?", "Karena VARCHAR membutuhkan batas maksimum jumlah karakter, sedangkan TEXT dan DATE sudah memiliki kapasitas atau format baku sistem database", "Karena VARCHAR hanya bisa menampung angka maksimal 100 digit", "Karena phpMyAdmin otomatis mengubah VARCHAR menjadi INT jika kosong", "Karena TEXT dan DATE tidak bisa digunakan dalam perintah INSERT PHP", "Karena nilai Length pada VARCHAR mengatur ukuran huruf di web")
+];
 
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-          <div class="flex justify-between">
-            <span class="text-slate-400">Pencapaian Ruangan:</span>
-            <span id="go-score" class="font-bold text-rose-400">0 / 50</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-400">Batas Minimal KKM:</span>
-            <span class="font-bold text-emerald-400">75% (38/50 Ruangan)</span>
-          </div>
-          <div class="flex justify-between border-t border-slate-800 pt-2">
-            <span class="text-slate-400">Status Sync Google Sheets:</span>
-            <span id="sync-status-fail" class="font-bold text-amber-400">Menyimpan...</span>
-          </div>
-        </div>
+var N = SOAL.length;
+var POINT = 100 / N;
 
-        <button onclick="restartGameRun()" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-xl transition flex items-center justify-center space-x-2">
-          <i class="fa-solid fa-rotate-right text-xs"></i>
-          <span>ULANGI DARI RUANGAN 1</span>
-        </button>
-      </div>
-    </div>
+/* =====================================================================
+   Util, Generator PDF Kisi-Kisi Ulangan XI RPL, TTS Audio, & SFX Horor
+   ===================================================================== */
+function $(id){ return document.getElementById(id); }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function hashStr(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function rng(seed){ var a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function fmtTime(sec){ sec=Math.max(0,Math.floor(sec)); var m=Math.floor(sec/60), s=sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+var toastTimer=null;
+function toast(msg){ var t=$('toast'); t.textContent=msg; t.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.hidden=true;},3200); }
 
-    <!-- MODAL VICTORY -->
-    <div id="modal-victory" class="hidden fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div class="bg-slate-900 border-2 border-emerald-500/80 w-full max-w-lg rounded-2xl p-6 text-center space-y-5 shadow-2xl">
-        <div class="inline-flex p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-400">
-          <i class="fa-solid fa-trophy text-4xl"></i>
-        </div>
-        <div>
-          <h2 class="font-pixel text-lg text-emerald-400 mb-2">MASTER FOTO & VIDEO!</h2>
-          <p class="text-slate-300 text-xs sm:text-sm">Selamat! Kamu berhasil menuntaskan evaluasi acak dengan sempurna!</p>
-        </div>
+function getVoucherCode(){
+  if(!S) return 'DANA5K-0000';
+  var h = hashStr(S.name.toLowerCase() + '|' + S.kelas.toLowerCase() + '|SMKN1SEMPARUK2026');
+  return 'DANA5K-' + h.toString(36).toUpperCase().slice(0, 6);
+}
 
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-          <div class="flex justify-between">
-            <span class="text-slate-400">Skor Akhir Kelulusan:</span>
-            <span id="vic-score" class="font-bold text-emerald-400 text-sm">100%</span>
-          </div>
-          <div class="flex justify-between border-t border-slate-800 pt-2">
-            <span class="text-slate-400">Status Sync Google Sheets:</span>
-            <span id="sync-status-pass" class="font-bold text-amber-400">Menyimpan...</span>
-          </div>
-        </div>
+function downloadKisiKisiPDF(){
+  var lines = [
+    'KISI-KISI ASESMEN SUMATIF SEMESTER GANJIL - PEMROGRAMAN WEB',
+    'KELAS XI RPL 1 & 2 | SMKN 1 SEMPARUK | GURU: U. HERI MUKTI, S.TR.KOM',
+    'PEMENANG PETI HARTA KARUN: ' + (S ? S.name.toUpperCase() + ' (' + S.kelas.toUpperCase() + ')' : 'SISWA XI RPL'),
+    '--------------------------------------------------------------------------',
+    '1. STRUKTUR DASAR DOKUMEN HTML & FORMAT TEKS:',
+    '   - Kepanjangan HTML (Hyper Text Markup Language) & WWW (World Wide Web).',
+    '   - Fungsi tag <head>, <title>, <body>, paragraf <p>, dan baris baru <br>.',
+    '   - Tag format teks: tebal <b>, miring <i>, garis bawah <u>, berjalan <marquee>.',
+    '   - Ukuran heading dari terbesar <h1> hingga terkecil <h6>.',
+    '   - Atribut warna latar <body bgcolor="..."> dan jenis huruf <font face="...">.',
+    '2. MEDIA, TOMBOL, TABEL & DAFTAR PADA HTML:',
+    '   - Menampilkan gambar: <img src="nama_file.jpg" width="..." height="..." alt="...">.',
+    '   - Membuat item daftar list <li>, tombol <button>, serta baris/kolom tabel <tr> <td>.',
+    '3. STYLING HALAMAN WEB DENGAN CSS:',
+    '   - Kepanjangan dan fungsi CSS (Cascading Style Sheets) untuk gaya tampilan.',
+    '   - Properti CSS: font-family (jenis huruf), font-size (ukuran), text-align (rata kanan).',
+    '4. BASIS DATA MYSQL, PHPMYADMIN & KONSEP CRUD:',
+    '   - Kepanjangan CRUD: Create, Read, Update, Delete.',
+    '   - Pembuatan tabel phpMyAdmin: kolom id bertipe INT dengan A_I & indeks PRIMARY.',
+    '   - Pemilihan tipe data efisien: VARCHAR(Length), TEXT, INT/DECIMAL, dan DATE.',
+    '--------------------------------------------------------------------------',
+    'CATATAN: Kuasai juga penulisan sintaks HTML (gambar, heading, bgcolor, tabel 2 kolom)!'
+  ];
 
-        <button onclick="restartGameRun()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition flex items-center justify-center space-x-2">
-          <i class="fa-solid fa-play text-xs"></i>
-          <span>MAIN LAGI</span>
-        </button>
-      </div>
-    </div>
-  </main>
+  function pdfEsc(str){
+    return str.replace(/[^\x20-\x7E]/g, '-').replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  }
 
-  <!-- CONTROLS -->
-  <footer class="w-full bg-slate-900 border-t border-slate-800 p-2.5 sm:hidden flex items-center justify-between z-20">
-    <div class="grid grid-cols-3 gap-1 w-28 h-28">
-      <div></div>
-      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Up', true)" ontouchend="setKey('Up', false)">
-        <i class="fa-solid fa-chevron-up"></i>
-      </button>
-      <div></div>
-      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Left', true)" ontouchend="setKey('Left', false)">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-      <div class="bg-slate-950 rounded-lg border border-slate-800"></div>
-      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Right', true)" ontouchend="setKey('Right', false)">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
-      <div></div>
-      <button class="touch-btn bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300" ontouchstart="setKey('Down', true)" ontouchend="setKey('Down', false)">
-        <i class="fa-solid fa-chevron-down"></i>
-      </button>
-      <div></div>
-    </div>
+  var stream = 'BT\n/F1 10.5 Tf\n40 788 Td\n15.5 TL\n';
+  lines.forEach(function(ln, idx){
+    if(idx === 0) stream += '/F2 12.5 Tf\n(' + pdfEsc(ln) + ') Tj\nT*\n/F1 10 Tf\n';
+    else if(ln.indexOf(':') === ln.length - 1 && /^\d\./.test(ln)) stream += 'T*\n/F2 10.5 Tf\n(' + pdfEsc(ln) + ') Tj\nT*\n/F1 10 Tf\n';
+    else stream += '(' + pdfEsc(ln) + ') Tj\nT*\n';
+  });
+  stream += 'ET';
 
-    <div class="pr-2">
-      <button onclick="triggerAction()" class="touch-btn w-20 h-20 bg-indigo-600 border-2 border-indigo-400 rounded-full flex flex-col items-center justify-center text-white font-pixel text-[10px] shadow-lg active:bg-indigo-500">
-        <i class="fa-solid fa-key mb-1 text-sm"></i>
-        <span id="touch-action-label">AMBIL</span>
-      </button>
-    </div>
-  </footer>
+  var objs = [
+    '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n',
+    '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n',
+    '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>\nendobj\n',
+    '4 0 obj\n<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream\nendobj\n',
+    '5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n',
+    '6 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>\nendobj\n'
+  ];
 
-  <script>
-    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzl7nC2wlyrHvPcwgFq1AnPVTaaQZHFvHHmqOCdXJuDtkUlVyr5oQhcncjTS1mfoL-m7Q/exec";
+  var pdf = '%PDF-1.4\n';
+  var offsets = [0];
+  for(var i=0; i<objs.length; i++){
+    offsets.push(pdf.length);
+    pdf += objs[i];
+  }
+  var xrefPos = pdf.length;
+  pdf += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n';
+  for(var j=1; j<offsets.length; j++){
+    var off = String(offsets[j]);
+    while(off.length < 10) off = '0' + off;
+    pdf += off + ' 00000 n \n';
+  }
+  pdf += 'trailer\n<< /Size ' + (objs.length + 1) + '\n/Root 1 0 R >>\nstartxref\n' + xrefPos + '\n%%EOF';
 
-    let studentData = { nama: "", kelas: "", nis: "" };
-    let shuffledQuestions = [];
-    let cheatCount = 0;
-    const MAX_CHEAT_ALLOWED = 2;
-    let isGameStarted = false;
+  var blob = new Blob([pdf], {type: 'application/pdf'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'Kisi-Kisi-Ulangan-PW-XIRPL-SMKN1Semparuk.pdf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  toast('File PDF Kisi-Kisi Pemrograman Web XI RPL berhasil diunduh!');
+}
+$('btnDownloadPdf').addEventListener('click', downloadKisiKisiPDF);
 
-    function enableFullscreen() {
-      try {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) elem.requestFullscreen().catch(e => {});
-        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-        else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-      } catch(e){}
+var TTS = {
+  speaking: false,
+  stop: function(){
+    if('speechSynthesis' in window){
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+    }
+    this.speaking = false;
+    var b = $('btnSpeakQ');
+    var st = $('audioStage');
+    var txt = $('audioStatusTxt');
+    if(b){ b.textContent = '🔁 Putar Ulang Soal'; b.classList.remove('speaking'); }
+    if(st){ st.classList.remove('playing'); }
+    if(txt){ txt.textContent = 'Klik tombol di bawah untuk memutar ulang suara soal'; }
+  },
+  speakQuestion: function(idx){
+    if(!('speechSynthesis' in window)){
+      toast('Browser ini belum mendukung pembaca suara otomatis.');
+      return;
+    }
+    if(this.speaking){
+      this.stop();
+      return;
+    }
+    this.stop();
+    var qObj = SOAL[idx];
+    var ord = optOrder(idx);
+    var letters = ['A', 'B', 'C', 'D', 'E'];
+    var fullText = 'Soal nomor ' + (idx + 1) + '. ' + qObj.q + '. ';
+    ord.forEach(function(orig, k){
+      fullText += 'Pilihan ' + letters[k] + ': ' + qObj.o[orig] + '. ';
+    });
+
+    var utter = new SpeechSynthesisUtterance(fullText);
+    utter.lang = 'id-ID';
+    utter.rate = 0.94;
+    utter.pitch = 0.92;
+
+    var voices = window.speechSynthesis.getVoices();
+    for(var v=0; v<voices.length; v++){
+      if(/id[-_]ID/i.test(voices[v].lang)){
+        utter.voice = voices[v];
+        break;
+      }
     }
 
-    document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement && isGameStarted && !isGameOver) {
-        handleSecurityViolation("Anda keluar dari mode layar penuh!");
-      }
+    var b = $('btnSpeakQ');
+    var st = $('audioStage');
+    var txt = $('audioStatusTxt');
+    utter.onstart = function(){
+      TTS.speaking = true;
+      if(b){ b.textContent = '⏹️ Hentikan Suara'; b.classList.add('speaking'); }
+      if(st){ st.classList.add('playing'); }
+      if(txt){ txt.textContent = 'Sedang membacakan soal & pilihan A–E...'; }
+    };
+    utter.onend = utter.onerror = function(){
+      TTS.speaking = false;
+      if(b){ b.textContent = '🔁 Putar Ulang Soal'; b.classList.remove('speaking'); }
+      if(st){ st.classList.remove('playing'); }
+      if(txt){ txt.textContent = 'Suara selesai. Pilih jawaban A, B, C, D, atau E.'; }
+    };
+
+    window.speechSynthesis.speak(utter);
+  }
+};
+if('speechSynthesis' in window){
+  window.speechSynthesis.getVoices();
+}
+$('btnSpeakQ').addEventListener('click', function(){
+  if(curQ >= 0) TTS.speakQuestion(curQ);
+});
+
+var SFX = {
+  ctx: null, muted: false, windGain: null,
+  init: function(){
+    if(this.ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return;
+    this.ctx = new AC();
+    var bufSize = this.ctx.sampleRate * 3;
+    var buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+    var out = buf.getChannelData(0);
+    var b0=0,b1=0,b2=0;
+    for(var i=0;i<bufSize;i++){
+      var white = Math.random()*2-1;
+      b0 = 0.99765*b0 + white*0.099046;
+      b1 = 0.96300*b1 + white*0.2965164;
+      b2 = 0.57000*b2 + white*1.0526913;
+      out[i] = (b0+b1+b2+white*0.1848)*0.08;
+    }
+    var src = this.ctx.createBufferSource();
+    src.buffer = buf; src.loop = true;
+    var filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass'; filter.frequency.value = 340; filter.Q.value = 1.6;
+    this.windGain = this.ctx.createGain();
+    this.windGain.gain.value = 0.22;
+    src.connect(filter); filter.connect(this.windGain); this.windGain.connect(this.ctx.destination);
+    src.start();
+  },
+  resume: function(){ if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  toggleMute: function(){
+    this.muted = !this.muted;
+    if(this.windGain) this.windGain.gain.value = this.muted ? 0 : 0.22;
+    $('btnSound').textContent = this.muted ? '🔇 Bisu' : '🔊 Suara';
+  },
+  heartbeat: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    [0, 0.16].forEach(function(off, idx){
+      var osc = SFX.ctx.createOscillator();
+      var g = SFX.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(idx===0?65:52, t+off);
+      osc.frequency.exponentialRampToValueAtTime(28, t+off+0.12);
+      g.gain.setValueAtTime(0.35, t+off);
+      g.gain.exponentialRampToValueAtTime(0.001, t+off+0.14);
+      osc.connect(g); g.connect(SFX.ctx.destination);
+      osc.start(t+off); osc.stop(t+off+0.15);
+    });
+  },
+  woodCreak: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    var osc = this.ctx.createOscillator();
+    var g = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110 + Math.random()*40, t);
+    osc.frequency.linearRampToValueAtTime(75, t+0.25);
+    g.gain.setValueAtTime(0.09, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.28);
+    osc.connect(g); g.connect(SFX.ctx.destination);
+    osc.start(t); osc.stop(t+0.3);
+  },
+  chestFanfare: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function(freq, idx){
+      var osc = SFX.ctx.createOscillator();
+      var g = SFX.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, t + idx*0.1);
+      g.gain.setValueAtTime(0.2, t + idx*0.1);
+      g.gain.exponentialRampToValueAtTime(0.001, t + idx*0.1 + 0.45);
+      osc.connect(g); g.connect(SFX.ctx.destination);
+      osc.start(t + idx*0.1); osc.stop(t + idx*0.1 + 0.48);
+    });
+  },
+  beastGrowl: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    var osc = this.ctx.createOscillator();
+    var g = SFX.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(95, t);
+    osc.frequency.linearRampToValueAtTime(62, t+0.45);
+    g.gain.setValueAtTime(0.24, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.5);
+    osc.connect(g); g.connect(SFX.ctx.destination);
+    osc.start(t); osc.stop(t+0.52);
+  },
+  ghostMoan: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    var osc = this.ctx.createOscillator();
+    var g = SFX.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(520, t);
+    osc.frequency.exponentialRampToValueAtTime(280, t+0.7);
+    g.gain.setValueAtTime(0.001, t);
+    g.gain.linearRampToValueAtTime(0.14, t+0.15);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.75);
+    osc.connect(g); g.connect(SFX.ctx.destination);
+    osc.start(t); osc.stop(t+0.78);
+  },
+  scareHit: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    var osc = this.ctx.createOscillator();
+    var g = SFX.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, t);
+    osc.frequency.exponentialRampToValueAtTime(42, t+0.6);
+    g.gain.setValueAtTime(0.35, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.65);
+    osc.connect(g); g.connect(SFX.ctx.destination);
+    osc.start(t); osc.stop(t+0.68);
+  }
+};
+$('btnSound').addEventListener('click',function(){ SFX.init(); SFX.toggleMute(); });
+
+/* =====================================================================
+   Medan 3 Bukit Terpisah Jurang Dalam (-28m) + Jalan Landai ke Jembatan
+   ===================================================================== */
+var WORLD_SIZE = CFG.WORLD_SIZE;
+var PEAK = CFG.PEAK;
+var ABYSS_Y = -28;
+
+var HILLS = [
+  { id: 1, name: 'Bukit 1 (Rimba)',     cx: -195, cz:  175, rad: 106, peak: 38, qStart: 0,  qEnd: 13 },
+  { id: 2, name: 'Bukit 2 (Kabut)',     cx:   -5, cz:   15, rad: 108, peak: 64, qStart: 14, qEnd: 27 },
+  { id: 3, name: 'Bukit 3 (Tertinggi)', cx:  185, cz: -165, rad: 112, peak: 92, qStart: 28, qEnd: 39 }
+];
+
+var BRIDGE_DEFS = [
+  { ax: -124, az: 119, bx: -76, bz: 77, halfWidth: 0.78 },
+  { ax:   66, az: -46, bx: 113, bz: -91, halfWidth: 0.78 }
+];
+
+function singleHillHeight(x, z, h){
+  var dx = x - h.cx, dz = z - h.cz;
+  var dist = Math.hypot(dx, dz);
+  if(dist >= h.rad) return ABYSS_Y;
+  var t = 1 - (dist / h.rad);
+  var cliff = Math.min(1, t / 0.12);
+  var climb = Math.pow(t, 1.32);
+  var ridge = Math.sin(dist * 0.09 + h.id * 1.5) * 3.5 + Math.cos((dx - dz) * 0.06) * 2.2;
+  return ABYSS_Y + cliff * 28 + climb * h.peak + ridge * Math.sin(t * Math.PI);
+}
+
+function bridgeApproachBlend(x, z, baseH){
+  var pts = [
+    [BRIDGE_DEFS[0].ax, BRIDGE_DEFS[0].az, 15.5],
+    [BRIDGE_DEFS[0].bx, BRIDGE_DEFS[0].bz, 16.0],
+    [BRIDGE_DEFS[1].ax, BRIDGE_DEFS[1].az, 23.0],
+    [BRIDGE_DEFS[1].bx, BRIDGE_DEFS[1].bz, 24.0]
+  ];
+  for(var i=0; i<pts.length; i++){
+    var d = Math.hypot(x - pts[i][0], z - pts[i][1]);
+    if(d < 13){
+      var w = 1 - (d / 13);
+      w = w * w * (3 - 2 * w);
+      baseH = baseH * (1 - w) + pts[i][2] * w;
+    }
+  }
+  return baseH;
+}
+
+function heightAt(x, z){
+  var h1 = singleHillHeight(x, z, HILLS[0]);
+  var h2 = singleHillHeight(x, z, HILLS[1]);
+  var h3 = singleHillHeight(x, z, HILLS[2]);
+  var base = Math.max(h1, h2, h3, ABYSS_Y);
+  if(base <= ABYSS_Y + 0.5) return ABYSS_Y;
+  var micro = Math.sin(x * 0.14) * Math.cos(z * 0.13) * 0.85;
+  return bridgeApproachBlend(x, z, base + micro);
+}
+
+function spiral(u){
+  if(u < 0){
+    return [-242, 225];
+  }
+  var hillIdx = u <= 13 ? 0 : (u <= 27 ? 1 : 2);
+  var h = HILLS[hillIdx];
+  var localCount = (h.qEnd - h.qStart + 1);
+  var localT = (u - h.qStart) / Math.max(1, localCount - 1);
+
+  var r = h.rad * (0.74 * (1 - localT) + 0.12);
+  var baseAng = hillIdx === 0 ? 2.35 : (hillIdx === 1 ? 2.55 : 2.35);
+  var zigzag = Math.sin(localT * Math.PI * 3.2) * 1.15;
+  var ang = baseAng + localT * 3.6 + zigzag;
+
+  return [h.cx + Math.cos(ang) * r, h.cz + Math.sin(ang) * r];
+}
+var SPAWN_U = -0.9;
+
+var bridges = [];
+function getBridgeHeight(x, z){
+  for(var i=0; i<bridges.length; i++){
+    var b = bridges[i];
+    var dx = x - b.x, dz = z - b.z;
+    var localAlong = dx * b.cos + dz * b.sin;
+    var localCross = -dx * b.sin + dz * b.cos;
+    if(Math.abs(localAlong) <= b.halfLen + 1.2 && Math.abs(localCross) <= b.halfWidth){
+      var t = (localAlong + b.halfLen) / (2 * b.halfLen);
+      t = clamp(t, 0, 1);
+      var slopeY = b.ya + (b.yb - b.ya) * t;
+      var arch = Math.sin(t * Math.PI) * 0.28;
+      return slopeY + arch;
+    }
+  }
+  return null;
+}
+
+function groundAndBridgeHeight(x, z){
+  var gh = heightAt(x, z);
+  var bh = getBridgeHeight(x, z);
+  if(bh !== null && bh >= gh - 1.2) return bh;
+  return gh;
+}
+
+/* =====================================================================
+   Three.js Setup (Atmosfer Malam Berkabut + Senter Kepala)
+   ===================================================================== */
+var canvas=$('gl'), renderer;
+try{
+  renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});
+}catch(e){
+  document.body.insertAdjacentHTML('beforeend','<div id="nogl">Perangkat atau browser ini belum mendukung grafik 3D (WebGL). Coba buka dengan Chrome terbaru.</div>');
+  return;
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+var scene=new THREE.Scene();
+var NIGHT_SKY=0x060d18;
+scene.background=new THREE.Color(NIGHT_SKY);
+scene.fog=new THREE.FogExp2(0x091322, 0.0102);
+
+var camera=new THREE.PerspectiveCamera(58,1,0.5,950);
+scene.add(new THREE.HemisphereLight(0x3a5a8c, 0x0d1a14, 0.58));
+
+var moonLight=new THREE.DirectionalLight(0x6d93c7, 0.48);
+moonLight.position.set(-200, 290, -160);
+scene.add(moonLight);
+
+(function buildMoon(){
+  var mMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(20, 16, 16),
+    new THREE.MeshBasicMaterial({color: 0xdbeafe, fog: false})
+  );
+  mMesh.position.set(-320, 340, -280);
+  scene.add(mMesh);
+})();
+
+var headlamp = new THREE.SpotLight(0xfff5d6, 3.0, 86, Math.PI * 0.25, 0.46, 1.05);
+var headlampTarget = new THREE.Object3D();
+scene.add(headlamp);
+scene.add(headlampTarget);
+headlamp.target = headlampTarget;
+var flashlightOn = true;
+
+$('btnLight').addEventListener('click', toggleFlashlight);
+function toggleFlashlight(){
+  flashlightOn = !flashlightOn;
+  headlamp.visible = flashlightOn;
+  var b = $('btnLight');
+  b.textContent = flashlightOn ? '🔦 Senter: ON' : '🔦 Senter: OFF';
+  b.classList.toggle('off', !flashlightOn);
+}
+
+function resize(){
+  var w=window.innerWidth,h=window.innerHeight;
+  renderer.setSize(w,h,false);
+  camera.aspect=w/h; camera.updateProjectionMatrix();
+}
+window.addEventListener('resize',resize); resize();
+
+function makeBarkTexture(){
+  var c=document.createElement('canvas'); c.width=128; c.height=128; var x=c.getContext('2d');
+  x.fillStyle='#5c3a1e'; x.fillRect(0,0,128,128);
+  for(var i=0;i<90;i++){
+    x.fillStyle=i%2===0?'#3b2411':'#784d2a';
+    x.fillRect(Math.random()*128, 0, 2+Math.random()*4, 128);
+  }
+  var tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  return tex;
+}
+var barkTex = makeBarkTexture();
+
+(function buildTerrain(){
+  var seg=290;
+  var geo=new THREE.PlaneGeometry(2*WORLD_SIZE,2*WORLD_SIZE,seg,seg); geo.rotateX(-Math.PI/2);
+  var pos=geo.attributes.position, col=new Float32Array(pos.count*3);
+  var chasm=new THREE.Color(0x03070f), cliffRock=new THREE.Color(0x272e38), grass1=new THREE.Color(0x284d2a), grass2=new THREE.Color(0x1b3b24), rock=new THREE.Color(0x3f4854), peakCol=new THREE.Color(0xa6bdd6), tmp=new THREE.Color();
+  for(var i=0;i<pos.count;i++){
+    var x=pos.getX(i), z=pos.getZ(i), h=heightAt(x,z);
+    pos.setY(i,h);
+    var sl=Math.abs(heightAt(x+1.5,z)-h)+Math.abs(heightAt(x,z+1.5)-h); sl/=1.5;
+
+    if(h < -16) tmp.copy(chasm);
+    else if(h < 0) tmp.copy(cliffRock);
+    else if(h < 20) tmp.copy(grass1);
+    else if(h < 46) tmp.copy(grass1).lerp(grass2, (h-20)/26);
+    else if(h < 72) tmp.copy(grass2).lerp(rock, (h-46)/26);
+    else tmp.copy(rock).lerp(peakCol, clamp((h-72)/18, 0, 1));
+
+    if(sl > 0.7 && h >= 0 && h < 76) tmp.lerp(rock, clamp((sl-0.7)*1.1, 0, 0.75));
+    var j=0.92+0.12*(Math.sin(x*1.5)*Math.cos(z*1.2)*0.5+0.5);
+    col[i*3]=tmp.r*j; col[i*3+1]=tmp.g*j; col[i*3+2]=tmp.b*j;
+  }
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  geo.computeVertexNormals();
+  var mesh = new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0.05,flatShading:true}));
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+
+  var abyssMist = new THREE.Mesh(
+    new THREE.PlaneGeometry(2*WORLD_SIZE, 2*WORLD_SIZE),
+    new THREE.MeshBasicMaterial({color: 0x0d1b30, transparent: true, opacity: 0.88})
+  );
+  abyssMist.rotation.x = -Math.PI / 2;
+  abyssMist.position.y = -21;
+  scene.add(abyssMist);
+})();
+
+(function buildSingleLogBridges(){
+  var logMat = new THREE.MeshStandardMaterial({map: barkTex, roughness: 0.88});
+  var capMat = new THREE.MeshStandardMaterial({color: 0x9c7a4c, roughness: 0.85});
+  var torchMat = new THREE.MeshBasicMaterial({color: 0xffb62b, fog: false});
+  var plankMat = new THREE.MeshStandardMaterial({color: 0xc89d66, emissive: 0x3b240b, roughness: 0.85});
+
+  BRIDGE_DEFS.forEach(function(def){
+    var ya = heightAt(def.ax, def.az) + 0.12;
+    var yb = heightAt(def.bx, def.bz) + 0.12;
+    var cx = (def.ax + def.bx) * 0.5;
+    var cz = (def.az + def.bz) * 0.5;
+    var dx = def.bx - def.ax;
+    var dz = def.bz - def.az;
+    var span = Math.hypot(dx, dz) + 6.0;
+    var ang = Math.atan2(dz, dx);
+    var pitch = Math.atan2(yb - ya, Math.hypot(dx, dz));
+
+    bridges.push({
+      x: cx, z: cz, ya: ya, yb: yb,
+      cos: Math.cos(ang), sin: Math.sin(ang),
+      halfLen: span * 0.5,
+      halfWidth: def.halfWidth
     });
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && isGameStarted && !isGameOver) {
-        handleSecurityViolation("Terdeteksi membuka aplikasi/tab lain!");
-      }
+    var bg = new THREE.Group();
+    bg.position.set(cx, (ya + yb) * 0.5, cz);
+    bg.rotation.y = -ang;
+
+    var logGeo = new THREE.CylinderGeometry(0.62, 0.68, span, 12);
+    logGeo.rotateZ(Math.PI / 2);
+    var logMesh = new THREE.Mesh(logGeo, [logMat, capMat, capMat]);
+    logMesh.rotation.z = pitch;
+    logMesh.position.y = -0.52;
+    bg.add(logMesh);
+
+    [[-span*0.47, -0.47*span*Math.sin(pitch)], [span*0.47, 0.47*span*Math.sin(pitch)]].forEach(function(pt){
+      var ramp = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.25, 2.4), plankMat);
+      ramp.position.set(pt[0], pt[1] - 0.05, 0);
+      bg.add(ramp);
+
+      [-1.15, 1.15].forEach(function(sideZ){
+        var post = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.17, 2.8, 7), logMat);
+        post.position.set(pt[0], pt[1] + 1.0, sideZ);
+        bg.add(post);
+
+        var flame = new THREE.Mesh(new THREE.SphereGeometry(0.24, 6, 6), torchMat);
+        flame.position.set(pt[0], pt[1] + 2.5, sideZ);
+        bg.add(flame);
+      });
     });
 
-    window.addEventListener('blur', () => {
-      if (isGameStarted && !isGameOver) {
-        handleSecurityViolation("Fokus layar terputus (pindah jendela)!");
-      }
-    });
+    scene.add(bg);
+  });
+})();
 
-    function handleSecurityViolation(reason) {
-      cheatCount++;
-      playSfx('wrong');
-      const el = document.getElementById('ui-cheat-count');
-      if (el) el.innerText = `${cheatCount}/${MAX_CHEAT_ALLOWED}`;
+var trailPts=[];
+var approachPts=[];
+(function buildTrail(){
+  var pts=[], last=spiral(SPAWN_U), acc=0;
+  pts.push(last);
+  for(var u=SPAWN_U+0.02; u<=N-1; u+=0.02){
+    var p=spiral(u);
+    if(heightAt(p[0], p[1]) < 0) continue;
+    var d=Math.hypot(p[0]-last[0],p[1]-last[1]); acc+=d; last=p;
+    if(acc>=5.2){
+      pts.push(p);
+      acc=0;
+    }
+  }
 
-      if (cheatCount >= MAX_CHEAT_ALLOWED) {
-        document.getElementById('gameover-reason').innerText = `PELANGGARAN UTAMA: ${reason}\nUjian dibatalkan!`;
-        triggerGameOverScreen();
-      } else {
-        alert(`PERINGATAN SISWA (${cheatCount}/${MAX_CHEAT_ALLOWED}):\n${reason}\n\nDilarang keluar dari layar kuis!`);
-        enableFullscreen();
+  function addConnectorPath(x1, z1, x2, z2, step, withLanterns){
+    var dist = Math.hypot(x2 - x1, z2 - z1);
+    var steps = Math.max(2, Math.floor(dist / step));
+    for(var s=0; s<=steps; s++){
+      var t = s / steps;
+      var px = x1 + (x2 - x1) * t;
+      var pz = z1 + (z2 - z1) * t;
+      if(heightAt(px, pz) > -2){
+        approachPts.push([px, pz, withLanterns && (s % 2 === 0)]);
       }
     }
+  }
 
-    // BANK SOAL
-    const raw100BankSoal = [
-      { fragments: ["Segitiga Eksposure terdiri dari...", "tiga elemen dasar kamera,", "yaitu Aperture, Shutter Speed, dan..."], options: ["Focal Length", "ISO", "White Balance", "Frame Rate"], a: 1 },
-      { fragments: ["Pengaturan Aperture lebar...", "ditandai dengan nilai f-number kecil...", "seperti f/1.4 yang menghasilkan efek?"], options: ["Foto sangat tajam keseluruhan", "Ruang tajam dangkal (Bokeh)", "Foto gelap sempurna", "Gerakan membeku"], a: 1 },
-      { fragments: ["Untuk MEMBEKUKAN GERAKAN...", "subjek balap motor berkecepatan tinggi,", "parameter mana yang dinaikkan?"], options: ["Shutter Speed tinggi (1/1000s)", "Aperture sempit (f/22)", "White Balance Tungsten", "ISO paling rendah"], a: 0 },
-      { fragments: ["Dampak negatif penggunaan ISO...", "yang terlalu tinggi pada kondisi malam...", "akan menimbulkan apa pada foto?"], options: ["Distorsi lensa", "Noise / Grain tajam", "Motion blur", "Bayangan putih"], a: 1 },
-      { fragments: ["Sudut pengambilan gambar...", "dari bawah objek sehingga terlihat...", "sangat megah dinamakan?"], options: ["Bird Eye View", "Low Angle / Frog Eye", "Eye Level", "High Angle"], a: 1 },
-      { fragments: ["Pergerakan kamera horizontal...", "dari kiri ke kanan tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Tilting", "Panning", "Dolly", "Pedestal"], a: 1 },
-      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu utama yang menjadi pencahayaan...", "paling dominan pada subjek adalah?"], options: ["Fill Light", "Key Light", "Back Light", "Ambient Light"], a: 1 },
-      { fragments: ["Dalam teknik 3-Point Lighting,", "lampu yang berfungsi memisahkan...", "subjek dari latar belakang adalah?"], options: ["Key Light", "Back Light / Hair Light", "Fill Light", "Softbox"], a: 1 },
-      { fragments: ["Lensa dengan panjang fokus tetap...", "tanpa fitur mekanis zoom,", "seperti lensa 50mm dinamakan?"], options: ["Lensa Telephoto", "Lensa Prime / Fix", "Lensa Wide", "Lensa Fisheye"], a: 1 },
-      { fragments: ["Standard Frame Rate (FPS)...", "yang digunakan dalam standar pembuatan...", "film sinematik komersial adalah?"], options: ["60 FPS", "24 FPS", "120 FPS", "12 FPS"], a: 1 },
-      { fragments: ["Efek ruang tajam luas...", "dimana latar depan dan belakang...", "sama-sama fokus dinamakan?"], options: ["Shallow Depth of Field", "Deep Depth of Field", "Bokeh Effect", "Motion Blur"], a: 1 },
-      { fragments: ["Lensa ultra-wide yang memiliki...", "distorsi melengkung ekstrim hingga 180°...", "dinamakan lensa?"], options: ["Lensa Macro", "Lensa Fisheye", "Lensa Telephoto", "Lensa Tilt-shift"], a: 1 },
-      { fragments: ["Komposisi membagi layar...", "menjadi 9 kotak sejajar...", "dengan 4 titik potong utama dinamakan?"], options: ["Symmetry", "Rule of Thirds", "Golden Ratio", "Leading Lines"], a: 1 },
-      { fragments: ["Elemen warna cahaya dikonfigurasi...", "agar warna putih tampak alami...", "menggunakan pengaturan?"], options: ["ISO", "White Balance (Kelvin)", "Shutter Speed", "Picture Profile"], a: 1 },
-      { fragments: ["Filter kamera yang berfungsi...", "menghilangkan pantulan air/kaca...", "serta membirukan langit dinamakan?"], options: ["Filter ND", "Filter CPL (Polarizer)", "Filter UV", "Filter Diffusion"], a: 1 },
-      { fragments: ["Filter 'kacamata hitam' kamera...", "yang mereduksi intensitas cahaya masuk...", "tanpa mengubah warna dinamakan?"], options: ["Filter CPL", "Filter ND (Neutral Density)", "Filter Infra Merah", "Filter Soft"], a: 1 },
-      { fragments: ["Profil warna datar (flat profile)...", "yang mempertahankan dynamic range tinggi...", "untuk kebutuhan color grading dinamakan?"], options: ["Standard Profile", "LOG / S-Log Profile", "Vivid Profile", "Monochrome"], a: 1 },
-      { fragments: ["Pergerakan kamera mendekati...", "atau menjauhi subjek menggunakan...", "rel / roda dinamakan?"], options: ["Panning", "Dolly (Dolly In/Out)", "Tilting", "Crabbing"], a: 1 },
-      { fragments: ["Aturan kontinuitas arah posisi...", "interaksi antar dua karakter...", "dalam sinematografi dinamakan?"], options: ["Aturan Rule of Thirds", "Aturan Garis 180 Derajat", "Aturan Golden Ratio", "Aturan 30 Derajat"], a: 1 },
-      { fragments: ["Ukuran bidang pandang sinematik...", "yang memperlihatkan seluruh tubuh subjek...", "dari kepala hingga kaki adalah?"], options: ["Close Up (CU)", "Full Shot (FS)", "Medium Shot (MS)", "Extreme Close Up"], a: 1 },
-      { fragments: ["Ukuran bidang pandang...", "yang memotong subjek dari dada...", "hingga atas kepala dinamakan?"], options: ["Extreme Close Up", "Medium Close Up (MCU)", "Long Shot", "Full Shot"], a: 1 },
-      { fragments: ["Potongan video pendukung...", "yang disisipkan untuk melengkapi...", "narasi video utama dinamakan?"], options: ["A-Roll", "B-Roll", "Raw Footage", "Master Shot"], a: 1 },
-      { fragments: ["File presets konfigurasi warna...", "yang diimpor saat color grading...", "video dinamakan?"], options: ["RAW", "LUT (Look-Up Table)", "CODEC", "FPS"], a: 1 },
-      { fragments: ["Format file foto mentah...", "yang menyimpan seluruh informasi...", "sensor kamera tanpa kompresi adalah?"], options: ["JPEG", "RAW", "PNG", "GIF"], a: 1 },
-      { fragments: ["Sudut kamera tegak lurus...", "dari atas subjek langsung...", "seperti mata burung dinamakan?"], options: ["Eye Level", "Bird's Eye View", "Low Angle", "Dutch Angle"], a: 1 },
-      { fragments: ["Kamera sengaja dimiringkan...", "untuk menciptakan kesan ketegangan...", "atau ketidakstabilan dinamakan?"], options: ["High Angle", "Dutch Angle / Canted", "Eye Level", "Frog Eye"], a: 1 },
-      { fragments: ["Suara latar alami sekitar lokasi...", "yang direkam untuk kebutuhan...", "penyelaras audio editing dinamakan?"], options: ["Voice Over", "Ambient Sound / Room Tone", "Foley Sound", "Sound Effect"], a: 1 },
-      { fragments: ["Suara buatan fisik yang dibuat...", "di studio untuk mereplikasi bunyi...", "langkah kaki atau gesekan baju adalah?"], options: ["Foley Sound", "Ambient Sound", "Voice Over", "MOS"], a: 0 },
-      { fragments: ["Istilah rekaman video sinematik...", "yang diambil tanpa merekam...", "suara langsung di lokasi adalah?"], options: ["Sync Sound", "MOS (Mit Out Sound)", "B-Roll", "Wild Track"], a: 1 },
-      { fragments: ["Sensitivitas sensor kamera...", "terhadap cahaya dinyatakan...", "dalam satuan?"], options: ["Kelvin", "ISO", "Milimeter (mm)", "F-Number"], a: 1 },
-      { fragments: ["Panjang fokus lensa (focal length)...", "dinyatakan dalam satuan...", "ukuran fisik apa?"], options: ["Pixel (px)", "Milimeter (mm)", "Kelvin (K)", "Second (s)"], a: 1 },
-      { fragments: ["Semakin panjang fokus lensa...", "seperti lensa Telephoto 200mm,", "maka sudut pandang (FOV) menjadi?"], options: ["Semakin lebar", "Semakin sempit & menyempit", "Tetap sama", "Melengkung fisheye"], a: 1 },
-      { fragments: ["Proses merekam video slow-motion...", "membutuhkan perekaman Frame Rate (FPS)...", "yang bersifat?"], options: ["FPS Rendah (12 FPS)", "FPS Tinggi (60/120+ FPS)", "FPS Sinematik (24 FPS)", "FPS Bebas"], a: 1 },
-      { fragments: ["Istilah bayangan gelap melingkar...", "di sudut-sudut foto akibat...", "lensa atau filter dinamakan?"], options: ["Noise", "Vignette", "Flare", "Chromatic Aberration"], a: 1 },
-      { fragments: ["Pantulan cahaya terang berlebih...", "saat kamera menghadap sumber sinar...", "langsung dinamakan?"], options: ["Bokeh", "Lens Flare", "Motion Blur", "Ghosting"], a: 1 },
-      { fragments: ["Alat pembendung sinar samping...", "yang dipasang di ujung lensa...", "untuk mencegah lens flare dinamakan?"], options: ["Lens Hood", "Filter UV", "Tripod", "Softbox"], a: 0 },
-      { fragments: ["Pergerakan kamera vertikal...", "ke atas atau ke bawah tanpa memindahkan...", "posisi kaki tripod dinamakan?"], options: ["Panning", "Tilting (Tilt Up/Down)", "Pedestal", "Dolly"], a: 1 },
-      { fragments: ["Alat penyeimbang fisik mekanis...", "atau elektronik untuk merekam...", "video pergerakan mulus dinamakan?"], options: ["Tripod", "Gimbal / Stabilizer", "Slider", "Monopod"], a: 1 },
-      { fragments: ["Teknik pencahayaan lembut...", "menggunakan aksesoris diffuser...", "seperti kain tebal dinamakan?"], options: ["Hard Light", "Soft Light (Softbox)", "Direct Sun", "Spotlight"], a: 1 },
-      { fragments: ["Garis batas tepi warna melenceng...", "seperti garis ungu pada objek kontras...", "dinamakan?"], options: ["Chromatic Aberration", "Vignette", "Distorsi Pincushion", "Noise"], a: 0 },
-      { fragments: ["Ruang kosong di depan arah pandang...", "atau arah gerak subjek dinamakan...", "ruang komposisi apa?"], options: ["Headroom", "Nose Room / Lead Room", "Top Room", "Side Blur"], a: 1 },
-      { fragments: ["Ruang kosong di atas kepala...", "subjek hingga batas atas frame...", "dinamakan?"], options: ["Lead Room", "Headroom", "Footroom", "Bokeh Space"], a: 1 },
-      { fragments: ["Pergerakan kamera menaikkan...", "atau menurunkan seluruh badan kamera...", "secara vertikal dinamakan?"], options: ["Tilting", "Pedestal (Pedestal Up/Down)", "Crabbing", "Tracking"], a: 1 },
-      { fragments: ["Teknik foto malam hari...", "menggunakan shutter speed lambat...", "sehingga mengukir jejak lampu dinamakan?"], options: ["High-speed photography", "Light Painting / Long Exposure", "Macro photography", "HDR"], a: 1 },
-      { fragments: ["Sistem mikrofon nirkabel klip...", "yang dipasang pada baju subjek...", "dinamakan mikrofon?"], options: ["Shotgun Mic", "Lavalier / Clip-on Mic", "Condenser Studio Mic", "Ribbon Mic"], a: 1 },
-      { fragments: ["Mikrofon arah terfokus...", "yang dipasang di atas kamera atau boom pole...", "dinamakan?"], options: ["Lavalier Mic", "Shotgun Mic", "Dynamic Handheld Mic", "Omni Mic"], a: 1 },
-      { fragments: ["Proses penyesuaian suhu warna...", "gambar awal sebelum pewarnaan gaya sinematik...", "dinamakan?"], options: ["Color Grading", "Color Correction", "LUT Applied", "Chroma Key"], a: 1 },
-      { fragments: ["Proses pemberian nuansa gaya...", "atau efek suasana artistik pada video...", "dinamakan?"], options: ["Color Correction", "Color Grading", "White Balancing", "Exposure Lock"], a: 1 },
-      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada kondisi sinar matahari terik...", "siang hari (daylight) standar adalah?"], options: ["3200 K", "5600 K", "10000 K", "2000 K"], a: 1 },
-      { fragments: ["Nilai suhu warna cahaya Kelvin...", "pada lampu pijar tungsten indoor...", "standar adalah?"], options: ["5600 K", "3200 K", "7000 K", "1200 K"], a: 1 }
+  var p13 = spiral(13);
+  addConnectorPath(p13[0], p13[1], -155, 148, 2.8, true);
+  addConnectorPath(-155, 148, BRIDGE_DEFS[0].ax, BRIDGE_DEFS[0].az, 2.6, true);
+
+  var p14 = spiral(14);
+  addConnectorPath(BRIDGE_DEFS[0].bx, BRIDGE_DEFS[0].bz, p14[0], p14[1], 2.8, true);
+
+  var p27 = spiral(27);
+  addConnectorPath(p27[0], p27[1], 34, -18, 2.8, true);
+  addConnectorPath(34, -18, BRIDGE_DEFS[1].ax, BRIDGE_DEFS[1].az, 2.6, true);
+
+  var p28 = spiral(28);
+  addConnectorPath(BRIDGE_DEFS[1].bx, BRIDGE_DEFS[1].bz, p28[0], p28[1], 2.8, true);
+
+  trailPts = pts.concat(approachPts.map(function(a){ return [a[0], a[1]]; }));
+
+  var g=new THREE.CylinderGeometry(1.15,1.4,0.34,7);
+  var m=new THREE.InstancedMesh(g,new THREE.MeshStandardMaterial({color:0x9aa5b1,emissive:0x1b293d,roughness:0.9,flatShading:true}),pts.length);
+  var d=new THREE.Object3D();
+  pts.forEach(function(p,i){
+    d.position.set(p[0], groundAndBridgeHeight(p[0],p[1])+0.05, p[1]);
+    d.rotation.y=i*1.7; d.updateMatrix();
+    m.setMatrixAt(i,d.matrix);
+  });
+  scene.add(m);
+
+  var appGeo = new THREE.CylinderGeometry(1.65, 1.95, 0.36, 8);
+  var appMat = new THREE.MeshStandardMaterial({color: 0xe2e8f0, emissive: 0x3b2f1e, roughness: 0.85, flatShading: true});
+  var appMesh = new THREE.InstancedMesh(appGeo, appMat, approachPts.length);
+  var postMat = new THREE.MeshStandardMaterial({map: barkTex, roughness: 0.9});
+  var lanternMat = new THREE.MeshBasicMaterial({color: 0xffc857, fog: false});
+
+  approachPts.forEach(function(ap, idx){
+    var gy = heightAt(ap[0], ap[1]);
+    d.position.set(ap[0], gy + 0.08, ap[1]);
+    d.rotation.y = idx * 0.8;
+    d.updateMatrix();
+    appMesh.setMatrixAt(idx, d.matrix);
+
+    if(ap[2]){
+      var side = (idx % 4 === 0) ? 2.1 : -2.1;
+      var lPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.1, 1.5, 6), postMat);
+      lPost.position.set(ap[0] + side*0.7, gy + 0.75, ap[1] - side*0.7);
+      scene.add(lPost);
+
+      var lBulb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 6, 6), lanternMat);
+      lBulb.position.set(ap[0] + side*0.7, gy + 1.55, ap[1] - side*0.7);
+      scene.add(lBulb);
+    }
+  });
+  scene.add(appMesh);
+})();
+function nearTrail(x,z,r){ for(var i=0;i<trailPts.length;i++){ if(Math.abs(trailPts[i][0]-x)<r && Math.abs(trailPts[i][1]-z)<r) return true; } return false; }
+
+(function buildNature(){
+  var rand=rng(99), trees=[], rocks=[];
+  for(var a=0;a<3500 && trees.length<600;a++){
+    var hill = HILLS[a % 3];
+    var ang = rand() * Math.PI * 2;
+    var rad = (0.16 + Math.sqrt(rand()) * 0.72) * hill.rad;
+    var x = hill.cx + Math.cos(ang) * rad;
+    var z = hill.cz + Math.sin(ang) * rad;
+    var h = heightAt(x,z);
+    if(h > 2 && h < 78 && !nearTrail(x,z,5.6) && getBridgeHeight(x,z) === null){
+      trees.push([x,z,h,0.85+rand()*1.3,rand()]);
+    }
+  }
+  for(var b=0;b<1300 && rocks.length<180;b++){
+    var bh = HILLS[b % 3];
+    var an = rand() * Math.PI * 2;
+    var ra = (0.14 + Math.sqrt(rand()) * 0.74) * bh.rad;
+    var rx = bh.cx + Math.cos(an) * ra;
+    var rz = bh.cz + Math.sin(an) * ra;
+    var rh = heightAt(rx,rz);
+    if(rh > 2 && !nearTrail(rx,rz,5.8) && getBridgeHeight(rx,rz) === null){
+      rocks.push([rx,rz,rh,0.7+rand()*1.9]);
+    }
+  }
+
+  var trunk=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.35,0.58,2.8,7),new THREE.MeshStandardMaterial({color:0x2b1d12,roughness:0.95}),trees.length);
+  var crown1=new THREE.InstancedMesh(new THREE.ConeGeometry(2.6,5.4,8),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.9,flatShading:true}),trees.length);
+  var crown2=new THREE.InstancedMesh(new THREE.ConeGeometry(1.9,4.4,8),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.9,flatShading:true}),trees.length);
+
+  var d=new THREE.Object3D(), c=new THREE.Color();
+  trees.forEach(function(t,i){
+    var sc = t[3];
+    d.position.set(t[0],t[2]+1.4*sc,t[1]); d.scale.set(sc,sc,sc); d.rotation.set(0,t[4]*6,0); d.updateMatrix(); trunk.setMatrixAt(i,d.matrix);
+    d.position.set(t[0],t[2]+3.9*sc,t[1]); d.updateMatrix(); crown1.setMatrixAt(i,d.matrix);
+    d.position.set(t[0],t[2]+6.3*sc,t[1]); d.updateMatrix(); crown2.setMatrixAt(i,d.matrix);
+    c.setHSL(0.36+t[4]*0.06, 0.48, 0.11+t[4]*0.06);
+    crown1.setColorAt(i,c);
+    c.offsetHSL(0, 0, 0.03);
+    crown2.setColorAt(i,c);
+  });
+  crown1.instanceColor.needsUpdate=true;
+  crown2.instanceColor.needsUpdate=true;
+  scene.add(trunk); scene.add(crown1); scene.add(crown2);
+
+  var rk=new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1,0),new THREE.MeshStandardMaterial({color:0x363d47,roughness:0.95,flatShading:true}),rocks.length);
+  rocks.forEach(function(r,i){ d.position.set(r[0],r[2]+r[3]*0.25,r[1]); d.scale.set(r[3],r[3]*0.65,r[3]*0.9); d.rotation.set(i,i*2,i*0.5); d.updateMatrix(); rk.setMatrixAt(i,d.matrix); });
+  scene.add(rk);
+})();
+
+var ghosts = [];
+(function buildGhosts(){
+  var bodyMat = new THREE.MeshStandardMaterial({color: 0x0b0e14, roughness: 0.92, transparent: true, opacity: 0.94});
+  var paleSkinMat = new THREE.MeshStandardMaterial({color: 0xdbeafe, roughness: 0.75});
+  var hairMat = new THREE.MeshStandardMaterial({color: 0x040507, roughness: 0.85, side: THREE.DoubleSide});
+  var eyeMat = new THREE.MeshBasicMaterial({color: 0xff1e27, fog: false});
+  var mistMat = new THREE.MeshBasicMaterial({color: 0x1e293b, transparent: true, opacity: 0.25, depthWrite: false});
+
+  var patrolIdx = [4, 9, 12, 17, 22, 26, 31, 36];
+  patrolIdx.forEach(function(idx, k){
+    var baseP = spiral(idx);
+    var root = new THREE.Group();
+    var bodyPivot = new THREE.Group();
+    root.add(bodyPivot);
+
+    var cloak = new THREE.Mesh(new THREE.ConeGeometry(1.18, 4.6, 10, 1, true), bodyMat);
+    cloak.position.y = 2.45;
+    bodyPivot.add(cloak);
+
+    var footMist = new THREE.Mesh(new THREE.RingGeometry(0.4, 2.1, 14), mistMat);
+    footMist.rotation.x = -Math.PI / 2;
+    footMist.position.y = 0.25;
+    root.add(footMist);
+
+    function makeGhostArm(side){
+      var armPiv = new THREE.Group();
+      armPiv.position.set(side * 0.75, 3.85, 0.1);
+      var armMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 2.2, 6), paleSkinMat);
+      armMesh.position.y = -1.0;
+      armPiv.add(armMesh);
+      for(var c=-1; c<=1; c++){
+        var claw = new THREE.Mesh(new THREE.ConeGeometry(0.03, 0.35, 4), paleSkinMat);
+        claw.position.set(c*0.05, -2.15, 0.05);
+        claw.rotation.x = 0.4;
+        armPiv.add(claw);
+      }
+      bodyPivot.add(armPiv);
+      return armPiv;
+    }
+    var armL = makeGhostArm(-1);
+    var armR = makeGhostArm(1);
+
+    var headGroup = new THREE.Group();
+    headGroup.position.y = 4.65;
+    bodyPivot.add(headGroup);
+
+    var head = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 10), paleSkinMat);
+    headGroup.add(head);
+
+    var eyeGeo = new THREE.SphereGeometry(0.11, 6, 6);
+    var eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.21, 0.02, 0.54);
+    var eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.21, 0.02, 0.54);
+    var mouth = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), hairMat);
+    mouth.scale.set(0.8, 1.4, 0.5); mouth.position.set(0, -0.26, 0.52);
+    headGroup.add(eyeL); headGroup.add(eyeR); headGroup.add(mouth);
+
+    var hairGroup = new THREE.Group();
+    hairGroup.position.set(0, 0.1, 0);
+    var crownHair = new THREE.Mesh(new THREE.SphereGeometry(0.67, 10, 8, 0, Math.PI*2, 0, Math.PI*0.64), hairMat);
+    crownHair.rotation.x = -0.15;
+    hairGroup.add(crownHair);
+
+    var strandSpecs = [
+      {x: 0,     z: -0.58, w: 1.25, h: 3.9, ry: 0,    rx: 0.08},
+      {x: -0.48, z: -0.35, w: 0.62, h: 3.7, ry: 0.55, rx: 0.06},
+      {x: 0.48,  z: -0.35, w: 0.62, h: 3.7, ry: -0.55,rx: 0.06},
+      {x: -0.58, z: 0.12,  w: 0.48, h: 3.4, ry: 1.25, rx: 0.04},
+      {x: 0.58,  z: 0.12,  w: 0.48, h: 3.4, ry: -1.25,rx: 0.04},
+      {x: -0.38, z: 0.48,  w: 0.28, h: 1.85, ry: 0.25, rx: -0.05},
+      {x: 0.38,  z: 0.48,  w: 0.28, h: 1.85, ry: -0.25,rx: -0.05},
+      {x: 0,     z: 0.58,  w: 0.16, h: 1.15, ry: 0,    rx: -0.08}
     ];
-
-    function shuffleArray(array) {
-      let arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function startAppLoading() {
-      const loadingBar = document.getElementById('loading-bar');
-      const loadingText = document.getElementById('loading-percentage');
-      let progress = 0;
-
-      try {
-        shuffledQuestions = shuffleArray(raw100BankSoal).slice(0, 50);
-      } catch(e) {
-        shuffledQuestions = raw100BankSoal.slice(0, 50);
-      }
-
-      const interval = setInterval(() => {
-        progress += 2;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          document.getElementById('screen-loading').classList.add('hidden');
-          document.getElementById('screen-auth').classList.remove('hidden');
-        }
-        if (loadingBar) loadingBar.style.width = progress + '%';
-        if (loadingText) loadingText.innerText = progress + '%';
-      }, 30);
-    }
-
-    function submitLogin(e) {
-      e.preventDefault();
-      const nama = document.getElementById('input-nama').value.trim();
-      const kelas = document.getElementById('input-kelas').value.trim();
-      const nis = document.getElementById('input-nis').value.trim();
-
-      if (!nama || !kelas || !nis) return;
-
-      studentData = { nama, kelas, nis };
-      localStorage.setItem('student_app_data', JSON.stringify(studentData));
-
-      document.getElementById('screen-auth').classList.add('hidden');
-      document.getElementById('ui-user-badge').innerText = `${nis} | ${nama.split(' ')[0]}`;
-      
-      isGameStarted = true;
-      enableFullscreen();
-
-      setupRoom(0);
-      requestAnimationFrame(gameLoop);
-    }
-
-    let audioCtx = null;
-    let audioEnabled = true;
-
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      const icon = document.getElementById('icon-audio');
-      if (audioEnabled) {
-        icon.className = "fa-solid fa-volume-high text-xs";
-        icon.parentElement.classList.replace('text-slate-500', 'text-sky-400');
-      } else {
-        icon.className = "fa-solid fa-volume-xmark text-xs";
-        icon.parentElement.classList.replace('text-sky-400', 'text-slate-500');
-      }
-    }
-
-    function playSfx(type) {
-      if (!audioEnabled) return;
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain); gain.connect(audioCtx.destination);
-
-        if (type === 'step') {
-          osc.type = 'triangle'; osc.frequency.setValueAtTime(100, now);
-          osc.frequency.exponentialRampToValueAtTime(30, now + 0.05);
-          gain.gain.setValueAtTime(0.05, now); gain.gain.linearRampToValueAtTime(0, now + 0.05);
-          osc.start(now); osc.stop(now + 0.05);
-        } else if (type === 'pickup') {
-          osc.type = 'sine'; osc.frequency.setValueAtTime(350, now);
-          osc.frequency.exponentialRampToValueAtTime(700, now + 0.15);
-          gain.gain.setValueAtTime(0.15, now); gain.gain.linearRampToValueAtTime(0, now + 0.15);
-          osc.start(now); osc.stop(now + 0.15);
-        } else if (type === 'flash') {
-          osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
-          gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0, now + 0.2);
-          osc.start(now); osc.stop(now + 0.2);
-        } else if (type === 'correct') {
-          osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, now);
-          osc.frequency.setValueAtTime(659.25, now + 0.08); osc.frequency.setValueAtTime(783.99, now + 0.16);
-          gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.35);
-          osc.start(now); osc.stop(now + 0.35);
-        } else if (type === 'wrong') {
-          osc.type = 'sawtooth'; osc.frequency.setValueAtTime(220, now);
-          osc.frequency.setValueAtTime(180, now + 0.1);
-          gain.gain.setValueAtTime(0.25, now); gain.gain.linearRampToValueAtTime(0, now + 0.3);
-          osc.start(now); osc.stop(now + 0.3);
-        } else if (type === 'gameover') {
-          osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now);
-          osc.frequency.linearRampToValueAtTime(60, now + 0.6);
-          gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0, now + 0.6);
-          osc.start(now); osc.stop(now + 0.6);
-        }
-      } catch(e){}
-    }
-
-    // CANVAS ENGINE
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const V_WIDTH = 800; const V_HEIGHT = 600;
-    canvas.width = V_WIDTH; canvas.height = V_HEIGHT;
-
-    let roomIndex = 0; let livesRemaining = 3; let correctCount = 0;
-    let currentQuestionData = null; let carriedKeyIndex = null; let isGameOver = false;
-    let isAltarUnlocked = false; let isFlashActive = false; let isCooldownActive = false;
-    let cooldownTimer = 0; let cooldownInterval = null;
-
-    const player = { x: 400, y: 460, width: 32, height: 36, speed: 4.5, dir: 'down', isCarrying: false, animTimer: 0, animFrame: 0 };
-    const altarBox = { x: 350, y: 110, width: 100, height: 60 };
-    let keysInRoom = []; let particleEffects = [];
-
-    const inputKeys = { Up: false, Down: false, Left: false, Right: false, Space: false };
-    function setKey(dir, val) { inputKeys[dir] = val; }
-
-    window.addEventListener('keydown', (e) => {
-      if (isGameOver) return;
-      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') inputKeys.Up = true;
-      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') inputKeys.Down = true;
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inputKeys.Left = true;
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inputKeys.Right = true;
-      if (e.key === ' ' || e.key === 'Enter') { inputKeys.Space = true; triggerAction(); }
+    strandSpecs.forEach(function(st){
+      var sGeo = new THREE.PlaneGeometry(st.w, st.h, 1, 3);
+      sGeo.translate(0, -st.h * 0.5, 0);
+      var sMesh = new THREE.Mesh(sGeo, hairMat);
+      sMesh.position.set(st.x, 0.25, st.z);
+      sMesh.rotation.set(st.rx, st.ry, 0);
+      hairGroup.add(sMesh);
     });
+    headGroup.add(hairGroup);
 
-    window.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') inputKeys.Up = false;
-      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') inputKeys.Down = false;
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') inputKeys.Left = false;
-      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') inputKeys.Right = false;
-      if (e.key === ' ' || e.key === 'Enter') inputKeys.Space = false;
+    var gx = baseP[0];
+    var gz = baseP[1];
+    root.position.set(gx, groundAndBridgeHeight(gx,gz), gz);
+    scene.add(root);
+
+    ghosts.push({
+      g: root, body: bodyPivot, head: headGroup, hair: hairGroup,
+      armL: armL, armR: armR, mist: footMist,
+      homeX: baseP[0], homeZ: baseP[1],
+      x: gx, z: gz, phase: k * 1.4, wasChasing: false
     });
+  });
+})();
 
-    function startFlashSequence() {
-      if (isFlashActive || isCooldownActive || isGameOver) return;
+var beasts = [];
+(function buildWildBeasts(){
+  var wolfFur = new THREE.MeshStandardMaterial({color: 0x181c24, roughness: 0.9});
+  var bearFur = new THREE.MeshStandardMaterial({color: 0x2d1e14, roughness: 0.95});
+  var fangMat = new THREE.MeshBasicMaterial({color: 0xf8fafc});
+  var wolfEye = new THREE.MeshBasicMaterial({color: 0xfacc15, fog: false});
 
-      isFlashActive = true;
-      const modal = document.getElementById('modal-flash');
-      const fragText = document.getElementById('flash-fragment-text');
-      const fragCounter = document.getElementById('flash-counter');
-      const progressBar = document.getElementById('flash-progress-bar');
-      
-      modal.classList.remove('hidden');
-      const fragments = currentQuestionData.fragments;
-      let currentFragIdx = 0;
+  var beastSpots = [2, 5, 8, 11, 15, 18, 21, 24, 29, 32, 35, 38];
+  beastSpots.forEach(function(idx, k){
+    var isBear = (k % 3 === 0);
+    var furMat = isBear ? bearFur : wolfFur;
+    var sc = isBear ? 1.35 : 0.95;
 
-      function showNextFragment() {
-        if (currentFragIdx >= fragments.length) {
-          modal.classList.add('hidden');
-          isFlashActive = false;
-          isAltarUnlocked = true;
-          document.getElementById('status-altar-lock').innerHTML = `
-            <i class="fa-solid fa-unlock text-xs text-emerald-400"></i>
-            <span class="text-emerald-400">ALTAR TERBUKA (Kunci dapat dimasukkan!)</span>
-          `;
-          startCooldownTimer(10);
-          return;
-        }
+    var bGroup = new THREE.Group();
+    var bodyPivot = new THREE.Group();
+    bGroup.add(bodyPivot);
 
-        playSfx('flash');
-        fragCounter.innerText = `FRAGMEN ${currentFragIdx + 1} / ${fragments.length}`;
-        fragText.innerText = fragments[currentFragIdx];
-        
-        fragText.classList.remove('animate-flash');
-        void fragText.offsetWidth;
-        fragText.classList.add('animate-flash');
+    var torso = new THREE.Mesh(new THREE.BoxGeometry(1.1*sc, 1.0*sc, 2.2*sc), furMat);
+    torso.position.y = 1.25 * sc;
+    bodyPivot.add(torso);
 
-        const progressPct = ((currentFragIdx + 1) / fragments.length) * 100;
-        progressBar.style.width = `${progressPct}%`;
+    var head = new THREE.Mesh(new THREE.BoxGeometry(0.95*sc, 0.85*sc, 0.95*sc), furMat);
+    head.position.set(0, 1.65*sc, 1.25*sc);
+    bodyPivot.add(head);
 
-        currentFragIdx++;
-        setTimeout(showNextFragment, 1800);
-      }
+    var snout = new THREE.Mesh(new THREE.BoxGeometry(0.55*sc, 0.45*sc, 0.65*sc), furMat);
+    snout.position.set(0, 1.5*sc, 1.85*sc);
+    bodyPivot.add(snout);
 
-      showNextFragment();
+    var fangL = new THREE.Mesh(new THREE.ConeGeometry(0.06*sc, 0.22*sc, 4), fangMat);
+    fangL.rotation.x = Math.PI; fangL.position.set(-0.16*sc, 1.26*sc, 2.05*sc);
+    var fangR = fangL.clone(); fangR.position.x = 0.16*sc;
+    bodyPivot.add(fangL); bodyPivot.add(fangR);
+
+    var earGeo = isBear ? new THREE.BoxGeometry(0.25*sc, 0.25*sc, 0.15*sc) : new THREE.ConeGeometry(0.18*sc, 0.42*sc, 4);
+    var earL = new THREE.Mesh(earGeo, furMat); earL.position.set(-0.32*sc, 2.18*sc, 1.15*sc);
+    var earR = earL.clone(); earR.position.x = 0.32*sc;
+    bodyPivot.add(earL); bodyPivot.add(earR);
+
+    var eyeGeo = new THREE.SphereGeometry(0.09*sc, 6, 6);
+    var eyeL = new THREE.Mesh(eyeGeo, wolfEye); eyeL.position.set(-0.26*sc, 1.78*sc, 1.72*sc);
+    var eyeR = new THREE.Mesh(eyeGeo, wolfEye); eyeR.position.set(0.26*sc, 1.78*sc, 1.72*sc);
+    bodyPivot.add(eyeL); bodyPivot.add(eyeR);
+
+    function makeBeastLeg(px, pz){
+      var lp = new THREE.Group();
+      lp.position.set(px*sc, 0.9*sc, pz*sc);
+      var lm = new THREE.Mesh(new THREE.BoxGeometry(0.32*sc, 0.9*sc, 0.32*sc), furMat);
+      lm.position.y = -0.45*sc;
+      lp.add(lm);
+      bodyPivot.add(lp);
+      return lp;
     }
+    var legFL = makeBeastLeg(-0.38, 0.75);
+    var legFR = makeBeastLeg(0.38, 0.75);
+    var legBL = makeBeastLeg(-0.38, -0.75);
+    var legBR = makeBeastLeg(0.38, -0.75);
 
-    function startCooldownTimer(seconds) {
-      isCooldownActive = true;
-      cooldownTimer = seconds;
-      const btn = document.getElementById('btn-flash-trigger');
-      const label = document.getElementById('flash-btn-label');
-      btn.disabled = true;
+    var baseP = spiral(idx);
+    var bx = baseP[0];
+    var bz = baseP[1];
+    bGroup.position.set(bx, groundAndBridgeHeight(bx, bz), bz);
+    scene.add(bGroup);
 
-      if (cooldownInterval) clearInterval(cooldownInterval);
-      label.innerText = `TUNGGU ${cooldownTimer}d KEMBALI...`;
+    beasts.push({
+      g: bGroup, body: bodyPivot, isBear: isBear,
+      legFL: legFL, legFR: legFR, legBL: legBL, legBR: legBR,
+      homeX: baseP[0], homeZ: baseP[1],
+      x: bx, z: bz, phase: k * 2.1, runPhase: 0, wasChasing: false
+    });
+  });
+})();
 
-      cooldownInterval = setInterval(() => {
-        cooldownTimer--;
-        if (cooldownTimer > 0) {
-          label.innerText = `TUNGGU ${cooldownTimer}d KEMBALI...`;
+var CHEST_POS = { x: HILLS[2].cx, z: HILLS[2].cz };
+var chestGroup = new THREE.Group(), chestLid = null, chestGlow = null;
+(function buildTreasureChest(){
+  var cx = CHEST_POS.x, cz = CHEST_POS.z;
+  var ch = heightAt(cx, cz);
+  chestGroup.position.set(cx, ch, cz);
+
+  var altar = new THREE.Mesh(
+    new THREE.CylinderGeometry(4.2, 5.5, 1.4, 10),
+    new THREE.MeshStandardMaterial({color: 0x475569, roughness: 0.9, flatShading: true})
+  );
+  altar.position.y = 0.5;
+  chestGroup.add(altar);
+
+  var woodMat = new THREE.MeshStandardMaterial({color: 0x5c2d16, roughness: 0.7});
+  var goldMat = new THREE.MeshStandardMaterial({color: 0xfbbf24, emissive: 0x92400e, emissiveIntensity: 0.45, metalness: 0.7, roughness: 0.25});
+
+  var baseBox = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.35, 1.7), woodMat);
+  baseBox.position.y = 1.85;
+  chestGroup.add(baseBox);
+
+  var trim = new THREE.Mesh(new THREE.BoxGeometry(2.72, 0.22, 1.82), goldMat);
+  trim.position.y = 2.45;
+  chestGroup.add(trim);
+
+  var lockPlate = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.55, 0.18), goldMat);
+  lockPlate.position.set(0, 2.35, 0.88);
+  chestGroup.add(lockPlate);
+
+  chestLid = new THREE.Group();
+  chestLid.position.set(0, 2.52, -0.82);
+  var lidMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 2.64, 10, 1, false, 0, Math.PI), woodMat);
+  lidMesh.rotation.z = Math.PI / 2;
+  lidMesh.position.set(0, 0, 0.82);
+  chestLid.add(lidMesh);
+  chestGroup.add(chestLid);
+
+  chestGlow = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.55, 1.4, 65, 12, 1, true),
+    new THREE.MeshBasicMaterial({color: 0xfbbf24, transparent: true, opacity: 0.34, depthWrite: false, side: THREE.DoubleSide, fog: false})
+  );
+  chestGlow.position.y = 33;
+  chestGroup.add(chestGlow);
+
+  var c = document.createElement('canvas'); c.width = 360; c.height = 96; var ctx = c.getContext('2d');
+  ctx.fillStyle = 'rgba(13,27,42,0.92)'; ctx.fillRect(4, 8, 352, 80);
+  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 4; ctx.strokeRect(4, 8, 352, 80);
+  ctx.fillStyle = '#fbbf24'; ctx.font = '800 26px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('🏆 PETI HARTA KARUN', 180, 42);
+  ctx.fillStyle = '#e2e8f0'; ctx.font = '700 20px sans-serif';
+  ctx.fillText('Syarat Buka: Nilai ≥ 80', 180, 72);
+  var sp = new THREE.Sprite(new THREE.SpriteMaterial({map: new THREE.CanvasTexture(c), fog: false, transparent: true}));
+  sp.scale.set(7.5, 2.0, 1);
+  sp.position.y = 5.4;
+  chestGroup.add(sp);
+
+  scene.add(chestGroup);
+})();
+
+var papers=[];
+(function buildPapers(){
+  var geo=new THREE.PlaneGeometry(1.9,2.4);
+  var beamGeo=new THREE.CylinderGeometry(0.35,0.35,44,10,1,true);
+  for(var i=0;i<N;i++){
+    var p=spiral(i);
+    var gy=groundAndBridgeHeight(p[0],p[1]);
+    var c=document.createElement('canvas'); c.width=128; c.height=160; var x=c.getContext('2d');
+    x.fillStyle='#0d1b2a'; x.fillRect(0,0,128,160); x.strokeStyle='#ffb62b'; x.lineWidth=8; x.strokeRect(4,4,120,152);
+    x.fillStyle='#ffb62b'; x.font='800 56px sans-serif'; x.textAlign='center'; x.fillText(String(i+1),64,76);
+    x.fillStyle='#4cc9f0'; x.font='800 22px sans-serif'; x.fillText('🔊 AUDIO',64,122);
+    var mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),side:THREE.DoubleSide,fog:false}));
+    var beam=new THREE.Mesh(beamGeo,new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:0.35,depthWrite:false,side:THREE.DoubleSide,fog:false}));
+    beam.position.y=21;
+    var g=new THREE.Group(); g.position.set(p[0],gy,p[1]);
+    mesh.position.y=2.6; g.add(mesh); g.add(beam); scene.add(g);
+    papers.push({g:g,mesh:mesh,x:p[0],z:p[1],y:gy});
+  }
+})();
+
+var avatar=null, limbs={};
+function makeFace(){
+  var c=document.createElement('canvas'); c.width=64; c.height=64; var x=c.getContext('2d');
+  x.fillStyle='#ffd24a'; x.fillRect(0,0,64,64);
+  x.fillStyle='#12263a'; x.beginPath(); x.ellipse(21,26,4,6,0,0,7); x.ellipse(43,26,4,6,0,0,7); x.fill();
+  x.strokeStyle='#12263a'; x.lineWidth=4; x.lineCap='round'; x.beginPath(); x.arc(32,38,12,Math.PI+0.3,Math.PI*2-0.3); x.stroke();
+  return new THREE.CanvasTexture(c);
+}
+var faceTex=makeFace();
+function makeAvatar(shirt,name,outLimbs){
+  var g=new THREE.Group(), L_=function(c){return new THREE.MeshStandardMaterial({color:c,roughness:0.7});};
+  var skin=0xffd24a;
+  var torso=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.7,0.9),L_(shirt)); torso.position.y=2.05; g.add(torso);
+  var head=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.1,1.1),[L_(skin),L_(skin),L_(skin),L_(skin),new THREE.MeshStandardMaterial({map:faceTex}),L_(skin)]); head.position.y=3.6; g.add(head);
+  var lamp = new THREE.Mesh(new THREE.BoxGeometry(0.45,0.28,0.25), new THREE.MeshBasicMaterial({color:0xfffbeb,fog:false}));
+  lamp.position.set(0, 3.9, 0.58); g.add(lamp);
+
+  var pack=new THREE.Mesh(new THREE.BoxGeometry(1.2,1.3,0.55),L_(0xe5505c)); pack.position.set(0,2.2,-0.75); g.add(pack);
+  function limb(w,h,d,color,px,py,oy){ var piv=new THREE.Group(); piv.position.set(px,py,0); var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),L_(color)); m.position.y=oy; piv.add(m); g.add(piv); return piv; }
+  var ref = outLimbs || limbs;
+  ref.legL=limb(0.7,1.2,0.7,0x2f4b7c,-0.4,1.2,-0.6);
+  ref.legR=limb(0.7,1.2,0.7,0x2f4b7c,0.4,1.2,-0.6);
+  ref.armL=limb(0.5,1.5,0.5,skin,-1.05,2.8,-0.62);
+  ref.armR=limb(0.5,1.5,0.5,skin,1.05,2.8,-0.62);
+
+  var c=document.createElement('canvas'); c.width=320; c.height=72; var x=c.getContext('2d');
+  x.fillStyle='rgba(8,16,28,.88)'; x.fillRect(0,8,320,56);
+  x.strokeStyle='#ffb62b'; x.lineWidth=3; x.strokeRect(2,10,316,52);
+  x.fillStyle='#fff'; x.font='800 26px sans-serif'; x.textAlign='center'; x.textBaseline='middle';
+  x.fillText(name.length>20?name.slice(0,19)+'…':name,160,36);
+  var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),fog:false,transparent:true}));
+  sp.scale.set(5.8,1.3,1); sp.position.y=5.6; g.add(sp);
+  return g;
+}
+
+/* =====================================================================
+   Sinkronisasi Multiplayer Real-Time (Google Apps Script Polling)
+   ===================================================================== */
+var remotePlayers = {};
+var syncTimer = null;
+
+function pushPositionToCloud(){
+  if(!CFG.GAS_URL || !S || mode !== 'play') return;
+  var payload = {
+    type: 'pos',
+    id: S.key,
+    nama: S.name,
+    kelas: S.kelas,
+    x: Math.round(P.x * 10) / 10,
+    y: Math.round(P.y * 10) / 10,
+    z: Math.round(P.z * 10) / 10,
+    color: S.color,
+    progress: answeredCount() + '/' + N
+  };
+  fetch(CFG.GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+
+function pullPlayersFromCloud(){
+  if(!CFG.GAS_URL || !S || mode !== 'play') return;
+  fetch(CFG.GAS_URL + '?t=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(list){
+      if(!Array.isArray(list)) return;
+      var activeIds = {};
+      var totalOnline = 1;
+
+      list.forEach(function(pl){
+        if(!pl.id || pl.id === S.key) return;
+        activeIds[pl.id] = true;
+        totalOnline++;
+
+        var label = pl.nama + ' (' + pl.kelas + ') · ' + (pl.progress || '0/40');
+        var rp = remotePlayers[pl.id];
+        if(!rp){
+          var rLimbs = {};
+          var grp = makeAvatar(new THREE.Color(pl.color || '#2f7de1').getHex(), label, rLimbs);
+          grp.position.set(pl.x, pl.y, pl.z);
+          scene.add(grp);
+          remotePlayers[pl.id] = {
+            group: grp, limbs: rLimbs,
+            tx: pl.x, ty: pl.y, tz: pl.z,
+            phase: 0, lastLabel: label
+          };
         } else {
-          clearInterval(cooldownInterval);
-          isCooldownActive = false;
-          btn.disabled = false;
-          label.innerText = "LIHAT FRAGMEN SOAL (FLASH)";
-        }
-      }, 1000);
-    }
-
-    function setupRoom(idx) {
-      player.x = 384; player.y = 480;
-      player.isCarrying = false; carriedKeyIndex = null;
-      isAltarUnlocked = false;
-
-      roomIndex = idx;
-      currentQuestionData = shuffledQuestions[roomIndex];
-      document.getElementById('altar-num').innerText = roomIndex + 1;
-
-      document.getElementById('carrying-indicator').classList.add('hidden');
-      document.getElementById('status-altar-lock').innerHTML = `
-        <i class="fa-solid fa-lock text-xs"></i>
-        <span>ALTAR TERKUNCI (Lihat fragmen soal terlebih dahulu!)</span>
-      `;
-
-      if (!isCooldownActive) {
-        document.getElementById('btn-flash-trigger').disabled = false;
-        document.getElementById('flash-btn-label').innerText = "LIHAT FRAGMEN SOAL (FLASH)";
-      }
-
-      const rawOptions = shuffleArray(currentQuestionData.options);
-      const cols = 4;
-      
-      keysInRoom = rawOptions.map((optText, i) => {
-        const row = Math.floor(i / cols);
-        const col = i % cols;
-        return {
-          id: i, label: optText,
-          x: 100 + col * 160 + (Math.random() * 20 - 10),
-          y: 220 + row * 110 + (Math.random() * 20 - 10),
-          width: 90, height: 42,
-          isCarried: false, isSocketed: false,
-          floatOffset: Math.random() * Math.PI * 2
-        };
-      });
-
-      updateHUD();
-    }
-
-    function updateHUD() {
-      document.getElementById('ui-room').innerText = `${roomIndex + 1} / 50`;
-      document.getElementById('ui-lives').innerText = livesRemaining;
-      document.getElementById('ui-cheat-count').innerText = `${cheatCount}/${MAX_CHEAT_ALLOWED}`;
-    }
-
-    function triggerAction() {
-      if (isGameOver) return;
-
-      if (player.isCarrying && carriedKeyIndex !== null) {
-        const distToAltar = Math.hypot((player.x + player.width/2) - (altarBox.x + altarBox.width/2), (player.y + player.height/2) - (altarBox.y + altarBox.height/2));
-        
-        if (distToAltar < 110) {
-          if (!isAltarUnlocked) {
-            playSfx('wrong');
-            const frame = document.getElementById('game-frame');
-            frame.classList.add('shake-screen');
-            setTimeout(() => frame.classList.remove('shake-screen'), 400);
-            return;
+          rp.tx = pl.x; rp.ty = pl.y; rp.tz = pl.z;
+          if(rp.lastLabel !== label){
+            scene.remove(rp.group);
+            var newLimbs = {};
+            var newGrp = makeAvatar(new THREE.Color(pl.color || '#2f7de1').getHex(), label, newLimbs);
+            newGrp.position.copy(rp.group.position);
+            scene.add(newGrp);
+            rp.group = newGrp; rp.limbs = newLimbs; rp.lastLabel = label;
           }
-
-          const chosenKey = keysInRoom[carriedKeyIndex];
-          checkAnswer(chosenKey.label);
-        } else {
-          const k = keysInRoom[carriedKeyIndex];
-          k.isCarried = false; k.x = player.x - 30; k.y = player.y + 10;
-          player.isCarrying = false; carriedKeyIndex = null;
-          document.getElementById('carrying-indicator').classList.add('hidden');
-          playSfx('step');
         }
-        return;
-      }
-
-      for (let i = 0; i < keysInRoom.length; i++) {
-        const k = keysInRoom[i];
-        if (k.isSocketed || k.isCarried) continue;
-
-        const dist = Math.hypot((player.x + player.width/2) - (k.x + k.width/2), (player.y + player.height/2) - (k.y + k.height/2));
-        if (dist < 65) {
-          k.isCarried = true; player.isCarrying = true; carriedKeyIndex = i;
-          document.getElementById('carried-key-label').innerText = k.label;
-          document.getElementById('carrying-indicator').classList.remove('hidden');
-          playSfx('pickup');
-          createParticles(player.x, player.y, '#38bdf8', 12);
-          break;
-        }
-      }
-    }
-
-    function checkAnswer(chosenLabel) {
-      const correctAnswerLabel = currentQuestionData.options[currentQuestionData.a];
-      const isCorrect = (chosenLabel.trim() === correctAnswerLabel.trim());
-
-      if (isCorrect) {
-        playSfx('correct');
-        correctCount++;
-        createParticles(altarBox.x + 50, altarBox.y + 30, '#10b981', 30);
-
-        if (roomIndex < 49) {
-          setupRoom(roomIndex + 1);
-        } else {
-          evaluateFinalResult();
-        }
-      } else {
-        playSfx('wrong');
-        livesRemaining--;
-        updateHUD();
-
-        const frame = document.getElementById('game-frame');
-        frame.classList.add('shake-screen');
-        setTimeout(() => frame.classList.remove('shake-screen'), 400);
-        createParticles(altarBox.x + 50, altarBox.y + 30, '#ef4444', 30);
-
-        if (livesRemaining <= 0) {
-          document.getElementById('gameover-reason').innerText = "Nyawa Anda habis!";
-          triggerGameOverScreen();
-        } else {
-          setupRoom(roomIndex);
-        }
-      }
-    }
-
-    function createParticles(x, y, color, count) {
-      for (let i = 0; i < count; i++) {
-        particleEffects.push({
-          x: x, y: y,
-          vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
-          radius: Math.random() * 4 + 2, color: color, life: 25
-        });
-      }
-    }
-
-    function updateGame() {
-      if (isGameOver) return;
-
-      let dx = 0; let dy = 0;
-      if (inputKeys.Up) { dy -= player.speed; player.dir = 'up'; }
-      if (inputKeys.Down) { dy += player.speed; player.dir = 'down'; }
-      if (inputKeys.Left) { dx -= player.speed; player.dir = 'left'; }
-      if (inputKeys.Right) { dx += player.speed; player.dir = 'right'; }
-
-      if (dx !== 0 && dy !== 0) { dx *= 0.7071; dy *= 0.7071; }
-
-      if (dx !== 0 || dy !== 0) {
-        player.animTimer++;
-        if (player.animTimer % 7 === 0) {
-          player.animFrame = (player.animFrame + 1) % 4;
-          playSfx('step');
-        }
-      } else {
-        player.animFrame = 0;
-      }
-
-      player.x = Math.max(50, Math.min(V_WIDTH - 50 - player.width, player.x + dx));
-      player.y = Math.max(160, Math.min(V_HEIGHT - 60 - player.height, player.y + dy));
-
-      if (player.isCarrying && carriedKeyIndex !== null) {
-        const k = keysInRoom[carriedKeyIndex];
-        k.x = player.x - (k.width / 2) + (player.width / 2);
-        k.y = player.y - 35;
-      }
-
-      let nearKey = false; let nearAltar = false;
-
-      if (player.isCarrying) {
-        const distToAltar = Math.hypot((player.x + player.width/2) - (altarBox.x + altarBox.width/2), (player.y + player.height/2) - (altarBox.y + altarBox.height/2));
-        if (distToAltar < 110) nearAltar = true;
-      } else {
-        for (let k of keysInRoom) {
-          const dist = Math.hypot((player.x + player.width/2) - (k.x + k.width/2), (player.y + player.height/2) - (k.y + k.height/2));
-          if (dist < 65) { nearKey = true; break; }
-        }
-      }
-
-      const promptEl = document.getElementById('action-prompt');
-      const promptText = document.getElementById('prompt-text');
-      const touchLabel = document.getElementById('touch-action-label');
-
-      if (nearAltar) {
-        promptEl.classList.remove('hidden');
-        promptText.innerText = isAltarUnlocked ? "Tekan SPASI untuk MASUKKAN KUNCI" : "ALTAR TERKUNCI! Lihat Fragmen Soal";
-        if (touchLabel) touchLabel.innerText = "MASUK";
-      } else if (nearKey) {
-        promptEl.classList.remove('hidden');
-        promptText.innerText = "Tekan SPASI untuk AMBIL KUNCI JAWABAN";
-        if (touchLabel) touchLabel.innerText = "AMBIL";
-      } else if (player.isCarrying) {
-        promptEl.classList.remove('hidden');
-        promptText.innerText = "Bawa Kunci ke Altar Soal di Atas!";
-        if (touchLabel) touchLabel.innerText = "DROP";
-      } else {
-        promptEl.classList.add('hidden');
-      }
-
-      particleEffects.forEach((p, idx) => {
-        p.x += p.vx; p.y += p.vy; p.life--;
-        if (p.life <= 0) particleEffects.splice(idx, 1);
-      });
-    }
-
-    function renderGame() {
-      ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
-
-      ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
-      for (let x = 40; x < V_WIDTH - 40; x += 40) {
-        for (let y = 40; y < V_HEIGHT - 40; y += 40) {
-          ctx.strokeRect(x, y, 40, 40);
-        }
-      }
-
-      ctx.fillStyle = '#020617';
-      ctx.fillRect(0, 0, V_WIDTH, 50); ctx.fillRect(0, V_HEIGHT - 40, V_WIDTH, 40);
-      ctx.fillRect(0, 0, 40, V_HEIGHT); ctx.fillRect(V_WIDTH - 40, 0, 40, V_HEIGHT);
-
-      ctx.strokeStyle = '#334155'; ctx.lineWidth = 4;
-      ctx.strokeRect(40, 50, V_WIDTH - 80, V_HEIGHT - 90);
-
-      // Altar
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(altarBox.x, altarBox.y, altarBox.width, altarBox.height);
-      ctx.strokeStyle = isAltarUnlocked ? '#10b981' : '#f43f5e';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(altarBox.x, altarBox.y, altarBox.width, altarBox.height);
-
-      ctx.fillStyle = isAltarUnlocked ? '#10b981' : '#f43f5e';
-      ctx.font = '9px "Press Start 2P"'; ctx.textAlign = 'center';
-      ctx.fillText(isAltarUnlocked ? 'UNLOCKED' : 'LOCKED', altarBox.x + 50, altarBox.y - 10);
-
-      ctx.fillStyle = isAltarUnlocked ? '#059669' : '#e11d48';
-      ctx.fillRect(altarBox.x + 10, altarBox.y + 10, 80, 40);
-
-      // Keys
-      keysInRoom.forEach((k) => {
-        if (k.isSocketed) return;
-
-        ctx.save();
-        const floatY = k.isCarried ? k.y : k.y + Math.sin(Date.now() * 0.005 + k.floatOffset) * 4;
-
-        ctx.fillStyle = k.isCarried ? '#f59e0b' : '#1e293b';
-        ctx.fillRect(k.x, floatY, k.width, k.height);
-        
-        ctx.strokeStyle = k.isCarried ? '#fbbf24' : '#6366f1';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(k.x, floatY, k.width, k.height);
-
-        ctx.fillStyle = k.isCarried ? '#0f172a' : '#f8fafc';
-        ctx.font = 'bold 11px "Plus Jakarta Sans"'; ctx.textAlign = 'center';
-        ctx.fillText(k.label, k.x + k.width / 2, floatY + 25);
-
-        ctx.restore();
       });
 
-      // Particles
-      particleEffects.forEach(p => {
-        ctx.fillStyle = p.color; ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+      Object.keys(remotePlayers).forEach(function(id){
+        if(!activeIds[id]){
+          scene.remove(remotePlayers[id].group);
+          delete remotePlayers[id];
+        }
       });
 
-      // Player
-      ctx.save();
-      ctx.translate(player.x + player.width/2, player.y + player.height/2);
+      $('onlineBadge').textContent = '👥 ' + totalOnline + ' Pendaki';
+    })
+    .catch(function(){});
+}
 
-      ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath();
-      ctx.ellipse(0, player.height/2 - 2, 12, 5, 0, 0, Math.PI * 2); ctx.fill();
+function startMultiplayerSync(){
+  stopMultiplayerSync();
+  pushPositionToCloud();
+  pullPlayersFromCloud();
+  syncTimer = setInterval(function(){
+    pushPositionToCloud();
+    pullPlayersFromCloud();
+  }, 3000);
+}
 
-      ctx.fillStyle = '#4f46e5'; ctx.fillRect(-12, -14, 24, 24);
-      ctx.fillStyle = '#f8fafc'; ctx.fillRect(-9, -22, 18, 12);
+function stopMultiplayerSync(){
+  if(syncTimer){ clearInterval(syncTimer); syncTimer = null; }
+  Object.keys(remotePlayers).forEach(function(id){
+    scene.remove(remotePlayers[id].group);
+  });
+  remotePlayers = {};
+}
 
-      ctx.fillStyle = '#818cf8';
-      if (player.dir === 'down') ctx.fillRect(-5, -18, 10, 3);
-      else if (player.dir === 'left') ctx.fillRect(-7, -18, 7, 3);
-      else if (player.dir === 'right') ctx.fillRect(0, -18, 7, 3);
-      else if (player.dir === 'up') ctx.fillRect(-5, -20, 10, 2);
+function updateRemotePlayers(dt){
+  Object.keys(remotePlayers).forEach(function(id){
+    var rp = remotePlayers[id];
+    var g = rp.group;
+    var dx = rp.tx - g.position.x;
+    var dz = rp.tz - g.position.z;
+    var dist = Math.hypot(dx, dz);
 
-      ctx.fillStyle = '#0f172a';
-      const offset = (player.animFrame % 2 === 0) ? 2 : -2;
-      ctx.fillRect(-8, 10 + offset, 6, 5);
-      ctx.fillRect(2, 10 - offset, 6, 5);
+    if(dist > 0.08){
+      g.position.x += dx * Math.min(1, dt * 3.5);
+      g.position.z += dz * Math.min(1, dt * 3.5);
+      g.position.y += (rp.ty - g.position.y) * Math.min(1, dt * 5);
+      var targetYaw = Math.atan2(dx, dz);
+      var da = targetYaw - g.rotation.y;
+      da = Math.atan2(Math.sin(da), Math.cos(da));
+      g.rotation.y += da * Math.min(1, dt * 8);
 
-      ctx.restore();
+      rp.phase += dt * 8;
+      var sw = Math.sin(rp.phase) * 0.75;
+      rp.limbs.legL.rotation.x = sw; rp.limbs.legR.rotation.x = -sw;
+      rp.limbs.armL.rotation.x = -sw; rp.limbs.armR.rotation.x = sw;
+    } else {
+      rp.limbs.legL.rotation.x = 0; rp.limbs.legR.rotation.x = 0;
+      rp.limbs.armL.rotation.x = 0; rp.limbs.armR.rotation.x = 0;
     }
+  });
+}
 
-    function gameLoop() {
-      updateGame(); renderGame();
-      requestAnimationFrame(gameLoop);
-    }
+/* =====================================================================
+   Status permainan & Keamanan Lockdown
+   ===================================================================== */
+var mode='login';
+var paused=false;
+var isTeacherMode=false;
+var P={x:0,y:0,z:0,vy:0,ground:true,face:0,phase:0,safeX:0,safeZ:0};
+var cam={yaw:0,pitch:0.38,dist:13};
+var S=null;
+var COLORS=['#e5505c','#2f7de1','#2d9d63','#ffb62b','#8a55d6','#334155'];
+var chosenColor=COLORS[0];
+var orders={};
 
-    function sendResultToGoogleSheets(percentage, isPass) {
-      const syncPass = document.getElementById('sync-status-pass');
-      const syncFail = document.getElementById('sync-status-fail');
-      if (syncPass) syncPass.innerText = "Mengirim...";
-      if (syncFail) syncFail.innerText = "Mengirim...";
+function optOrder(i){
+  if(orders[i]) return orders[i];
+  var r=rng(S.seed+i*131), a=[]; for(var z=0;z<SOAL[i].o.length;z++) a.push(z);
+  for(var k=a.length-1;k>0;k--){ var j=Math.floor(r()*(k+1)); var t=a[k]; a[k]=a[j]; a[j]=t; }
+  orders[i]=a; return a;
+}
+function answeredCount(){ return Object.keys(S.answers).length; }
+function collectedCount(){ return Object.keys(S.collected).length; }
+function save(){
+  if(!S || isTeacherMode) return;
+  try{
+    localStorage.setItem(S.key,JSON.stringify({
+      name:S.name,kelas:S.kelas,color:S.color,
+      collected:S.collected,answers:S.answers,
+      sec:elapsed(),submitted:S.submitted,
+      violations:S.violations||0,
+      chestOpened:!!S.chestOpened
+    }));
+  }catch(e){}
+}
+function elapsed(){ return S.submitted ? S.sec : (Date.now()-S.startTs)/1000; }
 
-      const payload = {
-        nama: studentData.nama,
-        kelas: studentData.kelas,
-        nis: studentData.nis,
-        skor: percentage,
-        benar: correctCount,
-        pelanggaran: cheatCount,
-        status: isPass ? "LULUS KKM (KOMPETEN)" : "BELUM LULUS"
-      };
+function enterFullscreen(){
+  if(!CFG.LOCKDOWN || isTeacherMode) return;
+  var el=document.documentElement;
+  try{
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }catch(e){}
+}
+function exitFullscreen(){
+  try{
+    if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }catch(e){}
+}
+function updateWarnBadge(){
+  if(!S || !CFG.LOCKDOWN || isTeacherMode) return;
+  var b=$('warnBadge');
+  b.hidden=false;
+  b.textContent='Pelanggaran: '+S.violations+'/'+CFG.MAX_VIOLATIONS;
+}
+var lastViolationTs=0;
+function registerViolation(reason){
+  if(!CFG.LOCKDOWN || isTeacherMode || mode!=='play' || !S || S.submitted) return;
+  var now=Date.now();
+  if(now-lastViolationTs<1500) return;
+  lastViolationTs=now;
+  S.violations=(S.violations||0)+1;
+  save();
+  updateWarnBadge();
+  clearInput();
+  TTS.stop();
 
-      try {
-        fetch(GAS_WEB_APP_URL, {
-          method: 'POST', mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).then(() => {
-          if (syncPass) syncPass.innerText = "TERSIMPAN ✅";
-          if (syncFail) syncFail.innerText = "TERSIMPAN ✅";
-        }).catch(() => {
-          if (syncPass) syncPass.innerText = "GAGAL SYNC ❌";
-          if (syncFail) syncFail.innerText = "GAGAL SYNC ❌";
-        });
-      } catch(e){}
-    }
+  if(S.violations>=CFG.MAX_VIOLATIONS){
+    $('lockModal').hidden=true;
+    $('qModal').hidden=true;
+    $('bagModal').hidden=true;
+    $('confirmModal').hidden=true;
+    $('chestModal').hidden=true;
+    S.sec=elapsed();
+    S.submitted=true;
+    save();
+    exitFullscreen();
+    stopMultiplayerSync();
+    showResult(true);
+    return;
+  }
 
-    function evaluateFinalResult() {
-      isGameOver = true;
-      const percentage = Math.round((correctCount / 50) * 100);
-      const isPass = percentage >= 75;
+  paused=true;
+  $('lkText').innerHTML='Terdeteksi aktivitas meninggalkan layar ujian (<b>'+esc(reason)+'</b>).<br><br>Peringatan ke-<b>'+S.violations+' dari '+CFG.MAX_VIOLATIONS+'</b>. Jika mencapai batas maksimal, ujian akan otomatis dikumpulkan!';
+  $('lockModal').hidden=false;
+}
 
-      if (isPass) {
-        playSfx('correct');
-        document.getElementById('vic-score').innerText = `${percentage}% (${correctCount}/50 Benar)`;
-        document.getElementById('modal-victory').classList.remove('hidden');
-      } else {
-        document.getElementById('gameover-reason').innerText = "Nilai Anda belum mencapai KKM 75%.";
-        triggerGameOverScreen();
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden) registerViolation('Berpindah tab atau meminimalkan browser');
+});
+window.addEventListener('blur',function(){
+  if(mode==='play' && !paused) registerViolation('Membuka jendela/aplikasi lain');
+});
+document.addEventListener('fullscreenchange',function(){
+  if(CFG.LOCKDOWN && !isTeacherMode && mode==='play' && !document.fullscreenElement && !S.submitted){
+    registerViolation('Keluar dari mode layar penuh');
+  }
+});
+document.addEventListener('contextmenu',function(e){
+  if(CFG.LOCKDOWN && !isTeacherMode && mode==='play') e.preventDefault();
+});
+$('lkResume').addEventListener('click',function(){
+  enterFullscreen();
+  $('lockModal').hidden=true;
+  if($('qModal').hidden && $('bagModal').hidden && $('confirmModal').hidden && $('chestModal').hidden){
+    paused=false;
+  }
+});
+
+var sw=$('swatches');
+COLORS.forEach(function(c,i){
+  var b=document.createElement('button'); b.type='button'; b.className='sw'; b.style.background=c; b.setAttribute('role','radio'); b.setAttribute('aria-label','Warna baju '+(i+1)); b.setAttribute('aria-checked',i===0?'true':'false');
+  b.addEventListener('click',function(){ chosenColor=c; Array.prototype.forEach.call(sw.children,function(x){x.setAttribute('aria-checked','false');}); b.setAttribute('aria-checked','true'); });
+  sw.appendChild(b);
+});
+if(CFG.ACCESS_CODE){ $('codeWrap').hidden=false; }
+try{ var lastU=JSON.parse(localStorage.getItem('pks:last')||'null'); if(lastU){ $('inName').value=lastU.name||''; $('inClass').value=lastU.kelas||''; } }catch(e){}
+
+$('loginForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var name=$('inName').value.trim().replace(/\s+/g,' '), kelas=$('inClass').value.trim();
+  var err=$('loginErr'); err.textContent='';
+  if(name.length<3){ err.textContent='Tulis nama lengkapmu (minimal 3 huruf).'; $('inName').focus(); return; }
+  if(!kelas){ err.textContent='Isi kelasmu dulu (mis. XI RPL 1 atau XI RPL 2).'; $('inClass').focus(); return; }
+  if(CFG.ACCESS_CODE && $('inCode').value.trim().toLowerCase()!==CFG.ACCESS_CODE.toLowerCase()){ err.textContent='Kode ujian belum tepat. Tanyakan pada gurumu.'; $('inCode').focus(); return; }
+  SFX.init(); SFX.resume();
+  isTeacherMode = /^(guru|pengawas)$/i.test(name);
+  enterFullscreen();
+  startSession(name,kelas,chosenColor);
+});
+
+function startSession(name,kelas,color){
+  var key='pks:rpl:'+hashStr(name.toLowerCase()+'|'+kelas.toLowerCase());
+  var saved=null;
+  if(!isTeacherMode){
+    try{ saved=JSON.parse(localStorage.getItem(key)||'null'); }catch(e){}
+  }
+  orders={};
+  S={name:name,kelas:kelas,color:saved&&saved.color?saved.color:color,collected:{},answers:{},startTs:Date.now(),sec:0,submitted:false,violations:0,chestOpened:false,key:key,seed:hashStr(name.toLowerCase()+'|'+kelas.toLowerCase())};
+  if(saved){
+    S.collected=saved.collected||{};
+    S.answers=saved.answers||{};
+    S.sec=saved.sec||0;
+    S.submitted=!!saved.submitted;
+    S.violations=saved.violations||0;
+    S.chestOpened=!!saved.chestOpened;
+    S.startTs=Date.now()-S.sec*1000;
+  }
+  if(chestLid) chestLid.rotation.x = S.chestOpened ? -1.1 : 0;
+
+  try{ localStorage.setItem('pks:last',JSON.stringify({name:name,kelas:kelas})); }catch(e){}
+  papers.forEach(function(p,i){ p.g.visible=!S.collected[i]; });
+  if(avatar){ scene.remove(avatar); }
+  avatar=makeAvatar(new THREE.Color(isTeacherMode ? '#ffb62b' : S.color).getHex(), isTeacherMode ? 'PENGAWAS' : name);
+  scene.add(avatar);
+  $('login').hidden=true;
+  if(S.submitted){ showResult(false); return; }
+
+  var lastIdx=-1; Object.keys(S.collected).forEach(function(k){ lastIdx=Math.max(lastIdx,+k); });
+  var sp=spiral(lastIdx>=0?lastIdx:SPAWN_U);
+  P.x=sp[0]; P.z=sp[1]; P.safeX=P.x; P.safeZ=P.z;
+  P.y=groundAndBridgeHeight(P.x,P.z); P.vy=0; P.ground=true;
+  var tgt=nextTarget(); var dx=tgt.x-P.x, dz=tgt.z-P.z; cam.yaw=Math.atan2(-dx,-dz); P.face=Math.atan2(dx,dz); cam.pitch=0.38; cam.dist=13;
+  $('whoName').textContent=isTeacherMode ? 'Mode Pengawas' : name;
+  $('whoClass').textContent=isTeacherMode ? 'Pantau Siswa' : 'Kelas '+kelas;
+  $('warnBadge').hidden = isTeacherMode;
+  updateWarnBadge();
+  $('hud').hidden=false; mode='play'; paused=false; hudTick(true);
+
+  startMultiplayerSync();
+
+  if(isTeacherMode){
+    toast('Mode Pengawas aktif! Anda bebas memantau 3 bukit terpisah & jalan setapak ke jembatan.');
+  } else {
+    toast('Ikuti jalan batu berlentera menuju jembatan 1 batang kayu antar-bukit!');
+  }
+}
+
+/* ---------- Navigasi Target (Kertas Soal -> Jembatan -> Peti Harta Karun) ---------- */
+function getPlayerHill(){
+  var d0 = Math.hypot(P.x - HILLS[0].cx, P.z - HILLS[0].cz);
+  var d1 = Math.hypot(P.x - HILLS[1].cx, P.z - HILLS[1].cz);
+  var d2 = Math.hypot(P.x - HILLS[2].cx, P.z - HILLS[2].cz);
+  if(d0 <= d1 && d0 <= d2) return 0;
+  if(d1 <= d0 && d1 <= d2) return 1;
+  return 2;
+}
+
+function nextTarget(){
+  var curHill = getPlayerHill();
+  for(var i=0; i<N; i++){
+    if(!S.collected[i]){
+      var targetHill = i <= 13 ? 0 : (i <= 27 ? 1 : 2);
+      if(curHill === 0 && targetHill >= 1){
+        return {x: BRIDGE_DEFS[0].ax, z: BRIDGE_DEFS[0].az, i: i, kind: 'bridge1'};
       }
-
-      sendResultToGoogleSheets(percentage, isPass);
-    }
-
-    function triggerGameOverScreen() {
-      isGameOver = true; playSfx('gameover');
-      document.getElementById('go-score').innerText = `${correctCount} / 50 Ruangan`;
-      document.getElementById('modal-gameover').classList.remove('hidden');
-
-      const percentage = Math.round((correctCount / 50) * 100);
-      sendResultToGoogleSheets(percentage, false);
-    }
-
-    function restartGameRun() {
-      isGameOver = false;
-      roomIndex = 0; livesRemaining = 3; correctCount = 0; cheatCount = 0;
-
-      if (cooldownInterval) clearInterval(cooldownInterval);
-      isCooldownActive = false;
-
-      try {
-        shuffledQuestions = shuffleArray(raw100BankSoal).slice(0, 50);
-      } catch(e){}
-
-      document.getElementById('modal-gameover').classList.add('hidden');
-      document.getElementById('modal-victory').classList.add('hidden');
-
-      setupRoom(0);
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      const saved = localStorage.getItem('student_app_data');
-      if (saved) {
-        try {
-          studentData = JSON.parse(saved);
-          document.getElementById('input-nama').value = studentData.nama || '';
-          document.getElementById('input-kelas').value = studentData.kelas || '';
-          document.getElementById('input-nis').value = studentData.nis || '';
-        } catch(e){}
+      if(curHill <= 1 && targetHill === 2){
+        return {x: BRIDGE_DEFS[1].ax, z: BRIDGE_DEFS[1].az, i: i, kind: 'bridge2'};
       }
+      return {x: papers[i].x, z: papers[i].z, i: i, kind: 'paper'};
+    }
+  }
+  for(var j=0; j<N; j++){
+    if(S.answers[j]===undefined) return {x: papers[j].x, z: papers[j].z, i: j, kind: 'bag'};
+  }
+  if(curHill === 0) return {x: BRIDGE_DEFS[0].ax, z: BRIDGE_DEFS[0].az, i: -1, kind: 'bridge1'};
+  if(curHill === 1) return {x: BRIDGE_DEFS[1].ax, z: BRIDGE_DEFS[1].az, i: -1, kind: 'bridge2'};
+  return {x: CHEST_POS.x, z: CHEST_POS.z, i: -1, kind: 'chest'};
+}
 
-      startAppLoading();
+/* ---------- Modal Soal Audio (Tanpa Teks) ---------- */
+var curQ=-1;
+function openQ(i){
+  curQ=i; paused=true; clearInput();
+  TTS.stop();
+  $('fearVignette').style.opacity = '0';
+  $('ghostWarn').hidden = true;
+  $('qTitle').textContent='Soal Audio '+(i+1)+' / '+N;
+  var wrap=$('qOpts'); wrap.innerHTML='';
+  var ord=optOrder(i);
+  ord.forEach(function(orig,k){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='opt-ltr';
+    b.dataset.orig=orig;
+    b.textContent='ABCDE'[k];
+    b.setAttribute('aria-label','Pilihan '+'ABCDE'[k]);
+    b.setAttribute('aria-pressed',S.answers[i]===orig?'true':'false');
+    b.addEventListener('click',function(){
+      S.answers[i]=orig; save();
+      Array.prototype.forEach.call(wrap.children,function(x){ x.setAttribute('aria-pressed',x===b?'true':'false'); });
+      qState(); hudTick(true);
     });
-  </script>
+    wrap.appendChild(b);
+  });
+  qState();
+  $('qModal').hidden=false;
+  setTimeout(function(){
+    if(curQ === i && !$('qModal').hidden){
+      TTS.speakQuestion(i);
+    }
+  }, 180);
+}
+function qState(){
+  var ok=S.answers[curQ]!==undefined, c=$('qState');
+  c.textContent=ok?'Jawaban tersimpan':'Belum dijawab'; c.className='chip'+(ok?' ok':'');
+  $('qNote').textContent=ok?'Jawaban tercatat. Klik Lanjut mendaki atau Putar Ulang.':'Dengarkan suara soal lalu pilih huruf A–E.';
+}
+$('qClose').addEventListener('click',closeQ);
+function closeQ(){
+  TTS.stop();
+  $('qModal').hidden=true; paused=false;
+  if(S.answers[curQ]===undefined) toast('Soal '+(curQ+1)+' belum dijawab. Buka lagi lewat Tas soal.');
+  curQ=-1;
+}
+function collect(i){
+  S.collected[i]=true; papers[i].g.visible=false;
+  P.safeX = P.x; P.safeZ = P.z;
+  save();
+  openQ(i);
+}
+
+/* ---------- Modal Peti Harta Karun (Voucher DANA 5000 + PDF Kisi-Kisi) ---------- */
+var chestAsked = false;
+function checkChest(){
+  if(mode!=='play' || paused || isTeacherMode) return;
+  var d = Math.hypot(P.x - CHEST_POS.x, P.z - CHEST_POS.z);
+  if(d < 4.5 && !chestAsked){
+    chestAsked = true;
+    openChestModal();
+  }
+  if(d > 9) chestAsked = false;
+}
+
+function openChestModal(){
+  paused = true; clearInput(); TTS.stop();
+  var s = summary();
+  var eligible = (s.score >= 80);
+
+  $('chLead').textContent = 'Kamu telah mencapai puncak Bukit 3 (Bukit Tertinggi)! Nilai sementara kamu: ' + String(s.score).replace('.', ',') + ' (' + s.ok.length + ' benar dari ' + N + ' soal).';
+
+  if(eligible){
+    S.chestOpened = true;
+    save();
+    if(chestLid) chestLid.rotation.x = -1.1;
+    SFX.chestFanfare();
+    $('voucherCodeTxt').textContent = getVoucherCode();
+    $('chestUnlocked').hidden = false;
+    $('chestLocked').hidden = true;
+  } else {
+    $('chestUnlocked').hidden = true;
+    $('chestLocked').hidden = false;
+    $('chestLockedMsg').innerHTML = '🔒 <b>Peti Harta Karun Masih Terkunci!</b><br>Syarat membuka peti adalah nilai minimal <b>80</b>.<br>Nilai kamu saat ini baru <b>' + String(s.score).replace('.', ',') + '</b> (terjawab ' + answeredCount() + '/' + N + ' soal). Cek kembali Tas Soal jika masih ada nomor yang kosong atau belum yakin!';
+  }
+  $('chestModal').hidden = false;
+}
+
+$('chCloseBtn').addEventListener('click', function(){
+  $('chestModal').hidden = true;
+  paused = false;
+});
+$('chFinishBtn').addEventListener('click', function(){
+  $('chestModal').hidden = true;
+  openConfirm();
+});
+
+function openBag(){
+  paused=true; clearInput();
+  TTS.stop();
+  $('fearVignette').style.opacity = '0';
+  var grid=$('bagGrid'); grid.innerHTML='';
+  for(var i=0;i<N;i++){
+    var b=document.createElement('button'); b.type='button'; b.textContent=i+1;
+    if(!S.collected[i] && !isTeacherMode){ b.className='lock'; b.disabled=true; b.setAttribute('aria-label','Soal '+(i+1)+' belum ditemukan'); }
+    else { b.className=S.answers[i]!==undefined?'done':''; b.setAttribute('aria-label','Soal '+(i+1)); (function(ii){ b.addEventListener('click',function(){ $('bagModal').hidden=true; openQ(ii); }); })(i); }
+    grid.appendChild(b);
+  }
+  $('bagLead').textContent='Ditemukan '+collectedCount()+' dari '+N+' soal audio. Terjawab '+answeredCount()+'. Ketuk nomor untuk mendengarkan ulang soal.';
+  $('bagModal').hidden=false;
+}
+function closeBag(){ $('bagModal').hidden=true; paused=false; }
+$('btnBag').addEventListener('click',openBag);
+$('bagClose').addEventListener('click',closeBag);
+
+/* ---------- Kumpulkan & Pengiriman ke Google Sheets ---------- */
+function openConfirm(){
+  paused=true; clearInput();
+  TTS.stop();
+  if(isTeacherMode){
+    stopMultiplayerSync();
+    $('hud').hidden=true; S=null; if(avatar){ scene.remove(avatar); avatar=null; } mode='login'; $('login').hidden=false;
+    return;
+  }
+  var un=N-answeredCount(), nf=N-collectedCount();
+  var t='Kamu sudah menjawab '+answeredCount()+' dari '+N+' soal.';
+  if(un>0){ t+=' Masih ada '+un+' soal tanpa jawaban'+(nf>0?' ('+nf+' kertas belum ditemukan)':'')+'. Soal kosong dihitung salah.'; }
+  t+=' Setelah dikumpulkan, jawaban tidak bisa diubah.';
+  $('cfText').textContent=t; $('confirmModal').hidden=false;
+}
+$('btnFinish').addEventListener('click',openConfirm);
+$('cfNo').addEventListener('click',function(){ $('confirmModal').hidden=true; paused=false; });
+$('cfYes').addEventListener('click',function(){
+  S.sec=elapsed(); S.submitted=true; save(); $('confirmModal').hidden=true;
+  exitFullscreen();
+  stopMultiplayerSync();
+  showResult(false);
+});
+
+function summary(){
+  var ok=[],bad=[],blank=[],detailArr=[];
+  for(var i=0;i<N;i++){
+    if(S.answers[i]===undefined){
+      blank.push(i+1);
+      detailArr.push((i+1)+':-');
+    } else if(S.answers[i]===0){
+      ok.push(i+1);
+      detailArr.push((i+1)+':B');
+    } else {
+      bad.push(i+1);
+      detailArr.push((i+1)+':S');
+    }
+  }
+  var sc = Math.round(ok.length*POINT*10)/10;
+  return {ok:ok,bad:bad,blank:blank,score:sc,detail:detailArr.join(',')};
+}
+
+function sendToSpreadsheet(){
+  if(!CFG.GAS_URL || isTeacherMode) return;
+  var st=$('syncStatus'), retry=$('rsRetrySync');
+  st.hidden=false; retry.hidden=true;
+  st.className='sync-status';
+  st.textContent='Mengirim nilai otomatis ke rekap guru...';
+
+  var s=summary();
+  var voucherInfo = s.score >= 80 ? ' [VOUCHER DANA 5K: ' + getVoucherCode() + ']' : '';
+  var payload={
+    type: 'submit',
+    nama: S.name,
+    kelas: S.kelas,
+    nilai: s.score,
+    benar: s.ok.length,
+    salah: s.bad.length,
+    kosong: s.blank.length,
+    waktu: fmtTime(S.sec),
+    pelanggaran: S.violations||0,
+    detail: s.detail + voucherInfo
+  };
+
+  fetch(CFG.GAS_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify(payload)
+  }).then(function(){
+    st.className='sync-status ok';
+    st.textContent='Nilai berhasil dikirim ke rekap Google Sheets guru.';
+  }).catch(function(){
+    st.className='sync-status err';
+    st.textContent='Gagal mengirim otomatis (periksa koneksi internet). Gunakan tombol "Salin hasil untuk guru" atau klik Kirim ulang.';
+    retry.hidden=false;
+  });
+}
+
+$('rsRetrySync').addEventListener('click',sendToSpreadsheet);
+
+function showResult(forcedByViolation){
+  mode='result'; paused=false; clearInput();
+  TTS.stop();
+  $('hud').hidden=true; $('bridgeWarn').hidden=true; $('ghostWarn').hidden=true;
+  $('fearVignette').style.opacity='0';
+  var s=summary();
+  $('rsName').textContent=S.name;
+  $('rsMeta').textContent='Kelas '+S.kelas+(S.violations>0?' · Pelanggaran keluar layar: '+S.violations+'x':'');
+  $('rsScore').textContent=String(s.score).replace('.',',');
+  var msg=forcedByViolation
+    ?'Ujian otomatis dihentikan dan dikumpulkan karena melebihi batas meninggalkan layar ujian.'
+    :s.score>=80?'Luar biasa! Nilai kamu ≥ 80 dan berhak atas hadiah Peti Harta Karun Puncak Tertinggi!'
+    :s.score>=70?'Bagus. Kamu berhasil melewati 3 bukit malam dengan baik.'
+    :s.score>=55?'Cukup baik. Pelajari lagi materi yang masih salah.'
+    :'Pendakian selesai. Ayo belajar lagi dan tingkatkan nilaimu.';
+  $('rsMsg').textContent=msg;
+  $('rsOk').textContent=s.ok.length; $('rsBad').textContent=s.bad.length+s.blank.length; $('rsTime').textContent=fmtTime(S.sec);
+
+  var rz = $('rsRewardZone');
+  if(s.score >= 80 && !forcedByViolation){
+    rz.innerHTML = '<div class="treasure-box"><div style="font-weight:800;color:#fbbf24">🏆 HADIAH PETI HARTA KARUN TERBUKA (NILAI ≥ 80)</div><div class="voucher-card"><div style="font-size:.8rem;font-weight:800">VOUCHER DANA RP 5.000</div><div class="voucher-code">'+esc(getVoucherCode())+'</div></div><button class="btn sun" id="rsPdfBtn" type="button" style="width:100%">📄 Download Kisi-Kisi Pemrograman Web (PDF)</button></div>';
+    setTimeout(function(){
+      var b = $('rsPdfBtn');
+      if(b) b.addEventListener('click', downloadKisiKisiPDF);
+    }, 0);
+  } else {
+    rz.innerHTML = '';
+  }
+
+  sendToSpreadsheet();
+
+  var det=$('rsDetails'); det.hidden=!CFG.SHOW_REVIEW;
+  if(CFG.SHOW_REVIEW){
+    var h='';
+    for(var i=0;i<N;i++){
+      var a=S.answers[i], st=a===undefined?'<span class="bad">Tidak dijawab</span>':a===0?'<span class="good">Benar</span>':'<span class="bad">Salah</span>';
+      h+='<li><div class="t">Soal Audio #'+(i+1)+'</div><div>'+st+(a===undefined?'':' · Jawabanmu: '+esc(SOAL[i].o[a]))+(a===0?'':' · Kunci: '+esc(SOAL[i].o[0]))+'</div></li>';
+    }
+    $('rsList').innerHTML=h;
+  }
+  $('copyBox').hidden=true;
+  $('result').hidden=false;
+}
+
+$('rsCopy').addEventListener('click',function(){
+  var s=summary();
+  var vLine = s.score >= 80 ? '\nKode Voucher DANA 5K: '+getVoucherCode() : '';
+  var txt='HASIL EKSPEDISI 3 BUKIT XI RPL\nNama: '+S.name+'\nKelas: '+S.kelas+'\nNilai: '+String(s.score).replace('.',',')+' ('+s.ok.length+' benar dari '+N+')'+vLine+'\nTerjawab: '+(N-s.blank.length)+'/'+N+'\nWaktu: '+fmtTime(S.sec)+'\nPelanggaran Layar: '+(S.violations||0)+'\nNomor benar: '+(s.ok.join(', ')||'-')+'\nNomor salah: '+(s.bad.join(', ')||'-')+'\nNomor kosong: '+(s.blank.join(', ')||'-');
+  var box=$('copyBox'); box.value=txt; box.hidden=false;
+  function fallback(){ box.focus(); box.select(); toast('Salin teks di kotak ini lalu kirim ke gurumu'); }
+  try{ navigator.clipboard.writeText(txt).then(function(){ toast('Hasil disalin. Kirim ke gurumu.'); },fallback); }catch(e){ fallback(); }
+});
+$('rsExit').addEventListener('click',function(){
+  stopMultiplayerSync();
+  $('result').hidden=true; S=null; if(avatar){ scene.remove(avatar); avatar=null; } mode='login'; $('login').hidden=false;
+});
+
+/* =====================================================================
+   Input
+   ===================================================================== */
+var keys={}, joy={x:0,y:0}, jumpReq=false;
+function clearInput(){ keys={}; joy.x=joy.y=0; jumpReq=false; var k=$('knob'); if(k) k.style.transform='translate(-50%,-50%)'; }
+window.addEventListener('keydown',function(e){
+  if(CFG.LOCKDOWN && !isTeacherMode && mode==='play'){
+    if(e.key==='F12' || (e.ctrlKey && e.shiftKey && /[IJC]/i.test(e.key)) || (e.ctrlKey && /[UuSsPp]/.test(e.key))){
+      e.preventDefault();
+      return;
+    }
+  }
+  if(e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  if(mode!=='play') return;
+  if(e.code==='Escape'){ if(!$('qModal').hidden) closeQ(); else if(!$('bagModal').hidden) closeBag(); else if(!$('chestModal').hidden){ $('chestModal').hidden=true; paused=false; } else if(!$('confirmModal').hidden){ $('confirmModal').hidden=true; paused=false; } return; }
+  if(paused) return;
+  if(e.code==='KeyB'){ openBag(); return; }
+  if(e.code==='KeyF'){ toggleFlashlight(); return; }
+  if(e.code==='Space'){ jumpReq=true; e.preventDefault(); }
+  keys[e.code]=true;
+  if(/^Arrow/.test(e.code)) e.preventDefault();
+});
+window.addEventListener('keyup',function(e){ keys[e.code]=false; });
+
+var drag=null;
+canvas.addEventListener('pointerdown',function(e){ drag={id:e.pointerId,x:e.clientX,y:e.clientY}; try{canvas.setPointerCapture(e.pointerId);}catch(_){} });
+canvas.addEventListener('pointermove',function(e){
+  if(!drag||e.pointerId!==drag.id) return;
+  if(mode==='play'&&!paused){ cam.yaw-=(e.clientX-drag.x)*0.006; cam.pitch=clamp(cam.pitch+(e.clientY-drag.y)*0.005,0.05,1.25); }
+  drag.x=e.clientX; drag.y=e.clientY;
+});
+['pointerup','pointercancel'].forEach(function(ev){ canvas.addEventListener(ev,function(e){ if(drag&&e.pointerId===drag.id) drag=null; }); });
+canvas.addEventListener('wheel',function(e){ if(mode==='play'){ cam.dist=clamp(cam.dist+e.deltaY*0.01,7,28); e.preventDefault(); } },{passive:false});
+
+var touchy=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||('ontouchstart' in window);
+if(touchy) $('hud').classList.add('touchy');
+var stick=$('stick'), knob=$('knob'), stickId=null;
+function moveStick(e){
+  var r=stick.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2, dx=e.clientX-cx, dy=e.clientY-cy, max=r.width/2-8, d=Math.hypot(dx,dy);
+  if(d>max){ dx*=max/d; dy*=max/d; }
+  joy.x=dx/max; joy.y=dy/max; knob.style.transform='translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px))';
+}
+stick.addEventListener('pointerdown',function(e){ stickId=e.pointerId; try{stick.setPointerCapture(e.pointerId);}catch(_){} moveStick(e); });
+stick.addEventListener('pointermove',function(e){ if(e.pointerId===stickId) moveStick(e); });
+['pointerup','pointercancel'].forEach(function(ev){ stick.addEventListener(ev,function(e){ if(e.pointerId===stickId){ stickId=null; joy.x=joy.y=0; knob.style.transform='translate(-50%,-50%)'; } }); });
+$('jumpBtn').addEventListener('pointerdown',function(e){ e.preventDefault(); if(!paused) jumpReq=true; });
+
+/* =====================================================================
+   Loop Utama (3 Bukit Terpisah Jurang Dalam, Jembatan 1 Batang Kayu, & Peti)
+   ===================================================================== */
+var tNow=0, last=performance.now(), hudAcc=0;
+var heartAcc=0, creakAcc=0, wasOnBridge=false;
+
+function update(dt){
+  var ix=((keys.KeyD||keys.ArrowRight)?1:0)-((keys.KeyA||keys.ArrowLeft)?1:0)+joy.x;
+  var iz=((keys.KeyW||keys.ArrowUp)?1:0)-((keys.KeyS||keys.ArrowDown)?1:0)-joy.y;
+  if(keys.KeyQ) cam.yaw+=1.8*dt; if(keys.KeyE) cam.yaw-=1.8*dt;
+  var fx=-Math.sin(cam.yaw), fz=-Math.cos(cam.yaw), rx=-fz, rz=fx;
+  var mx=rx*ix+fx*iz, mz=rz*ix+fz*iz, len=Math.hypot(mx,mz), moving=false, sp=0;
+
+  var onBridge = getBridgeHeight(P.x, P.z) !== null;
+  $('bridgeWarn').hidden = !onBridge;
+  if(onBridge && !wasOnBridge && creakAcc <= 0){
+    SFX.woodCreak();
+    creakAcc = 2.5;
+  }
+  wasOnBridge = onBridge;
+  if(creakAcc > 0) creakAcc -= dt;
+
+  if(len>0.05){
+    moving=true; var m=Math.min(1,len), nx=mx/len, nz=mz/len;
+    var hh=groundAndBridgeHeight(P.x,P.z), ahead=groundAndBridgeHeight(P.x+nx*0.8,P.z+nz*0.8), sl=(ahead-hh)/0.8;
+    var f=P.ground?clamp(1-Math.max(0,sl)*0.42,0.48,1):1;
+    var bridgeCaution = onBridge ? 0.72 : 1.0;
+    var baseSpeed = isTeacherMode ? 22 : 11.5;
+    sp=baseSpeed*m*f*bridgeCaution;
+    P.x+=nx*sp*dt; P.z+=nz*sp*dt; P.face=Math.atan2(nx,nz);
+  }
+  P.x = clamp(P.x, -WORLD_SIZE+15, WORLD_SIZE-15);
+  P.z = clamp(P.z, -WORLD_SIZE+15, WORLD_SIZE-15);
+
+  if(jumpReq && P.ground){ P.vy = 9.5; P.ground=false; } jumpReq=false;
+  P.vy-=26*dt; P.y+=P.vy*dt;
+  var gh=groundAndBridgeHeight(P.x,P.z);
+  if(P.y<=gh+(P.ground?0.5:0) && P.vy<=0){ P.y=gh; P.vy=0; P.ground=true; } else P.ground=false;
+
+  if(!isTeacherMode && P.y < -10){
+    SFX.scareHit();
+    toast('Terpeleset jatuh ke jurang dalam! Kamu kembali ke titik aman bukit.');
+    P.x = P.safeX; P.z = P.safeZ;
+    P.y = groundAndBridgeHeight(P.x, P.z);
+    P.vy = 0; P.ground = true;
+  }
+
+  P.phase+=dt*(moving?sp*0.85:0);
+  var sw_=moving&&P.ground?Math.sin(P.phase)*0.85:(P.ground?0:0.5);
+  limbs.legL.rotation.x=sw_; limbs.legR.rotation.x=-sw_; limbs.armL.rotation.x=-sw_; limbs.armR.rotation.x=sw_;
+  var da=P.face-avatar.rotation.y; da=Math.atan2(Math.sin(da),Math.cos(da)); avatar.rotation.y+=da*Math.min(1,dt*12);
+  avatar.position.set(P.x,P.y,P.z);
+
+  var lookDirX = Math.sin(avatar.rotation.y);
+  var lookDirZ = Math.cos(avatar.rotation.y);
+  headlamp.position.set(P.x + lookDirX*0.6, P.y + 4.1, P.z + lookDirZ*0.6);
+  headlampTarget.position.set(P.x + lookDirX*22, P.y + 1.2, P.z + lookDirZ*22);
+
+  var minDangerDist = 999;
+  var dangerLabel = '';
+  var detectRadius = flashlightOn ? 23 : 8.5;
+
+  for(var gi=0; gi<ghosts.length; gi++){
+    var ghObj = ghosts[gi];
+    var distToP = Math.hypot(P.x - ghObj.x, P.z - ghObj.z);
+    if(!isTeacherMode && distToP < minDangerDist){
+      minDangerDist = distToP;
+      dangerLabel = '👁️ Sosok berambut panjang mendekat! Matikan senter (F) atau menghindar!';
+    }
+
+    var chasing = !isTeacherMode && !onBridge && (distToP < detectRadius);
+    if(chasing && !ghObj.wasChasing){
+      SFX.ghostMoan();
+    }
+    ghObj.wasChasing = chasing;
+
+    var nextGx = ghObj.x, nextGz = ghObj.z;
+    if(chasing){
+      var angToP = Math.atan2(P.x - ghObj.x, P.z - ghObj.z);
+      var chaseSpd = flashlightOn ? 5.2 : 3.1;
+      nextGx += Math.sin(angToP) * chaseSpd * dt;
+      nextGz += Math.cos(angToP) * chaseSpd * dt;
+      ghObj.g.rotation.y = angToP;
+      ghObj.body.rotation.x = 0.24 + Math.sin(tNow*8 + gi)*0.05;
+      ghObj.armL.rotation.x = -1.25 + Math.sin(tNow*7 + gi)*0.18;
+      ghObj.armR.rotation.x = -1.25 - Math.sin(tNow*7 + gi)*0.18;
+      ghObj.head.rotation.z = Math.sin(tNow*9 + gi)*0.16;
+    } else {
+      ghObj.phase += dt * 0.65;
+      var tx = ghObj.homeX + Math.cos(ghObj.phase) * 10;
+      var tz = ghObj.homeZ + Math.sin(ghObj.phase) * 10;
+      ghObj.g.rotation.y = Math.atan2(tx - ghObj.x, tz - ghObj.z);
+      nextGx += (tx - ghObj.x) * dt * 0.8;
+      nextGz += (tz - ghObj.z) * dt * 0.8;
+      ghObj.body.rotation.x = 0.04;
+      ghObj.armL.rotation.x = -0.25 + Math.sin(tNow*2.5 + gi)*0.12;
+      ghObj.armR.rotation.x = -0.25 - Math.sin(tNow*2.5 + gi)*0.12;
+      ghObj.head.rotation.z = Math.sin(tNow*1.8 + gi)*0.08;
+    }
+    if(heightAt(nextGx, nextGz) > 1){
+      ghObj.x = nextGx; ghObj.z = nextGz;
+    }
+    var gy = groundAndBridgeHeight(ghObj.x, ghObj.z);
+    ghObj.g.position.set(ghObj.x, gy + Math.sin(tNow*3.2 + gi)*0.28, ghObj.z);
+    ghObj.mist.rotation.z += dt * 1.2;
+
+    if(ghObj.hair){
+      var swaySpeed = chasing ? 7.2 : 2.8;
+      var swayAmp = chasing ? 0.22 : 0.09;
+      ghObj.hair.rotation.x = (chasing ? 0.28 : 0.05) + Math.sin(tNow * swaySpeed + gi) * swayAmp;
+      ghObj.hair.rotation.z = Math.cos(tNow * (swaySpeed * 0.8) + gi) * (swayAmp * 0.8);
+    }
+
+    if(!isTeacherMode && distToP < 2.2){
+      SFX.scareHit();
+      toast('Tertangkap sosok berambut panjang! Kamu mundur ke titik aman sebelumnya.');
+      P.x = P.safeX; P.z = P.safeZ;
+      P.y = groundAndBridgeHeight(P.x, P.z);
+      ghObj.x = ghObj.homeX;
+      ghObj.z = ghObj.homeZ;
+      minDangerDist = 999;
+      break;
+    }
+  }
+
+  for(var bi=0; bi<beasts.length; bi++){
+    var bObj = beasts[bi];
+    var distB = Math.hypot(P.x - bObj.x, P.z - bObj.z);
+    if(!isTeacherMode && distB < minDangerDist){
+      minDangerDist = distB;
+      dangerLabel = bObj.isBear
+        ? '🐻 Beruang hutan mengaum! Jangan mendekat!'
+        : '🐺 Serigala malam mengintai! Matikan senter (F) atau menghindar!';
+    }
+
+    var beastDetect = flashlightOn ? 19 : 8;
+    var bChasing = !isTeacherMode && !onBridge && (distB < beastDetect);
+    if(bChasing && !bObj.wasChasing){
+      SFX.beastGrowl();
+    }
+    bObj.wasChasing = bChasing;
+
+    var nextBx = bObj.x, nextBz = bObj.z;
+    if(bChasing){
+      var angB = Math.atan2(P.x - bObj.x, P.z - bObj.z);
+      var moveSpd = bObj.isBear ? 5.4 : 6.6;
+      nextBx += Math.sin(angB) * moveSpd * dt;
+      nextBz += Math.cos(angB) * moveSpd * dt;
+      bObj.g.rotation.y = angB;
+    } else {
+      bObj.phase += dt * 0.55;
+      var btx = bObj.homeX + Math.sin(bObj.phase) * 11;
+      var btz = bObj.homeZ + Math.cos(bObj.phase) * 11;
+      bObj.g.rotation.y = Math.atan2(btx - bObj.x, btz - bObj.z);
+      nextBx += (btx - bObj.x) * dt * 0.7;
+      nextBz += (btz - bObj.z) * dt * 0.7;
+    }
+
+    if(heightAt(nextBx, nextBz) > 1){
+      bObj.x = nextBx; bObj.z = nextBz;
+    }
+
+    bObj.runPhase += dt * (bChasing ? 14 : 6);
+    var legSw = Math.sin(bObj.runPhase) * (bChasing ? 0.75 : 0.4);
+    bObj.legFL.rotation.x = legSw; bObj.legBR.rotation.x = legSw;
+    bObj.legFR.rotation.x = -legSw; bObj.legBL.rotation.x = -legSw;
+
+    var by = groundAndBridgeHeight(bObj.x, bObj.z);
+    var bounce = Math.abs(Math.sin(bObj.runPhase)) * (bChasing ? 0.22 : 0.08);
+    bObj.g.position.set(bObj.x, by + bounce, bObj.z);
+
+    if(!isTeacherMode && distB < 2.3){
+      SFX.scareHit();
+      toast((bObj.isBear ? 'Diserang beruang hutan!' : 'Disergap serigala malam!') + ' Kamu mundur ke titik aman.');
+      P.x = P.safeX; P.z = P.safeZ;
+      P.y = groundAndBridgeHeight(P.x, P.z);
+      bObj.x = bObj.homeX;
+      bObj.z = bObj.homeZ;
+      minDangerDist = 999;
+      break;
+    }
+  }
+
+  var fearLevel = clamp(1 - (minDangerDist - 3) / 18, 0, 1);
+  $('fearVignette').style.opacity = (fearLevel * 0.85).toFixed(2);
+  var gw = $('ghostWarn');
+  gw.hidden = (minDangerDist > 18);
+  if(!gw.hidden && dangerLabel) gw.textContent = dangerLabel;
+
+  if(fearLevel > 0.25){
+    heartAcc -= dt;
+    if(heartAcc <= 0){
+      SFX.heartbeat();
+      heartAcc = clamp(1.1 - fearLevel * 0.65, 0.42, 1.1);
+    }
+  }
+
+  if(!isTeacherMode){
+    for(var i=0;i<N;i++){
+      var p=papers[i]; if(S.collected[i]) continue;
+      var dx=p.x-P.x, dz=p.z-P.z;
+      if(dx*dx+dz*dz<12 && P.y<p.y+5){ collect(i); break; }
+    }
+    checkChest();
+  }
+}
+
+function camUpdate(){
+  var cp=Math.cos(cam.pitch);
+  var cx=P.x+Math.sin(cam.yaw)*cp*cam.dist, cz=P.z+Math.cos(cam.yaw)*cp*cam.dist, cy=P.y+3+Math.sin(cam.pitch)*cam.dist;
+  cy=Math.max(cy,groundAndBridgeHeight(cx,cz)+1.6);
+  camera.position.set(cx,cy,cz); camera.lookAt(P.x,P.y+2.8,P.z);
+}
+function hudTick(force){
+  if(!S) return;
+  $('clock').textContent=fmtTime(elapsed());
+  var curH = getPlayerHill();
+  $('hillLbl').textContent = 'Bukit ' + (curH + 1) + '/3';
+  var alt=clamp(Math.max(0, P.y)/PEAK, 0, 1);
+  $('altFill').style.width=(alt*100)+'%';
+  $('altTxt').textContent=Math.max(0, Math.round(P.y/PEAK*2800)).toLocaleString('id-ID')+' m';
+  $('bagCount').textContent=answeredCount()+'/'+N;
+
+  var t=nextTarget(), dx=t.x-P.x, dz=t.z-P.z, d=Math.hypot(dx,dz);
+  var fx=-Math.sin(cam.yaw), fz=-Math.cos(cam.yaw), rx=-fz, rz=fx;
+  var a=Math.atan2(dx*rx+dz*rz, dx*fx+dz*fz);
+  $('arrow').style.transform='rotate('+a+'rad)';
+
+  var txt = isTeacherMode
+    ? 'Mode Pengawas: Pantau 3 bukit terpisah & jalan setapak jembatan'
+    : t.kind==='bridge1' ? 'Ikuti jalan berlentera ke Jembatan 1 Batang Kayu (Bukit 2) · '+Math.round(d)+' m'
+    : t.kind==='bridge2' ? 'Ikuti jalan berlentera ke Jembatan 1 Batang Kayu (Bukit 3) · '+Math.round(d)+' m'
+    : t.kind==='paper' ? 'Kertas Audio '+(t.i+1)+' · '+Math.round(d)+' m'
+    : t.kind==='bag' ? 'Soal '+(t.i+1)+' belum dijawab. Buka Tas soal'
+    : 'Menuju Peti Harta Karun Bukit 3 · '+Math.round(d)+' m';
+  if($('compTxt').textContent!==txt) $('compTxt').textContent=txt;
+}
+function frame(now){
+  var dt=Math.min(0.05,(now-last)/1000); last=now; tNow+=dt;
+  if(mode==='play'){
+    if(!paused) update(dt);
+    updateRemotePlayers(dt);
+    camUpdate();
+    hudAcc+=dt; if(hudAcc>0.1){ hudAcc=0; hudTick(); }
+  } else {
+    var a=tNow*0.05+0.8;
+    camera.position.set(Math.cos(a)*330, 125+Math.sin(tNow*0.2)*8, Math.sin(a)*330);
+    camera.lookAt(0, 28, 0);
+  }
+  if(chestGlow){
+    chestGlow.rotation.y += dt * 0.8;
+  }
+  for(var i=0;i<papers.length;i++){ var p=papers[i]; if(p.g.visible){ p.mesh.position.y=2.6+Math.sin(tNow*2+i)*0.25; p.mesh.rotation.y+=dt*1.4; } }
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
