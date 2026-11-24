@@ -25,8 +25,14 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 
 #fearVignette{
   position:fixed;inset:0;pointer-events:none;z-index:4;
-  background:radial-gradient(circle, transparent 40%, rgba(180,15,25,0.72) 100%);
-  opacity:0;transition:opacity .18s ease;
+  background:radial-gradient(circle, transparent 35%, rgba(160,10,20,0.82) 100%);
+  opacity:0;transition:opacity .15s ease;
+}
+
+#jumpscareFlash{
+  position:fixed;inset:0;pointer-events:none;z-index:6;
+  background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(185,15,25,0.88) 85%, #000 100%);
+  opacity:0;mix-blend-mode:hard-light;
 }
 
 /* ---------- HUD ---------- */
@@ -62,8 +68,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-of
 .compass span{background:var(--glass);border-radius:10px;padding:6px 12px;font-size:.85rem;font-weight:800;border:1px solid rgba(255,255,255,.14)}
 .alert-banner{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 78px);transform:translateX(-50%);padding:6px 14px;border-radius:10px;font-size:.82rem;font-weight:800;pointer-events:none;border:1px solid rgba(255,255,255,.3);box-shadow:0 4px 12px rgba(0,0,0,.4);white-space:nowrap}
 .alert-banner.bridge{background:rgba(180,83,9,.95);color:#fff}
-.alert-banner.ghost{background:rgba(185,28,28,.94);color:#fff;animation:pulseWarn .7s infinite alternate}
-@keyframes pulseWarn{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.04)}}
+.alert-banner.ghost{background:rgba(153,27,27,.95);color:#fff;animation:pulseWarn .55s infinite alternate}
+@keyframes pulseWarn{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.05)}}
 .hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);background:var(--glass);border-radius:10px;padding:6px 12px;font-size:.8rem;font-weight:700;white-space:nowrap;pointer-events:none}
 #stick,#jumpBtn{display:none}
 .touchy #stick{display:block;position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:132px;height:132px;border-radius:50%;background:rgba(12,24,40,.55);border:3px solid rgba(255,255,255,.45);touch-action:none}
@@ -236,6 +242,7 @@ textarea#copyBox{width:100%;box-sizing:border-box;height:120px;margin-top:10px;f
 
 <canvas id="gl" aria-label="Pemandangan 3 bukit terpisah jurang dalam 3D"></canvas>
 <div id="fearVignette"></div>
+<div id="jumpscareFlash"></div>
 
 <div id="hud" hidden>
   <div class="row-top">
@@ -256,7 +263,7 @@ textarea#copyBox{width:100%;box-sizing:border-box;height:120px;margin-top:10px;f
   </div>
   <div class="compass"><div class="dial"><div id="arrow"></div></div><span id="compTxt">Cari kertas soal</span></div>
   <div class="alert-banner bridge" id="bridgeWarn" hidden>🪵 Hati-hati! Meniti jembatan 1 batang kayu di atas jurang dalam!</div>
-  <div class="alert-banner ghost" id="ghostWarn" hidden>👁️ Bahaya mendekat! Matikan senter (F) atau menghindar!</div>
+  <div class="alert-banner ghost" id="ghostWarn" hidden>👁️ Ada yang mengintip dari kegelapan...</div>
   <div class="hint">WASD/Panah: jalan · Spasi: lompat · F: senter · B: tas soal · Seret mouse/Q/E: kamera</div>
   <div id="stick"><div id="knob"></div></div>
   <button id="jumpBtn" type="button">Lompat</button>
@@ -265,7 +272,7 @@ textarea#copyBox{width:100%;box-sizing:border-box;height:120px;margin-top:10px;f
 <div class="overlay" id="login">
   <form class="card" id="loginForm" autocomplete="off" novalidate>
     <h1>Ekspedisi 3 Bukit RPL</h1>
-    <p class="lead">Asesmen Pemrograman Web <b>XI RPL 1 & 2</b>! Taklukkan 3 bukit terpisah <b>jurang dalam</b> melalui <b>jembatan 1 batang kayu</b>, hindari hantu & binatang buas, lalu buka <b>Peti Harta Karun</b> di puncak tertinggi!</p>
+    <p class="lead">Asesmen Pemrograman Web <b>XI RPL 1 & 2</b>! Taklukkan 3 bukit terpisah <b>jurang dalam</b> melalui <b>jembatan 1 batang kayu</b>, waspadai teror hantu berambut panjang & binatang buas, lalu buka <b>Peti Harta Karun</b> di puncak tertinggi!</p>
     <label class="f" for="inName">Nama lengkap (Ketik GURU untuk Mode Pengawas)</label>
     <input type="text" id="inName" maxlength="32" placeholder="mis. Ahmad Fauzi">
     <label class="f" for="inClass">Kelas</label>
@@ -706,25 +713,55 @@ var SFX = {
     osc.connect(g); g.connect(SFX.ctx.destination);
     osc.start(t); osc.stop(t+0.52);
   },
-  ghostMoan: function(){
+  ghostWhisper: function(){
     if(this.muted || !this.ctx) return;
     var t = this.ctx.currentTime;
     var osc = this.ctx.createOscillator();
     var g = SFX.ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(520, t);
-    osc.frequency.exponentialRampToValueAtTime(280, t+0.7);
+    osc.frequency.setValueAtTime(620, t);
+    osc.frequency.exponentialRampToValueAtTime(340, t+0.9);
     g.gain.setValueAtTime(0.001, t);
-    g.gain.linearRampToValueAtTime(0.14, t+0.15);
-    g.gain.exponentialRampToValueAtTime(0.001, t+0.75);
+    g.gain.linearRampToValueAtTime(0.11, t+0.25);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.95);
     osc.connect(g); g.connect(SFX.ctx.destination);
-    osc.start(t); osc.stop(t+0.78);
+    osc.start(t); osc.stop(t+1.0);
+  },
+  jumpscareScream: function(){
+    if(this.muted || !this.ctx) return;
+    var t = this.ctx.currentTime;
+    // Layer 1: Jeritan melengking tinggi (Screech)
+    var osc1 = this.ctx.createOscillator();
+    var osc2 = this.ctx.createOscillator();
+    var g1 = this.ctx.createGain();
+    osc1.type = 'sawtooth';
+    osc2.type = 'square';
+    osc1.frequency.setValueAtTime(980, t);
+    osc1.frequency.exponentialRampToValueAtTime(390, t+0.78);
+    osc2.frequency.setValueAtTime(1045, t);
+    osc2.frequency.exponentialRampToValueAtTime(310, t+0.78);
+    g1.gain.setValueAtTime(0.45, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t+0.82);
+    osc1.connect(g1); osc2.connect(g1); g1.connect(this.ctx.destination);
+    osc1.start(t); osc2.start(t);
+    osc1.stop(t+0.85); osc2.stop(t+0.85);
+
+    // Layer 2: Dentuman bass kejut (Sub-drop)
+    var sub = this.ctx.createOscillator();
+    var gs = this.ctx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(140, t);
+    sub.frequency.exponentialRampToValueAtTime(32, t+0.6);
+    gs.gain.setValueAtTime(0.55, t);
+    gs.gain.exponentialRampToValueAtTime(0.001, t+0.65);
+    sub.connect(gs); gs.connect(this.ctx.destination);
+    sub.start(t); sub.stop(t+0.68);
   },
   scareHit: function(){
     if(this.muted || !this.ctx) return;
     var t = this.ctx.currentTime;
     var osc = this.ctx.createOscillator();
-    var g = SFX.ctx.createGain();
+    var g = this.ctx.createGain();
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(220, t);
     osc.frequency.exponentialRampToValueAtTime(42, t+0.6);
@@ -853,12 +890,12 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 var scene=new THREE.Scene();
 var NIGHT_SKY=0x060d18;
 scene.background=new THREE.Color(NIGHT_SKY);
-scene.fog=new THREE.FogExp2(0x091322, 0.0102);
+scene.fog=new THREE.FogExp2(0x091322, 0.0108);
 
-var camera=new THREE.PerspectiveCamera(58,1,0.5,950);
-scene.add(new THREE.HemisphereLight(0x3a5a8c, 0x0d1a14, 0.58));
+var camera=new THREE.PerspectiveCamera(58,1,0.3,950);
+scene.add(new THREE.HemisphereLight(0x3a5a8c, 0x0d1a14, 0.54));
 
-var moonLight=new THREE.DirectionalLight(0x6d93c7, 0.48);
+var moonLight=new THREE.DirectionalLight(0x6d93c7, 0.45);
 moonLight.position.set(-200, 290, -160);
 scene.add(moonLight);
 
@@ -1129,101 +1166,130 @@ function nearTrail(x,z,r){ for(var i=0;i<trailPts.length;i++){ if(Math.abs(trail
   scene.add(rk);
 })();
 
-var ghosts = [];
-(function buildGhosts(){
-  var bodyMat = new THREE.MeshStandardMaterial({color: 0x0b0e14, roughness: 0.92, transparent: true, opacity: 0.94});
-  var paleSkinMat = new THREE.MeshStandardMaterial({color: 0xdbeafe, roughness: 0.75});
-  var hairMat = new THREE.MeshStandardMaterial({color: 0x040507, roughness: 0.85, side: THREE.DoubleSide});
-  var eyeMat = new THREE.MeshBasicMaterial({color: 0xff1e27, fog: false});
-  var mistMat = new THREE.MeshBasicMaterial({color: 0x1e293b, transparent: true, opacity: 0.25, depthWrite: false});
+/* =====================================================================
+   Hantu Berambut Panjang Menyeramkan (Stealth Stalker + Jumpscare Rig)
+   ===================================================================== */
+function createGhostRig(){
+  var bodyMat = new THREE.MeshStandardMaterial({color: 0x050608, roughness: 0.95, transparent: true, opacity: 0.95});
+  var paleSkinMat = new THREE.MeshStandardMaterial({color: 0xcbd5e1, roughness: 0.85, transparent: true, opacity: 0.95});
+  var hairMat = new THREE.MeshStandardMaterial({color: 0x020203, roughness: 0.9, side: THREE.DoubleSide, transparent: true, opacity: 0.96});
+  var eyeMat = new THREE.MeshBasicMaterial({color: 0xff0015, fog: false});
+  var mistMat = new THREE.MeshBasicMaterial({color: 0x0f172a, transparent: true, opacity: 0.35, depthWrite: false});
 
-  var patrolIdx = [4, 9, 12, 17, 22, 26, 31, 36];
-  patrolIdx.forEach(function(idx, k){
-    var baseP = spiral(idx);
-    var root = new THREE.Group();
-    var bodyPivot = new THREE.Group();
-    root.add(bodyPivot);
+  var root = new THREE.Group();
+  var bodyPivot = new THREE.Group();
+  root.add(bodyPivot);
 
-    var cloak = new THREE.Mesh(new THREE.ConeGeometry(1.18, 4.6, 10, 1, true), bodyMat);
-    cloak.position.y = 2.45;
-    bodyPivot.add(cloak);
+  var cloak = new THREE.Mesh(new THREE.ConeGeometry(1.18, 4.7, 10, 1, true), bodyMat);
+  cloak.position.y = 2.45;
+  bodyPivot.add(cloak);
 
-    var footMist = new THREE.Mesh(new THREE.RingGeometry(0.4, 2.1, 14), mistMat);
-    footMist.rotation.x = -Math.PI / 2;
-    footMist.position.y = 0.25;
-    root.add(footMist);
+  var footMist = new THREE.Mesh(new THREE.RingGeometry(0.4, 2.3, 14), mistMat);
+  footMist.rotation.x = -Math.PI / 2;
+  footMist.position.y = 0.25;
+  root.add(footMist);
 
-    function makeGhostArm(side){
-      var armPiv = new THREE.Group();
-      armPiv.position.set(side * 0.75, 3.85, 0.1);
-      var armMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 2.2, 6), paleSkinMat);
-      armMesh.position.y = -1.0;
-      armPiv.add(armMesh);
-      for(var c=-1; c<=1; c++){
-        var claw = new THREE.Mesh(new THREE.ConeGeometry(0.03, 0.35, 4), paleSkinMat);
-        claw.position.set(c*0.05, -2.15, 0.05);
-        claw.rotation.x = 0.4;
-        armPiv.add(claw);
-      }
-      bodyPivot.add(armPiv);
-      return armPiv;
+  function makeGhostArm(side){
+    var armPiv = new THREE.Group();
+    armPiv.position.set(side * 0.75, 3.85, 0.1);
+    var armMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.07, 2.35, 6), paleSkinMat);
+    armMesh.position.y = -1.08;
+    armPiv.add(armMesh);
+    for(var c=-1; c<=1; c++){
+      var claw = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.42, 4), paleSkinMat);
+      claw.position.set(c*0.05, -2.3, 0.06);
+      claw.rotation.x = 0.45;
+      armPiv.add(claw);
     }
-    var armL = makeGhostArm(-1);
-    var armR = makeGhostArm(1);
+    bodyPivot.add(armPiv);
+    return armPiv;
+  }
+  var armL = makeGhostArm(-1);
+  var armR = makeGhostArm(1);
 
-    var headGroup = new THREE.Group();
-    headGroup.position.y = 4.65;
-    bodyPivot.add(headGroup);
+  var headGroup = new THREE.Group();
+  headGroup.position.y = 4.65;
+  bodyPivot.add(headGroup);
 
-    var head = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 10), paleSkinMat);
-    headGroup.add(head);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 10), paleSkinMat);
+  headGroup.add(head);
 
-    var eyeGeo = new THREE.SphereGeometry(0.11, 6, 6);
-    var eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.21, 0.02, 0.54);
-    var eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.21, 0.02, 0.54);
-    var mouth = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 6), hairMat);
-    mouth.scale.set(0.8, 1.4, 0.5); mouth.position.set(0, -0.26, 0.52);
-    headGroup.add(eyeL); headGroup.add(eyeR); headGroup.add(mouth);
+  // Mata hitam cekung dengan pupil merah menyala
+  var socketGeo = new THREE.SphereGeometry(0.16, 6, 6);
+  var sockL = new THREE.Mesh(socketGeo, hairMat); sockL.position.set(-0.21, 0.04, 0.51);
+  var sockR = new THREE.Mesh(socketGeo, hairMat); sockR.position.set(0.21, 0.04, 0.51);
+  var eyeGeo = new THREE.SphereGeometry(0.08, 6, 6);
+  var eyeL = new THREE.Mesh(eyeGeo, eyeMat); eyeL.position.set(-0.21, 0.04, 0.61);
+  var eyeR = new THREE.Mesh(eyeGeo, eyeMat); eyeR.position.set(0.21, 0.04, 0.61);
+  // Mulut menganga lebar menyeramkan
+  var mouth = new THREE.Mesh(new THREE.SphereGeometry(0.19, 8, 8), hairMat);
+  mouth.scale.set(0.85, 1.85, 0.55); mouth.position.set(0, -0.28, 0.52);
+  headGroup.add(sockL); headGroup.add(sockR);
+  headGroup.add(eyeL); headGroup.add(eyeR); headGroup.add(mouth);
 
-    var hairGroup = new THREE.Group();
-    hairGroup.position.set(0, 0.1, 0);
-    var crownHair = new THREE.Mesh(new THREE.SphereGeometry(0.67, 10, 8, 0, Math.PI*2, 0, Math.PI*0.64), hairMat);
-    crownHair.rotation.x = -0.15;
-    hairGroup.add(crownHair);
+  var hairGroup = new THREE.Group();
+  hairGroup.position.set(0, 0.1, 0);
+  var crownHair = new THREE.Mesh(new THREE.SphereGeometry(0.67, 10, 8, 0, Math.PI*2, 0, Math.PI*0.64), hairMat);
+  crownHair.rotation.x = -0.15;
+  hairGroup.add(crownHair);
 
-    var strandSpecs = [
-      {x: 0,     z: -0.58, w: 1.25, h: 3.9, ry: 0,    rx: 0.08},
-      {x: -0.48, z: -0.35, w: 0.62, h: 3.7, ry: 0.55, rx: 0.06},
-      {x: 0.48,  z: -0.35, w: 0.62, h: 3.7, ry: -0.55,rx: 0.06},
-      {x: -0.58, z: 0.12,  w: 0.48, h: 3.4, ry: 1.25, rx: 0.04},
-      {x: 0.58,  z: 0.12,  w: 0.48, h: 3.4, ry: -1.25,rx: 0.04},
-      {x: -0.38, z: 0.48,  w: 0.28, h: 1.85, ry: 0.25, rx: -0.05},
-      {x: 0.38,  z: 0.48,  w: 0.28, h: 1.85, ry: -0.25,rx: -0.05},
-      {x: 0,     z: 0.58,  w: 0.16, h: 1.15, ry: 0,    rx: -0.08}
-    ];
-    strandSpecs.forEach(function(st){
-      var sGeo = new THREE.PlaneGeometry(st.w, st.h, 1, 3);
-      sGeo.translate(0, -st.h * 0.5, 0);
-      var sMesh = new THREE.Mesh(sGeo, hairMat);
-      sMesh.position.set(st.x, 0.25, st.z);
-      sMesh.rotation.set(st.rx, st.ry, 0);
-      hairGroup.add(sMesh);
-    });
-    headGroup.add(hairGroup);
-
-    var gx = baseP[0];
-    var gz = baseP[1];
-    root.position.set(gx, groundAndBridgeHeight(gx,gz), gz);
-    scene.add(root);
-
-    ghosts.push({
-      g: root, body: bodyPivot, head: headGroup, hair: hairGroup,
-      armL: armL, armR: armR, mist: footMist,
-      homeX: baseP[0], homeZ: baseP[1],
-      x: gx, z: gz, phase: k * 1.4, wasChasing: false
-    });
+  var strandSpecs = [
+    {x: 0,     z: -0.58, w: 1.25, h: 4.1, ry: 0,    rx: 0.08},
+    {x: -0.48, z: -0.35, w: 0.62, h: 3.9, ry: 0.55, rx: 0.06},
+    {x: 0.48,  z: -0.35, w: 0.62, h: 3.9, ry: -0.55,rx: 0.06},
+    {x: -0.58, z: 0.12,  w: 0.48, h: 3.6, ry: 1.25, rx: 0.04},
+    {x: 0.58,  z: 0.12,  w: 0.48, h: 3.6, ry: -1.25,rx: 0.04},
+    {x: -0.36, z: 0.48,  w: 0.30, h: 2.1, ry: 0.25, rx: -0.05},
+    {x: 0.36,  z: 0.48,  w: 0.30, h: 2.1, ry: -0.25,rx: -0.05},
+    {x: 0,     z: 0.58,  w: 0.18, h: 1.35, ry: 0,    rx: -0.08}
+  ];
+  strandSpecs.forEach(function(st){
+    var sGeo = new THREE.PlaneGeometry(st.w, st.h, 1, 3);
+    sGeo.translate(0, -st.h * 0.5, 0);
+    var sMesh = new THREE.Mesh(sGeo, hairMat);
+    sMesh.position.set(st.x, 0.25, st.z);
+    sMesh.rotation.set(st.rx, st.ry, 0);
+    hairGroup.add(sMesh);
   });
-})();
+  headGroup.add(hairGroup);
+
+  return {
+    g: root, body: bodyPivot, head: headGroup, hair: hairGroup,
+    armL: armL, armR: armR, mist: footMist,
+    mats: [bodyMat, paleSkinMat, hairMat, mistMat]
+  };
+}
+
+// Hantu Pengintai (Stalker) yang bersembunyi di gelap & muncul mendadak di sudut pandangan
+var stalkerGhost = createGhostRig();
+stalkerGhost.g.visible = false;
+scene.add(stalkerGhost.g);
+var stalkerState = {
+  active: false,
+  timer: 6,
+  x: 0, z: 0,
+  whispered: false
+};
+
+// Hantu Khusus Jumpscare yang muncul tiba-tiba tepat di depan kamera!
+var jumpscareGhost = createGhostRig();
+jumpscareGhost.g.visible = false;
+scene.add(jumpscareGhost.g);
+var jumpscareState = {
+  active: false,
+  timer: 0,
+  cooldown: 22 // Muncul pertama kali setelah ~22 detik pendakian
+};
+
+function triggerJumpscare(){
+  if(jumpscareState.active || isTeacherMode || paused || mode !== 'play') return;
+  jumpscareState.active = true;
+  jumpscareState.timer = 0.85;
+  jumpscareState.cooldown = 30 + Math.random() * 22;
+  jumpscareGhost.g.visible = true;
+  $('jumpscareFlash').style.opacity = '1';
+  SFX.jumpscareScream();
+}
 
 var beasts = [];
 (function buildWildBeasts(){
@@ -1705,6 +1771,13 @@ function startSession(name,kelas,color){
   updateWarnBadge();
   $('hud').hidden=false; mode='play'; paused=false; hudTick(true);
 
+  stalkerState.active = false;
+  stalkerState.timer = 8;
+  stalkerGhost.g.visible = false;
+  jumpscareState.active = false;
+  jumpscareState.cooldown = 22;
+  jumpscareGhost.g.visible = false;
+
   startMultiplayerSync();
 
   if(isTeacherMode){
@@ -1752,7 +1825,12 @@ function openQ(i){
   curQ=i; paused=true; clearInput();
   TTS.stop();
   $('fearVignette').style.opacity = '0';
+  $('jumpscareFlash').style.opacity = '0';
   $('ghostWarn').hidden = true;
+  stalkerGhost.g.visible = false;
+  jumpscareGhost.g.visible = false;
+  jumpscareState.active = false;
+
   $('qTitle').textContent='Soal Audio '+(i+1)+' / '+N;
   var wrap=$('qOpts'); wrap.innerHTML='';
   var ord=optOrder(i);
@@ -1920,7 +1998,7 @@ function sendToSpreadsheet(){
     salah: s.bad.length,
     kosong: s.blank.length,
     waktu: fmtTime(S.sec),
-    pelanggaran: S.violations||0,
+    pelanggaran: s.violations||0,
     detail: s.detail + voucherInfo
   };
 
@@ -1946,6 +2024,7 @@ function showResult(forcedByViolation){
   TTS.stop();
   $('hud').hidden=true; $('bridgeWarn').hidden=true; $('ghostWarn').hidden=true;
   $('fearVignette').style.opacity='0';
+  $('jumpscareFlash').style.opacity='0';
   var s=summary();
   $('rsName').textContent=S.name;
   $('rsMeta').textContent='Kelas '+S.kelas+(S.violations>0?' · Pelanggaran keluar layar: '+S.violations+'x':'');
@@ -2046,10 +2125,11 @@ stick.addEventListener('pointermove',function(e){ if(e.pointerId===stickId) move
 $('jumpBtn').addEventListener('pointerdown',function(e){ e.preventDefault(); if(!paused) jumpReq=true; });
 
 /* =====================================================================
-   Loop Utama (3 Bukit Terpisah Jurang Dalam, Jembatan 1 Batang Kayu, & Peti)
+   Loop Utama (3 Bukit, Jembatan, Hantu Stalker & Jumpscare, & Peti)
    ===================================================================== */
 var tNow=0, last=performance.now(), hudAcc=0;
 var heartAcc=0, creakAcc=0, wasOnBridge=false;
+var camShake = 0;
 
 function update(dt){
   var ix=((keys.KeyD||keys.ArrowRight)?1:0)-((keys.KeyA||keys.ArrowLeft)?1:0)+joy.x;
@@ -2105,71 +2185,110 @@ function update(dt){
 
   var minDangerDist = 999;
   var dangerLabel = '';
-  var detectRadius = flashlightOn ? 23 : 8.5;
 
-  for(var gi=0; gi<ghosts.length; gi++){
-    var ghObj = ghosts[gi];
-    var distToP = Math.hypot(P.x - ghObj.x, P.z - ghObj.z);
-    if(!isTeacherMode && distToP < minDangerDist){
-      minDangerDist = distToP;
-      dangerLabel = '👁️ Sosok berambut panjang mendekat! Matikan senter (F) atau menghindar!';
-    }
-
-    var chasing = !isTeacherMode && !onBridge && (distToP < detectRadius);
-    if(chasing && !ghObj.wasChasing){
-      SFX.ghostMoan();
-    }
-    ghObj.wasChasing = chasing;
-
-    var nextGx = ghObj.x, nextGz = ghObj.z;
-    if(chasing){
-      var angToP = Math.atan2(P.x - ghObj.x, P.z - ghObj.z);
-      var chaseSpd = flashlightOn ? 5.2 : 3.1;
-      nextGx += Math.sin(angToP) * chaseSpd * dt;
-      nextGz += Math.cos(angToP) * chaseSpd * dt;
-      ghObj.g.rotation.y = angToP;
-      ghObj.body.rotation.x = 0.24 + Math.sin(tNow*8 + gi)*0.05;
-      ghObj.armL.rotation.x = -1.25 + Math.sin(tNow*7 + gi)*0.18;
-      ghObj.armR.rotation.x = -1.25 - Math.sin(tNow*7 + gi)*0.18;
-      ghObj.head.rotation.z = Math.sin(tNow*9 + gi)*0.16;
+  /* -------------------------------------------------------------------
+     1. HANTU PENGINTAI (Muncul diam-diam di gelap & menghilang saat didekati)
+     ------------------------------------------------------------------- */
+  if(!isTeacherMode && !onBridge){
+    stalkerState.timer -= dt;
+    if(!stalkerState.active){
+      if(stalkerState.timer <= 0){
+        // Muncul tiba-tiba di jarak 13–17m di sudut samping/belakang pemain
+        var spawnAng = avatar.rotation.y + Math.PI + (Math.random() - 0.5) * 2.1;
+        var spawnDist = 13 + Math.random() * 4;
+        var sx = P.x + Math.sin(spawnAng) * spawnDist;
+        var sz = P.z + Math.cos(spawnAng) * spawnDist;
+        if(heightAt(sx, sz) > 2){
+          stalkerState.active = true;
+          stalkerState.timer = 5.5 + Math.random() * 3.5; // Muncul mematung selama 5.5–9 detik
+          stalkerState.x = sx;
+          stalkerState.z = sz;
+          stalkerGhost.g.visible = true;
+          SFX.ghostWhisper();
+        } else {
+          stalkerState.timer = 4;
+        }
+      }
     } else {
-      ghObj.phase += dt * 0.65;
-      var tx = ghObj.homeX + Math.cos(ghObj.phase) * 10;
-      var tz = ghObj.homeZ + Math.sin(ghObj.phase) * 10;
-      ghObj.g.rotation.y = Math.atan2(tx - ghObj.x, tz - ghObj.z);
-      nextGx += (tx - ghObj.x) * dt * 0.8;
-      nextGz += (tz - ghObj.z) * dt * 0.8;
-      ghObj.body.rotation.x = 0.04;
-      ghObj.armL.rotation.x = -0.25 + Math.sin(tNow*2.5 + gi)*0.12;
-      ghObj.armR.rotation.x = -0.25 - Math.sin(tNow*2.5 + gi)*0.12;
-      ghObj.head.rotation.z = Math.sin(tNow*1.8 + gi)*0.08;
-    }
-    if(heightAt(nextGx, nextGz) > 1){
-      ghObj.x = nextGx; ghObj.z = nextGz;
-    }
-    var gy = groundAndBridgeHeight(ghObj.x, ghObj.z);
-    ghObj.g.position.set(ghObj.x, gy + Math.sin(tNow*3.2 + gi)*0.28, ghObj.z);
-    ghObj.mist.rotation.z += dt * 1.2;
+      var distStalker = Math.hypot(P.x - stalkerState.x, P.z - stalkerState.z);
+      minDangerDist = Math.min(minDangerDist, distStalker);
+      dangerLabel = '👁️ Ada sosok berambut panjang mematung mengawasimu di kegelapan...';
 
-    if(ghObj.hair){
-      var swaySpeed = chasing ? 7.2 : 2.8;
-      var swayAmp = chasing ? 0.22 : 0.09;
-      ghObj.hair.rotation.x = (chasing ? 0.28 : 0.05) + Math.sin(tNow * swaySpeed + gi) * swayAmp;
-      ghObj.hair.rotation.z = Math.cos(tNow * (swaySpeed * 0.8) + gi) * (swayAmp * 0.8);
-    }
+      // Berdiri diam kaku menatap pemain dengan kepala miring patah
+      var sy = groundAndBridgeHeight(stalkerState.x, stalkerState.z);
+      stalkerGhost.g.position.set(stalkerState.x, sy, stalkerState.z);
+      stalkerGhost.g.rotation.y = Math.atan2(P.x - stalkerState.x, P.z - stalkerState.z);
+      stalkerGhost.body.rotation.x = 0.08;
+      stalkerGhost.head.rotation.z = 0.42 + Math.sin(tNow * 18) * 0.04; // Kepala miring bergetar halus
+      stalkerGhost.armL.rotation.x = -0.15;
+      stalkerGhost.armR.rotation.x = -0.15;
+      stalkerGhost.hair.rotation.x = 0.06 + Math.sin(tNow * 3.5) * 0.07;
 
-    if(!isTeacherMode && distToP < 2.2){
-      SFX.scareHit();
-      toast('Tertangkap sosok berambut panjang! Kamu mundur ke titik aman sebelumnya.');
-      P.x = P.safeX; P.z = P.safeZ;
-      P.y = groundAndBridgeHeight(P.x, P.z);
-      ghObj.x = ghObj.homeX;
-      ghObj.z = ghObj.homeZ;
-      minDangerDist = 999;
-      break;
+      // Senter pemain berkedip konslet saat hantu mengintai
+      if(flashlightOn){
+        headlamp.intensity = (Math.sin(tNow * 43) * Math.cos(tNow * 29) > -0.35) ? 3.0 : 0.15;
+      }
+
+      // Menghilang seketika dalam kabut jika waktu habis atau disorot terlalu dekat (< 6.5m)
+      if(stalkerState.timer <= 0 || distStalker < 6.5){
+        stalkerState.active = false;
+        stalkerState.timer = 14 + Math.random() * 14;
+        stalkerGhost.g.visible = false;
+        if(flashlightOn) headlamp.intensity = 3.0;
+      }
+    }
+  } else {
+    stalkerState.active = false;
+    stalkerGhost.g.visible = false;
+    if(flashlightOn) headlamp.intensity = 3.0;
+  }
+
+  /* -------------------------------------------------------------------
+     2. JUMPSCARE MENDADAK DI DEPAN KAMERA!
+     ------------------------------------------------------------------- */
+  if(!isTeacherMode && !onBridge && !jumpscareState.active){
+    jumpscareState.cooldown -= dt;
+    if(jumpscareState.cooldown <= 0 && getPlayerHill() >= 0 && Math.hypot(P.x - CHEST_POS.x, P.z - CHEST_POS.z) > 14){
+      triggerJumpscare();
     }
   }
 
+  if(jumpscareState.active){
+    jumpscareState.timer -= dt;
+    camShake = 0.65;
+    $('jumpscareFlash').style.opacity = String(clamp(jumpscareState.timer / 0.85, 0, 1));
+    if(flashlightOn){
+      headlamp.intensity = (Math.sin(tNow * 65) > 0) ? 4.5 : 0.0;
+    }
+
+    // Posisikan hantu tepat 2.2 meter di depan lensa kamera menghadap langsung ke wajah pemain
+    var camForwardX = -Math.sin(cam.yaw);
+    var camForwardZ = -Math.cos(cam.yaw);
+    var jx = camera.position.x + camForwardX * 2.35;
+    var jz = camera.position.z + camForwardZ * 2.35;
+    var jy = camera.position.y - 4.35;
+
+    jumpscareGhost.g.position.set(jx, jy, jz);
+    jumpscareGhost.g.rotation.y = Math.atan2(camera.position.x - jx, camera.position.z - jz);
+    jumpscareGhost.body.rotation.x = 0.35;
+    jumpscareGhost.head.rotation.z = Math.sin(tNow * 45) * 0.25;
+    jumpscareGhost.armL.rotation.x = -1.55 + Math.sin(tNow * 35) * 0.2;
+    jumpscareGhost.armR.rotation.x = -1.55 - Math.sin(tNow * 35) * 0.2;
+    jumpscareGhost.hair.rotation.x = 0.35 + Math.sin(tNow * 30) * 0.28;
+
+    if(jumpscareState.timer <= 0){
+      jumpscareState.active = false;
+      jumpscareGhost.g.visible = false;
+      $('jumpscareFlash').style.opacity = '0';
+      if(flashlightOn) headlamp.intensity = 3.0;
+    }
+  } else {
+    camShake = Math.max(0, camShake - dt * 2.5);
+  }
+
+  /* -------------------------------------------------------------------
+     3. BINATANG BUAS (Serigala & Beruang Hutan)
+     ------------------------------------------------------------------- */
   for(var bi=0; bi<beasts.length; bi++){
     var bObj = beasts[bi];
     var distB = Math.hypot(P.x - bObj.x, P.z - bObj.z);
@@ -2229,12 +2348,13 @@ function update(dt){
   }
 
   var fearLevel = clamp(1 - (minDangerDist - 3) / 18, 0, 1);
+  if(jumpscareState.active) fearLevel = 1;
   $('fearVignette').style.opacity = (fearLevel * 0.85).toFixed(2);
   var gw = $('ghostWarn');
   gw.hidden = (minDangerDist > 18);
   if(!gw.hidden && dangerLabel) gw.textContent = dangerLabel;
 
-  if(fearLevel > 0.25){
+  if(fearLevel > 0.25 && !jumpscareState.active){
     heartAcc -= dt;
     if(heartAcc <= 0){
       SFX.heartbeat();
@@ -2256,6 +2376,11 @@ function camUpdate(){
   var cp=Math.cos(cam.pitch);
   var cx=P.x+Math.sin(cam.yaw)*cp*cam.dist, cz=P.z+Math.cos(cam.yaw)*cp*cam.dist, cy=P.y+3+Math.sin(cam.pitch)*cam.dist;
   cy=Math.max(cy,groundAndBridgeHeight(cx,cz)+1.6);
+  if(camShake > 0.01){
+    cx += (Math.random() - 0.5) * camShake;
+    cy += (Math.random() - 0.5) * camShake;
+    cz += (Math.random() - 0.5) * camShake;
+  }
   camera.position.set(cx,cy,cz); camera.lookAt(P.x,P.y+2.8,P.z);
 }
 function hudTick(force){
